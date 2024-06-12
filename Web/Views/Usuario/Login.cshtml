@@ -1,0 +1,75 @@
+﻿@model Infraestructura.Model.Administrador
+
+@{
+    ViewBag.Title = "Login";
+}
+
+<!-- Section: Design Block -->
+<section class="text-center text-lg-start">
+    <style>
+        .cascading-right {
+            margin-right: -150px;
+        }
+
+        .card{
+            border-radius:50px
+        }
+        .img-container img {
+            margin: 0 auto;
+        }
+
+        .img-container {
+            text-align: center;
+        }
+
+        .container{
+            width:80%;
+        }
+    </style>
+
+    <!-- Jumbotron -->
+    <div class="container py-4" id="container">
+        <div class="row g-0 align-items-center">
+            <div class="col-lg-6 mb-5 mb-lg-0 order-2 order-lg-1">
+               
+                <div class="card cascading-right bg-body-tertiary" style="backdrop-filter: blur(30px);">
+                    <div class="card-body p-5 shadow-5 text-center">
+                        <h2 class="fw-bold mb-5">Login</h2>
+                        @using (Html.BeginForm("Login", "Administrador", FormMethod.Post, new { @class = "form-signin" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            <!-- Username input -->
+                            <div class="form-outline mb-4">
+                                @Html.Label("Cédula / Usuario", new { @class = "form-label" })
+                                @Html.TextBox("Usuario", null, new { @class = "form-control" })
+                            </div>
+
+                            <!-- Password input -->
+                            <div class="form-outline mb-4">
+                                @Html.LabelFor(model => model.Contraseña, new { @class = "form-label" })
+                                @Html.PasswordFor(model => model.Contraseña, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.Contraseña, "", new { @class = "text-danger" })
+                            </div>
+
+                            <!-- Submit button -->
+                            <button type="submit" class="btn btn-primary btn-block mb-4">Login</button>
+
+                            <!-- Register buttons -->
+
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6 mb-5 mb-lg-0 order-1 order-lg-2 img-container">
+                <img src="https://mdbootstrap.com/img/new/ecommerce/vertical/004.jpg" class="w-100 rounded-4 shadow-4" alt="" />
+            </div>
+        </div>
+    </div>
+    <!-- Jumbotron -->
+</section>
+<!-- Section: Design Block -->
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

@@ -41,8 +41,46 @@ namespace Web.Controllers
             }
         }
 
-        // GET: Usuario/Details/5
-        public ActionResult Details(int id)
+      
+        public ActionResult Login(FormCollection collection)
+        {
+            string usuario = collection["Usuario"];
+            string contraseña = collection["Contraseña"];
+            int idAdmin;
+
+            if (ModelState.IsValid)
+            {
+                Administrador admin = null;
+
+                // Check if input is an ID
+                if (int.TryParse(usuario, out idAdmin))
+                {
+                  
+                }
+
+                // If not an ID, check as Usuario
+                if (admin == null)
+                {
+                   
+                }
+
+                if (admin != null)
+                {
+                   
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Invalid login attempt.");
+                }
+            }
+
+            return View();
+        }
+    
+
+    // GET: Usuario/Details/5
+    public ActionResult Details(int id)
         {
             return View();
         }
