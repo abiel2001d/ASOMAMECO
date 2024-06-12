@@ -1,0 +1,347 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="Proyecto_Calidad_SoftwareModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Administrador">
+          <Key>
+            <PropertyRef Name="ID_Administrador" />
+          </Key>
+          <Property Name="ID_Administrador" Type="int" Nullable="false" />
+          <Property Name="Usuario" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Contraseña" Type="varchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Asistencia">
+          <Key>
+            <PropertyRef Name="ID_Asistencia" />
+          </Key>
+          <Property Name="ID_Asistencia" Type="int" Nullable="false" />
+          <Property Name="ID_Usuario" Type="int" />
+          <Property Name="ID_Evento" Type="int" />
+          <Property Name="Fecha_Asistencia" Type="datetime" Nullable="false" />
+          <Property Name="Hora_Asistencia" Type="time" Precision="7" Nullable="false" />
+          <Property Name="Confirmado_Previamente" Type="varchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Evento">
+          <Key>
+            <PropertyRef Name="ID_Evento" />
+          </Key>
+          <Property Name="ID_Evento" Type="int" Nullable="false" />
+          <Property Name="Nombre_Evento" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Fecha_Evento" Type="date" Nullable="false" />
+          <Property Name="Descripcion" Type="varchar" MaxLength="255" />
+          <Property Name="Lugar" Type="varchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Invitacion">
+          <Key>
+            <PropertyRef Name="ID_Invitacion" />
+          </Key>
+          <Property Name="ID_Invitacion" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ID_Usuario" Type="int" />
+          <Property Name="ID_Evento" Type="int" />
+          <Property Name="Confirmado" Type="varchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Usuarios">
+          <Key>
+            <PropertyRef Name="ID_Usuario" />
+          </Key>
+          <Property Name="ID_Usuario" Type="int" Nullable="false" />
+          <Property Name="Nombre" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Cedula" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="Estado_usuario" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Correo" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Telefono" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="Rol" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <Association Name="FK__Asistenci__ID_Ev__2A4B4B5E">
+          <End Role="Evento" Type="Self.Evento" Multiplicity="0..1" />
+          <End Role="Asistencia" Type="Self.Asistencia" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Evento">
+              <PropertyRef Name="ID_Evento" />
+            </Principal>
+            <Dependent Role="Asistencia">
+              <PropertyRef Name="ID_Evento" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Asistenci__ID_Us__29572725">
+          <End Role="Usuarios" Type="Self.Usuarios" Multiplicity="0..1" />
+          <End Role="Asistencia" Type="Self.Asistencia" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Usuarios">
+              <PropertyRef Name="ID_Usuario" />
+            </Principal>
+            <Dependent Role="Asistencia">
+              <PropertyRef Name="ID_Usuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Invitacio__ID_Ev__2E1BDC42">
+          <End Role="Evento" Type="Self.Evento" Multiplicity="0..1" />
+          <End Role="Invitacion" Type="Self.Invitacion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Evento">
+              <PropertyRef Name="ID_Evento" />
+            </Principal>
+            <Dependent Role="Invitacion">
+              <PropertyRef Name="ID_Evento" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Invitacio__ID_Us__2D27B809">
+          <End Role="Usuarios" Type="Self.Usuarios" Multiplicity="0..1" />
+          <End Role="Invitacion" Type="Self.Invitacion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Usuarios">
+              <PropertyRef Name="ID_Usuario" />
+            </Principal>
+            <Dependent Role="Invitacion">
+              <PropertyRef Name="ID_Usuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Proyecto_Calidad_SoftwareModelStoreContainer">
+          <EntitySet Name="Administrador" EntityType="Self.Administrador" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Asistencia" EntityType="Self.Asistencia" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Evento" EntityType="Self.Evento" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Invitacion" EntityType="Self.Invitacion" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Usuarios" EntityType="Self.Usuarios" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__Asistenci__ID_Ev__2A4B4B5E" Association="Self.FK__Asistenci__ID_Ev__2A4B4B5E">
+            <End Role="Evento" EntitySet="Evento" />
+            <End Role="Asistencia" EntitySet="Asistencia" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Asistenci__ID_Us__29572725" Association="Self.FK__Asistenci__ID_Us__29572725">
+            <End Role="Usuarios" EntitySet="Usuarios" />
+            <End Role="Asistencia" EntitySet="Asistencia" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Invitacio__ID_Ev__2E1BDC42" Association="Self.FK__Invitacio__ID_Ev__2E1BDC42">
+            <End Role="Evento" EntitySet="Evento" />
+            <End Role="Invitacion" EntitySet="Invitacion" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Invitacio__ID_Us__2D27B809" Association="Self.FK__Invitacio__ID_Us__2D27B809">
+            <End Role="Usuarios" EntitySet="Usuarios" />
+            <End Role="Invitacion" EntitySet="Invitacion" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="Proyecto_Calidad_SoftwareModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Administrador">
+          <Key>
+            <PropertyRef Name="ID_Administrador" />
+          </Key>
+          <Property Name="ID_Administrador" Type="Int32" Nullable="false" />
+          <Property Name="Usuario" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Contraseña" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Asistencia">
+          <Key>
+            <PropertyRef Name="ID_Asistencia" />
+          </Key>
+          <Property Name="ID_Asistencia" Type="Int32" Nullable="false" />
+          <Property Name="ID_Usuario" Type="Int32" />
+          <Property Name="ID_Evento" Type="Int32" />
+          <Property Name="Fecha_Asistencia" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Hora_Asistencia" Type="Time" Nullable="false" Precision="7" />
+          <Property Name="Confirmado_Previamente" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Evento" Relationship="Self.FK__Asistenci__ID_Ev__2A4B4B5E" FromRole="Asistencia" ToRole="Evento" />
+          <NavigationProperty Name="Usuarios" Relationship="Self.FK__Asistenci__ID_Us__29572725" FromRole="Asistencia" ToRole="Usuarios" />
+        </EntityType>
+        <EntityType Name="Evento">
+          <Key>
+            <PropertyRef Name="ID_Evento" />
+          </Key>
+          <Property Name="ID_Evento" Type="Int32" Nullable="false" />
+          <Property Name="Nombre_Evento" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Fecha_Evento" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="Descripcion" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Lugar" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Asistencia" Relationship="Self.FK__Asistenci__ID_Ev__2A4B4B5E" FromRole="Evento" ToRole="Asistencia" />
+          <NavigationProperty Name="Invitacion" Relationship="Self.FK__Invitacio__ID_Ev__2E1BDC42" FromRole="Evento" ToRole="Invitacion" />
+        </EntityType>
+        <EntityType Name="Invitacion">
+          <Key>
+            <PropertyRef Name="ID_Invitacion" />
+          </Key>
+          <Property Name="ID_Invitacion" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ID_Usuario" Type="Int32" />
+          <Property Name="ID_Evento" Type="Int32" />
+          <Property Name="Confirmado" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Evento" Relationship="Self.FK__Invitacio__ID_Ev__2E1BDC42" FromRole="Invitacion" ToRole="Evento" />
+          <NavigationProperty Name="Usuarios" Relationship="Self.FK__Invitacio__ID_Us__2D27B809" FromRole="Invitacion" ToRole="Usuarios" />
+        </EntityType>
+        <EntityType Name="Usuarios">
+          <Key>
+            <PropertyRef Name="ID_Usuario" />
+          </Key>
+          <Property Name="ID_Usuario" Type="Int32" Nullable="false" />
+          <Property Name="Nombre" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Cedula" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Estado_usuario" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Correo" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Telefono" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Rol" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Asistencia" Relationship="Self.FK__Asistenci__ID_Us__29572725" FromRole="Usuarios" ToRole="Asistencia" />
+          <NavigationProperty Name="Invitacion" Relationship="Self.FK__Invitacio__ID_Us__2D27B809" FromRole="Usuarios" ToRole="Invitacion" />
+        </EntityType>
+        <Association Name="FK__Asistenci__ID_Ev__2A4B4B5E">
+          <End Role="Evento" Type="Self.Evento" Multiplicity="0..1" />
+          <End Role="Asistencia" Type="Self.Asistencia" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Evento">
+              <PropertyRef Name="ID_Evento" />
+            </Principal>
+            <Dependent Role="Asistencia">
+              <PropertyRef Name="ID_Evento" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Asistenci__ID_Us__29572725">
+          <End Role="Usuarios" Type="Self.Usuarios" Multiplicity="0..1" />
+          <End Role="Asistencia" Type="Self.Asistencia" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Usuarios">
+              <PropertyRef Name="ID_Usuario" />
+            </Principal>
+            <Dependent Role="Asistencia">
+              <PropertyRef Name="ID_Usuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Invitacio__ID_Ev__2E1BDC42">
+          <End Role="Evento" Type="Self.Evento" Multiplicity="0..1" />
+          <End Role="Invitacion" Type="Self.Invitacion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Evento">
+              <PropertyRef Name="ID_Evento" />
+            </Principal>
+            <Dependent Role="Invitacion">
+              <PropertyRef Name="ID_Evento" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Invitacio__ID_Us__2D27B809">
+          <End Role="Usuarios" Type="Self.Usuarios" Multiplicity="0..1" />
+          <End Role="Invitacion" Type="Self.Invitacion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Usuarios">
+              <PropertyRef Name="ID_Usuario" />
+            </Principal>
+            <Dependent Role="Invitacion">
+              <PropertyRef Name="ID_Usuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Proyecto_Calidad_SoftwareEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Administrador" EntityType="Self.Administrador" />
+          <EntitySet Name="Asistencia" EntityType="Self.Asistencia" />
+          <EntitySet Name="Evento" EntityType="Self.Evento" />
+          <EntitySet Name="Invitacion" EntityType="Self.Invitacion" />
+          <EntitySet Name="Usuarios" EntityType="Self.Usuarios" />
+          <AssociationSet Name="FK__Asistenci__ID_Ev__2A4B4B5E" Association="Self.FK__Asistenci__ID_Ev__2A4B4B5E">
+            <End Role="Evento" EntitySet="Evento" />
+            <End Role="Asistencia" EntitySet="Asistencia" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Asistenci__ID_Us__29572725" Association="Self.FK__Asistenci__ID_Us__29572725">
+            <End Role="Usuarios" EntitySet="Usuarios" />
+            <End Role="Asistencia" EntitySet="Asistencia" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Invitacio__ID_Ev__2E1BDC42" Association="Self.FK__Invitacio__ID_Ev__2E1BDC42">
+            <End Role="Evento" EntitySet="Evento" />
+            <End Role="Invitacion" EntitySet="Invitacion" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Invitacio__ID_Us__2D27B809" Association="Self.FK__Invitacio__ID_Us__2D27B809">
+            <End Role="Usuarios" EntitySet="Usuarios" />
+            <End Role="Invitacion" EntitySet="Invitacion" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="Proyecto_Calidad_SoftwareModelStoreContainer" CdmEntityContainer="Proyecto_Calidad_SoftwareEntities">
+          <EntitySetMapping Name="Administrador">
+            <EntityTypeMapping TypeName="Proyecto_Calidad_SoftwareModel.Administrador">
+              <MappingFragment StoreEntitySet="Administrador">
+                <ScalarProperty Name="ID_Administrador" ColumnName="ID_Administrador" />
+                <ScalarProperty Name="Usuario" ColumnName="Usuario" />
+                <ScalarProperty Name="Contraseña" ColumnName="Contraseña" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Asistencia">
+            <EntityTypeMapping TypeName="Proyecto_Calidad_SoftwareModel.Asistencia">
+              <MappingFragment StoreEntitySet="Asistencia">
+                <ScalarProperty Name="ID_Asistencia" ColumnName="ID_Asistencia" />
+                <ScalarProperty Name="ID_Usuario" ColumnName="ID_Usuario" />
+                <ScalarProperty Name="ID_Evento" ColumnName="ID_Evento" />
+                <ScalarProperty Name="Fecha_Asistencia" ColumnName="Fecha_Asistencia" />
+                <ScalarProperty Name="Hora_Asistencia" ColumnName="Hora_Asistencia" />
+                <ScalarProperty Name="Confirmado_Previamente" ColumnName="Confirmado_Previamente" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Evento">
+            <EntityTypeMapping TypeName="Proyecto_Calidad_SoftwareModel.Evento">
+              <MappingFragment StoreEntitySet="Evento">
+                <ScalarProperty Name="ID_Evento" ColumnName="ID_Evento" />
+                <ScalarProperty Name="Nombre_Evento" ColumnName="Nombre_Evento" />
+                <ScalarProperty Name="Fecha_Evento" ColumnName="Fecha_Evento" />
+                <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
+                <ScalarProperty Name="Lugar" ColumnName="Lugar" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Invitacion">
+            <EntityTypeMapping TypeName="Proyecto_Calidad_SoftwareModel.Invitacion">
+              <MappingFragment StoreEntitySet="Invitacion">
+                <ScalarProperty Name="ID_Invitacion" ColumnName="ID_Invitacion" />
+                <ScalarProperty Name="ID_Usuario" ColumnName="ID_Usuario" />
+                <ScalarProperty Name="ID_Evento" ColumnName="ID_Evento" />
+                <ScalarProperty Name="Confirmado" ColumnName="Confirmado" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Usuarios">
+            <EntityTypeMapping TypeName="Proyecto_Calidad_SoftwareModel.Usuarios">
+              <MappingFragment StoreEntitySet="Usuarios">
+                <ScalarProperty Name="ID_Usuario" ColumnName="ID_Usuario" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Cedula" ColumnName="Cedula" />
+                <ScalarProperty Name="Estado_usuario" ColumnName="Estado_usuario" />
+                <ScalarProperty Name="Correo" ColumnName="Correo" />
+                <ScalarProperty Name="Telefono" ColumnName="Telefono" />
+                <ScalarProperty Name="Rol" ColumnName="Rol" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
