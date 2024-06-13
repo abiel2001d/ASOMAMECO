@@ -1,56 +1,21 @@
-﻿@{
-    ViewBag.Title = "Home Page";
-}
-
-
-    <title>@ViewBag.Title</title>
+﻿
     <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-           
-            color: #333;
+        .construction-card {
+            border-radius:50px;
+            max-width: 800px;
+            margin: auto;
+            margin-top: 50px;
         }
-
-        .container {
-            text-align: center;
-        }
-
-            .container h1 {
-                font-size: 3em;
-                margin-bottom: 0.5em;
-            }
-
-            .container p {
-                font-size: 1.5em;
-                margin-bottom: 1.5em;
-            }
-
-            .container .btn {
-                display: inline-block;
-                padding: 10px 20px;
-                font-size: 1.2em;
-                color: #fff;
-                background-color: #007bff;
-                border: none;
-                border-radius: 5px;
-                text-decoration: none;
-                transition: background-color 0.3s;
-            }
-
-                .container .btn:hover {
-                    background-color: #0056b3;
-                }
     </style>
 
 
-    <div class="container">
-        <h1>En Construcción...</h1>
-        <p>Esta página está actualmente en construcción. ¡Vuelve pronto para más actualizaciones!</p>
-       
-    </div>
 
+    <div class="container">
+        <div class="card construction-card">
+            <div class="card-body text-center">
+                <h1 class="card-title">En Construcción...</h1>
+                <p class="card-text">Esta página está actualmente en construcción. ¡Vuelve pronto para más actualizaciones!</p>
+            </div>
+        </div>
+    </div>
 
