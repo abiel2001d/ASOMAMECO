@@ -5,10 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Infraestructura.Repository
+namespace ApplicationCore.Services
 {
-    public interface IRepositoryUsuario
+    public interface IServiceAdministrador
     {
-        IEnumerable<Usuario> GetUsuarios();
+        Administrador GetAdministrador(string usuario);
     }
 }

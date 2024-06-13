@@ -10,7 +10,7 @@ namespace ApplicationCore.Services
 {
     public class ServiceUsuario : IServiceUsuario
     {
-        public IEnumerable<Usuarios> GetUsuarios()
+        public IEnumerable<Usuario> GetUsuarios()
         {
             IRepositoryUsuario repository = new RepositoryUsuario();
             return repository.GetUsuarios();

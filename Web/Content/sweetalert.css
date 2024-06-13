@@ -230,19 +230,19 @@ body.stop-scrolling {
   z-index: 1040;
 }
 .sweet-alert {
-    background-color: #ffffff;
-    width: 478px;
-    padding: 17px;
-    border-radius: 5px;
-    text-align: center;
-    position: fixed;
-    left: 50%;
-    top: 50%;
-    margin-left: -256px;
-    margin-top: -200px;
-    overflow: hidden;
-    display: none;
-    z-index: 2000;
+  background-color: #ffffff;
+  width: 478px;
+  padding: 17px;
+  border-radius: 5px;
+  text-align: center;
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  margin-left: -256px;
+  margin-top: -200px;
+  overflow: hidden;
+  display: none;
+  z-index: 2000;
 }
 @media all and (max-width: 767px) {
   .sweet-alert {
@@ -263,10 +263,8 @@ body.stop-scrolling {
   display: block;
 }
 .sweet-alert .sa-confirm-button-container {
-    display: inline-block;
-    position: relative;
-    font-size: 10px !important;
- 
+  display: inline-block;
+  position: relative;
 }
 .sweet-alert .la-ball-fall {
   position: absolute;
@@ -276,23 +274,19 @@ body.stop-scrolling {
   margin-top: -9px;
   opacity: 0;
   visibility: hidden;
-
 }
 .sweet-alert button[disabled] {
-    opacity: .6;
-    cursor: default;
-    font-size: 10px !important;
+  opacity: .6;
+  cursor: default;
 }
 .sweet-alert button.confirm[disabled] {
-    color: transparent;
-    font-size: 10px !important;
+  color: transparent;
 }
-    .sweet-alert button.confirm[disabled] ~ .la-ball-fall {
-        opacity: 1;
-        visibility: visible;
-        transition-delay: 0s;
-        font-size: 10px !important;
-    }
+.sweet-alert button.confirm[disabled] ~ .la-ball-fall {
+  opacity: 1;
+  visibility: visible;
+  transition-delay: 0s;
+}
 .sweet-alert .sa-icon {
   width: 80px;
   height: 80px;
@@ -301,8 +295,6 @@ body.stop-scrolling {
   margin: 20px auto;
   position: relative;
   box-sizing: content-box;
-  margin-bottom:30px;
-
 }
 .sweet-alert .sa-icon.sa-error {
   border-color: #d43f3a;
@@ -331,16 +323,16 @@ body.stop-scrolling {
 .sweet-alert .sa-icon.sa-warning {
   border-color: #eea236;
 }
-    .sweet-alert .sa-icon.sa-warning .sa-body {
-        position: absolute;
-        width: 5px;
-        height: 15px;
-        left: 50%;
-        top: 10px;
-        border-radius: 2px;
-        margin-left: -2px;
-        background-color: #f0ad4e;
-    }
+.sweet-alert .sa-icon.sa-warning .sa-body {
+  position: absolute;
+  width: 5px;
+  height: 47px;
+  left: 50%;
+  top: 10px;
+  border-radius: 2px;
+  margin-left: -2px;
+  background-color: #f0ad4e;
+}
 .sweet-alert .sa-icon.sa-warning .sa-dot {
   position: absolute;
   width: 7px;
@@ -481,8 +473,7 @@ body.stop-scrolling {
   box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(238, 162, 54, 0.6);
 }
 .sweet-alert button::-moz-focus-inner {
-    border: 0;
-    font-size: 10px !important;
+  border: 0;
 }
 /*!
  * Load Awesome v1.1.0 (http://github.danielcardoso.net/load-awesome/)
@@ -693,6 +684,14 @@ body.stop-scrolling {
     transform: translateY(145%);
   }
 }
+/* Custom button styles */
+.sweet-alert button {
+    padding: 8px 20px; /* Smaller padding */
+    font-size: 14px; /* Smaller font size */
+    border-radius: 4px; /* Adjust border radius if needed */
+    margin-top: 15px; /* Ensure some space between content and button */
+}
 
-
-
+    .sweet-alert button:focus {
+        outline: none;
+    }

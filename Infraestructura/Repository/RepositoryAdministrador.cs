@@ -9,26 +9,22 @@ using System.Threading.Tasks;
 
 namespace Infraestructura.Repository
 {
-    public class RepositoryUsuario : IRepositoryUsuario
+    public class RepositoryAdministrador : IRepositoryAdministrador
     {
-      
-        public IEnumerable<Usuario> GetUsuarios()
+        public Administrador GetAdministrador(string usuario)
         {
-            IEnumerable<Usuario> lista = null;
+            Administrador oAdministrador = null;
             try
             {
-
                 using (MyContext ctx = new MyContext())
                 {
                     ctx.Configuration.LazyLoadingEnabled = false;
 
-                    lista = ctx.Usuario.ToList();
-
+                    oAdministrador = ctx.Administrador.Where(x => x.Usuario == usuario).FirstOrDefault();
 
                 }
-                return lista;
+                return oAdministrador;
             }
-
             catch (DbUpdateException dbEx)
             {
                 string mensaje = "";

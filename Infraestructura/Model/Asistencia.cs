@@ -22,6 +22,6 @@ namespace Infraestructura.Model
         public string Confirmado_Previamente { get; set; }
     
         public virtual Evento Evento { get; set; }
-        public virtual Usuarios Usuarios { get; set; }
+        public virtual Usuario Usuario { get; set; }
     }
 }

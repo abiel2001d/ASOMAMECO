@@ -43,17 +43,17 @@
           <Property Name="ID_Evento" Type="int" />
           <Property Name="Confirmado" Type="varchar" MaxLength="100" Nullable="false" />
         </EntityType>
-        <EntityType Name="Usuarios">
+        <EntityType Name="Usuario">
           <Key>
-            <PropertyRef Name="ID_Usuario" />
+            <PropertyRef Name="Id_Usuario" />
           </Key>
-          <Property Name="ID_Usuario" Type="int" Nullable="false" />
-          <Property Name="Nombre" Type="varchar" MaxLength="100" Nullable="false" />
-          <Property Name="Cedula" Type="varchar" MaxLength="20" Nullable="false" />
-          <Property Name="Estado_usuario" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="Correo" Type="varchar" MaxLength="100" Nullable="false" />
-          <Property Name="Telefono" Type="varchar" MaxLength="20" Nullable="false" />
-          <Property Name="Rol" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Id_Usuario" Type="int" Nullable="false" />
+          <Property Name="Nombre" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Cedula" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Estado_usuario" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Estado_2" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Correo" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Telefono" Type="nvarchar" MaxLength="100" Nullable="false" />
         </EntityType>
         <Association Name="FK__Asistenci__ID_Ev__2A4B4B5E">
           <End Role="Evento" Type="Self.Evento" Multiplicity="0..1" />
@@ -68,11 +68,11 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK__Asistenci__ID_Us__29572725">
-          <End Role="Usuarios" Type="Self.Usuarios" Multiplicity="0..1" />
+          <End Role="Usuario" Type="Self.Usuario" Multiplicity="0..1" />
           <End Role="Asistencia" Type="Self.Asistencia" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Usuarios">
-              <PropertyRef Name="ID_Usuario" />
+            <Principal Role="Usuario">
+              <PropertyRef Name="Id_Usuario" />
             </Principal>
             <Dependent Role="Asistencia">
               <PropertyRef Name="ID_Usuario" />
@@ -92,11 +92,11 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK__Invitacio__ID_Us__2D27B809">
-          <End Role="Usuarios" Type="Self.Usuarios" Multiplicity="0..1" />
+          <End Role="Usuario" Type="Self.Usuario" Multiplicity="0..1" />
           <End Role="Invitacion" Type="Self.Invitacion" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Usuarios">
-              <PropertyRef Name="ID_Usuario" />
+            <Principal Role="Usuario">
+              <PropertyRef Name="Id_Usuario" />
             </Principal>
             <Dependent Role="Invitacion">
               <PropertyRef Name="ID_Usuario" />
@@ -108,13 +108,13 @@
           <EntitySet Name="Asistencia" EntityType="Self.Asistencia" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Evento" EntityType="Self.Evento" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Invitacion" EntityType="Self.Invitacion" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Usuarios" EntityType="Self.Usuarios" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Usuario" EntityType="Self.Usuario" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK__Asistenci__ID_Ev__2A4B4B5E" Association="Self.FK__Asistenci__ID_Ev__2A4B4B5E">
             <End Role="Evento" EntitySet="Evento" />
             <End Role="Asistencia" EntitySet="Asistencia" />
           </AssociationSet>
           <AssociationSet Name="FK__Asistenci__ID_Us__29572725" Association="Self.FK__Asistenci__ID_Us__29572725">
-            <End Role="Usuarios" EntitySet="Usuarios" />
+            <End Role="Usuario" EntitySet="Usuario" />
             <End Role="Asistencia" EntitySet="Asistencia" />
           </AssociationSet>
           <AssociationSet Name="FK__Invitacio__ID_Ev__2E1BDC42" Association="Self.FK__Invitacio__ID_Ev__2E1BDC42">
@@ -122,7 +122,7 @@
             <End Role="Invitacion" EntitySet="Invitacion" />
           </AssociationSet>
           <AssociationSet Name="FK__Invitacio__ID_Us__2D27B809" Association="Self.FK__Invitacio__ID_Us__2D27B809">
-            <End Role="Usuarios" EntitySet="Usuarios" />
+            <End Role="Usuario" EntitySet="Usuario" />
             <End Role="Invitacion" EntitySet="Invitacion" />
           </AssociationSet>
         </EntityContainer>
@@ -150,7 +150,7 @@
           <Property Name="Hora_Asistencia" Type="Time" Nullable="false" Precision="7" />
           <Property Name="Confirmado_Previamente" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
           <NavigationProperty Name="Evento" Relationship="Self.FK__Asistenci__ID_Ev__2A4B4B5E" FromRole="Asistencia" ToRole="Evento" />
-          <NavigationProperty Name="Usuarios" Relationship="Self.FK__Asistenci__ID_Us__29572725" FromRole="Asistencia" ToRole="Usuarios" />
+          <NavigationProperty Name="Usuario" Relationship="Self.FK__Asistenci__ID_Us__29572725" FromRole="Asistencia" ToRole="Usuario" />
         </EntityType>
         <EntityType Name="Evento">
           <Key>
@@ -173,21 +173,21 @@
           <Property Name="ID_Evento" Type="Int32" />
           <Property Name="Confirmado" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
           <NavigationProperty Name="Evento" Relationship="Self.FK__Invitacio__ID_Ev__2E1BDC42" FromRole="Invitacion" ToRole="Evento" />
-          <NavigationProperty Name="Usuarios" Relationship="Self.FK__Invitacio__ID_Us__2D27B809" FromRole="Invitacion" ToRole="Usuarios" />
+          <NavigationProperty Name="Usuario" Relationship="Self.FK__Invitacio__ID_Us__2D27B809" FromRole="Invitacion" ToRole="Usuario" />
         </EntityType>
-        <EntityType Name="Usuarios">
+        <EntityType Name="Usuario">
           <Key>
-            <PropertyRef Name="ID_Usuario" />
+            <PropertyRef Name="Id_Usuario" />
           </Key>
-          <Property Name="ID_Usuario" Type="Int32" Nullable="false" />
-          <Property Name="Nombre" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Cedula" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Estado_usuario" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Correo" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Telefono" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Rol" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="Asistencia" Relationship="Self.FK__Asistenci__ID_Us__29572725" FromRole="Usuarios" ToRole="Asistencia" />
-          <NavigationProperty Name="Invitacion" Relationship="Self.FK__Invitacio__ID_Us__2D27B809" FromRole="Usuarios" ToRole="Invitacion" />
+          <Property Name="Id_Usuario" Type="Int32" Nullable="false" />
+          <Property Name="Nombre" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Cedula" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Estado_usuario" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Estado_2" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Correo" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Telefono" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Asistencia" Relationship="Self.FK__Asistenci__ID_Us__29572725" FromRole="Usuario" ToRole="Asistencia" />
+          <NavigationProperty Name="Invitacion" Relationship="Self.FK__Invitacio__ID_Us__2D27B809" FromRole="Usuario" ToRole="Invitacion" />
         </EntityType>
         <Association Name="FK__Asistenci__ID_Ev__2A4B4B5E">
           <End Role="Evento" Type="Self.Evento" Multiplicity="0..1" />
@@ -202,11 +202,11 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK__Asistenci__ID_Us__29572725">
-          <End Role="Usuarios" Type="Self.Usuarios" Multiplicity="0..1" />
+          <End Role="Usuario" Type="Self.Usuario" Multiplicity="0..1" />
           <End Role="Asistencia" Type="Self.Asistencia" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Usuarios">
-              <PropertyRef Name="ID_Usuario" />
+            <Principal Role="Usuario">
+              <PropertyRef Name="Id_Usuario" />
             </Principal>
             <Dependent Role="Asistencia">
               <PropertyRef Name="ID_Usuario" />
@@ -226,11 +226,11 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK__Invitacio__ID_Us__2D27B809">
-          <End Role="Usuarios" Type="Self.Usuarios" Multiplicity="0..1" />
+          <End Role="Usuario" Type="Self.Usuario" Multiplicity="0..1" />
           <End Role="Invitacion" Type="Self.Invitacion" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Usuarios">
-              <PropertyRef Name="ID_Usuario" />
+            <Principal Role="Usuario">
+              <PropertyRef Name="Id_Usuario" />
             </Principal>
             <Dependent Role="Invitacion">
               <PropertyRef Name="ID_Usuario" />
@@ -242,13 +242,13 @@
           <EntitySet Name="Asistencia" EntityType="Self.Asistencia" />
           <EntitySet Name="Evento" EntityType="Self.Evento" />
           <EntitySet Name="Invitacion" EntityType="Self.Invitacion" />
-          <EntitySet Name="Usuarios" EntityType="Self.Usuarios" />
+          <EntitySet Name="Usuario" EntityType="Self.Usuario" />
           <AssociationSet Name="FK__Asistenci__ID_Ev__2A4B4B5E" Association="Self.FK__Asistenci__ID_Ev__2A4B4B5E">
             <End Role="Evento" EntitySet="Evento" />
             <End Role="Asistencia" EntitySet="Asistencia" />
           </AssociationSet>
           <AssociationSet Name="FK__Asistenci__ID_Us__29572725" Association="Self.FK__Asistenci__ID_Us__29572725">
-            <End Role="Usuarios" EntitySet="Usuarios" />
+            <End Role="Usuario" EntitySet="Usuario" />
             <End Role="Asistencia" EntitySet="Asistencia" />
           </AssociationSet>
           <AssociationSet Name="FK__Invitacio__ID_Ev__2E1BDC42" Association="Self.FK__Invitacio__ID_Ev__2E1BDC42">
@@ -256,7 +256,7 @@
             <End Role="Invitacion" EntitySet="Invitacion" />
           </AssociationSet>
           <AssociationSet Name="FK__Invitacio__ID_Us__2D27B809" Association="Self.FK__Invitacio__ID_Us__2D27B809">
-            <End Role="Usuarios" EntitySet="Usuarios" />
+            <End Role="Usuario" EntitySet="Usuario" />
             <End Role="Invitacion" EntitySet="Invitacion" />
           </AssociationSet>
         </EntityContainer>
@@ -308,16 +308,16 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Usuarios">
-            <EntityTypeMapping TypeName="Proyecto_Calidad_SoftwareModel.Usuarios">
-              <MappingFragment StoreEntitySet="Usuarios">
-                <ScalarProperty Name="ID_Usuario" ColumnName="ID_Usuario" />
+          <EntitySetMapping Name="Usuario">
+            <EntityTypeMapping TypeName="Proyecto_Calidad_SoftwareModel.Usuario">
+              <MappingFragment StoreEntitySet="Usuario">
+                <ScalarProperty Name="Id_Usuario" ColumnName="Id_Usuario" />
                 <ScalarProperty Name="Nombre" ColumnName="Nombre" />
                 <ScalarProperty Name="Cedula" ColumnName="Cedula" />
                 <ScalarProperty Name="Estado_usuario" ColumnName="Estado_usuario" />
+                <ScalarProperty Name="Estado_2" ColumnName="Estado_2" />
                 <ScalarProperty Name="Correo" ColumnName="Correo" />
                 <ScalarProperty Name="Telefono" ColumnName="Telefono" />
-                <ScalarProperty Name="Rol" ColumnName="Rol" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace Infraestructura.Repository
 {
-    public interface IRepositoryUsuario
+    public interface IRepositoryAdministrador
     {
-        IEnumerable<Usuario> GetUsuarios();
+            Administrador GetAdministrador(string usuario);
     }
 }

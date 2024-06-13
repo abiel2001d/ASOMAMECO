@@ -9,6 +9,6 @@ namespace ApplicationCore.Services
 {
     public interface IServiceUsuario
     {
-        IEnumerable<Usuarios> GetUsuarios();
+        IEnumerable<Usuario> GetUsuarios();
     }
 }
