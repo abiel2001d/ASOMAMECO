@@ -84,6 +84,8 @@ namespace Web.Controllers
             // Verificar si el archivo es válido
             if (file != null && file.ContentLength > 0)
             {
+                //Codigo de la licencia del EPPlus
+                ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
                 // Leer el archivo
                 using (var package = new ExcelPackage(file.InputStream))
@@ -94,20 +96,35 @@ namespace Web.Controllers
                     // Iterar sobre las filas del archivo Excel
                     for (int row = 2; row <= rowCount; row++)
                     {
-                        // Crear un nuevo miembro y llenar sus propiedades con los datos del archivo
-                        Usuario miembro = new Usuario
+                        // Verificar si todas las celdas necesarias son distintas de null
+                        if (worksheet.Cells[row, 1].Value != null &&
+                            worksheet.Cells[row, 2].Value != null &&
+                            worksheet.Cells[row, 3].Value != null &&
+                            worksheet.Cells[row, 4].Value != null &&
+                            worksheet.Cells[row, 5].Value != null &&
+                            worksheet.Cells[row, 6].Value != null &&
+                            worksheet.Cells[row, 7].Value != null)
                         {
-                            Id_Usuario = int.Parse(worksheet.Cells[row, 1].Value.ToString()),
-                            Nombre = worksheet.Cells[row, 2].Value.ToString(),
-                            Cedula = worksheet.Cells[row, 3].Value.ToString(),
-                            Estado_usuario = worksheet.Cells[row, 4].Value.ToString(),
-                            Estado_2 = worksheet.Cells[row, 5].Value.ToString(),
-                            Correo = worksheet.Cells[row, 6].Value.ToString(),
-                            Telefono = worksheet.Cells[row, 7].Value.ToString()
-                        };
+                            // Crear un nuevo miembro y llenar sus propiedades con los datos del archivo
+                            Usuario miembro = new Usuario
+                            {
+                                Id_Usuario = int.Parse(worksheet.Cells[row, 1].Value.ToString()),
+                                Nombre = worksheet.Cells[row, 2].Value.ToString(),
+                                Cedula = worksheet.Cells[row, 3].Value.ToString(),
+                                Estado_usuario = worksheet.Cells[row, 4].Value.ToString(),
+                                Estado_2 = worksheet.Cells[row, 5].Value.ToString(),
+                                Correo = worksheet.Cells[row, 6].Value.ToString(),
+                                Telefono = worksheet.Cells[row, 7].Value.ToString()
+                            };
 
-                        // Añadir el miembro a la BD
-                        _ServiceUsuario.Save(miembro);
+                            // Añadir el miembro a la BD
+                            _ServiceUsuario.Save(miembro);
+                        }
+                        else
+                        {
+                            // Si alguna celda es null, terminar el bucle
+                            break;
+                        }
                     }
                 }
 
