@@ -16,5 +16,19 @@ namespace ApplicationCore.Services
             return repository.GetUsuarios();
         }
 
+        public Usuario GetUsuarioByID(int id)
+        {
+            IRepositoryUsuario repository = new RepositoryUsuario();
+            Usuario oUsuario = repository.GetUsuarioByID(id);
+            //INCLUIR ENCRIPCION DE CONTRA
+            return oUsuario;
+        }
+
+        public Usuario Save(Usuario usuario)
+        {
+            IRepositoryUsuario repository = new RepositoryUsuario();
+            return repository.Save(usuario);
+        }
+
     }
 }

@@ -80,7 +80,7 @@
                     <li>@Html.ActionLink("Inicio", "Index", "Home", null, new { @class = "nav-link scrollto" })</li>
                     @if (Session["User"] != null)
                     {
-                        <li><a class="nav-link scrollto " href="#portfolio">Miembros</a></li>
+                        <li>@Html.ActionLink("Miembros", "Index", "Usuario", null, new { @class = "nav-link scrollto" })</li>
                         <li><a class="nav-link scrollto " href="#portfolio">Eventos</a></li>
                         <li class="dropdown">
                             <a href="#">Reportes <i class="bi bi-chevron-down"></i></a>

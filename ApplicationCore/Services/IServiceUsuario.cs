@@ -10,5 +10,7 @@ namespace ApplicationCore.Services
     public interface IServiceUsuario
     {
         IEnumerable<Usuario> GetUsuarios();
+        Usuario GetUsuarioByID(int id);
+        Usuario Save(Usuario usuario);
     }
 }

@@ -10,5 +10,7 @@ namespace Infraestructura.Repository
     public interface IRepositoryUsuario
     {
         IEnumerable<Usuario> GetUsuarios();
+        Usuario GetUsuarioByID(int id);
+        Usuario Save(Usuario usuario);
     }
 }

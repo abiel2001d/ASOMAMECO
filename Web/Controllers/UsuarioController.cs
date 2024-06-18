@@ -1,5 +1,6 @@
 ﻿using ApplicationCore.Services;
 using Infraestructura.Model;
+using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -72,6 +73,52 @@ namespace Web.Controllers
                 return View();
             }
         }
+
+        [HttpPost]
+        public ActionResult ImportarMiembros(HttpPostedFileBase file)
+        {
+
+            IServiceUsuario _ServiceUsuario = new ServiceUsuario();
+
+
+            // Verificar si el archivo es válido
+            if (file != null && file.ContentLength > 0)
+            {
+
+                // Leer el archivo
+                using (var package = new ExcelPackage(file.InputStream))
+                {
+                    var worksheet = package.Workbook.Worksheets.First();
+                    int rowCount = worksheet.Dimension.Rows;
+
+                    // Iterar sobre las filas del archivo Excel
+                    for (int row = 2; row <= rowCount; row++)
+                    {
+                        // Crear un nuevo miembro y llenar sus propiedades con los datos del archivo
+                        Usuario miembro = new Usuario
+                        {
+                            Id_Usuario = int.Parse(worksheet.Cells[row, 1].Value.ToString()),
+                            Nombre = worksheet.Cells[row, 2].Value.ToString(),
+                            Cedula = worksheet.Cells[row, 3].Value.ToString(),
+                            Estado_usuario = worksheet.Cells[row, 4].Value.ToString(),
+                            Estado_2 = worksheet.Cells[row, 5].Value.ToString(),
+                            Correo = worksheet.Cells[row, 6].Value.ToString(),
+                            Telefono = worksheet.Cells[row, 7].Value.ToString()
+                        };
+
+                        // Añadir el miembro a la BD
+                        _ServiceUsuario.Save(miembro);
+                    }
+                }
+
+                // Redirigir a la vista deseada
+                return RedirectToAction("Index");
+            }
+
+            // Si el archivo no es válido, redirigir a la vista de error
+            return RedirectToAction("Error");
+        }
+
 
         // GET: Usuario/Edit/5
         public ActionResult Edit(int id)
