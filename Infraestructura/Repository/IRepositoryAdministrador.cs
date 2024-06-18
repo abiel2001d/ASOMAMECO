@@ -9,6 +9,6 @@ namespace Infraestructura.Repository
 {
     public interface IRepositoryAdministrador
     {
-            Administrador GetAdministrador(string usuario);
+            Administrador GetAdministrador(string usuario, string contrasena);
     }
 }

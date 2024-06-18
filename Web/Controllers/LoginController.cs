@@ -15,10 +15,24 @@ namespace Web.Controllers
         // GET: Login
         public ActionResult Index()
         {
+            if (Request.Cookies["UserLogin"] != null)
+            {
+                ViewBag.Usuario = Request.Cookies["UserLogin"]["Usuario"];
+                ViewBag.Contraseña = Request.Cookies["UserLogin"]["Contraseña"];
+                ViewBag.RememberMe = true;
+            }
+            else
+            {
+                ViewBag.Usuario = string.Empty;
+                ViewBag.Contraseña = string.Empty;
+                ViewBag.RememberMe = false;
+            }
+
             return View();
         }
 
-        public ActionResult Login(Administrador administrador)
+
+        public ActionResult Login(Administrador administrador, bool RememberMe = false)
         {
             if (administrador == null || string.IsNullOrWhiteSpace(administrador.Usuario) || string.IsNullOrWhiteSpace(administrador.Contraseña))
             {
@@ -37,26 +51,39 @@ namespace Web.Controllers
 
                 if (ModelState.IsValid)
                 {
-                    var oAdministrador = _serviceAdministrador.GetAdministrador(administrador.Usuario);
+                    var oAdministrador = _serviceAdministrador.GetAdministrador(administrador.Usuario, administrador.Contraseña);
                     if (oAdministrador != null)
                     {
-                        if (oAdministrador.Contraseña == administrador.Contraseña)
+                        Session["User"] = oAdministrador;
+                        Log.Info($"Inicio sesion: {administrador.Usuario}");
+
+                        if (RememberMe)
                         {
-                            Session["User"] = oAdministrador;
-                            Log.Info($"Inicio sesion: {administrador.Usuario}");
-                            TempData["mensaje"] = Util.SweetAlertHelper.Mensaje("Iniciar Sesión", "Bienvenido a ASOMAMECO", Util.SweetAlertMessageType.success);
-                            return RedirectToAction("Index", "Home");
+                            HttpCookie cookie = new HttpCookie("UserLogin");
+                            cookie.Values["Usuario"] = administrador.Usuario;
+                            cookie.Values["Contraseña"] = administrador.Contraseña;
+                            cookie.Values["RememberMe"] = "true";
+                            cookie.Expires = DateTime.Now.AddDays(2);
+                            Response.Cookies.Add(cookie);
                         }
                         else
                         {
-                            Log.Warn($"Intento de inicio: {administrador.Usuario}");
-                            TempData["mensaje"] = Util.SweetAlertHelper.Mensaje("Iniciar Sesión", "Contraseña no válida", Util.SweetAlertMessageType.error);
+                            // Remove the cookie if RememberMe is not checked
+                            if (Request.Cookies["UserLogin"] != null)
+                            {
+                                HttpCookie cookie = new HttpCookie("UserLogin");
+                                cookie.Expires = DateTime.Now.AddDays(-1);
+                                Response.Cookies.Add(cookie);
+                            }
                         }
+
+                        TempData["mensaje"] = Util.SweetAlertHelper.Mensaje("Iniciar Sesión", "Bienvenido a ASOMAMECO", Util.SweetAlertMessageType.success);
+                        return RedirectToAction("Index", "Home");
                     }
                     else
                     {
                         Log.Warn($"Intento de inicio: {administrador.Usuario}");
-                        TempData["mensaje"] = Util.SweetAlertHelper.Mensaje("Iniciar Sesión", "Usuario no válido", Util.SweetAlertMessageType.error);
+                        TempData["mensaje"] = Util.SweetAlertHelper.Mensaje("Iniciar Sesión", "Usuario o contraseña incorrecta.", Util.SweetAlertMessageType.error);
                     }
                 }
             }
@@ -69,6 +96,9 @@ namespace Web.Controllers
 
             return View("Index");
         }
+
+
+
         public ActionResult Logout()
         {
             try

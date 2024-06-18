@@ -233,7 +233,7 @@ body.stop-scrolling {
   background-color: #ffffff;
   width: 478px;
   padding: 17px;
-  border-radius: 5px;
+  border-radius: 50px;
   text-align: center;
   position: fixed;
   left: 50%;
@@ -295,6 +295,7 @@ body.stop-scrolling {
   margin: 20px auto;
   position: relative;
   box-sizing: content-box;
+  margin-bottom:40px;
 }
 .sweet-alert .sa-icon.sa-error {
   border-color: #d43f3a;

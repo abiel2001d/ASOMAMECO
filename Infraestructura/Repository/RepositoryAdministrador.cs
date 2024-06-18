@@ -11,7 +11,7 @@ namespace Infraestructura.Repository
 {
     public class RepositoryAdministrador : IRepositoryAdministrador
     {
-        public Administrador GetAdministrador(string usuario)
+        public Administrador GetAdministrador(string usuario, string contrasena)
         {
             Administrador oAdministrador = null;
             try
@@ -20,7 +20,7 @@ namespace Infraestructura.Repository
                 {
                     ctx.Configuration.LazyLoadingEnabled = false;
 
-                    oAdministrador = ctx.Administrador.Where(x => x.Usuario == usuario).FirstOrDefault();
+                    oAdministrador = ctx.Administrador.Where(x => x.Usuario == usuario && x.Contraseña == contrasena).FirstOrDefault();
 
                 }
                 return oAdministrador;

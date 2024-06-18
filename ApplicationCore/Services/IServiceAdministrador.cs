@@ -9,6 +9,6 @@ namespace ApplicationCore.Services
 {
     public interface IServiceAdministrador
     {
-        Administrador GetAdministrador(string usuario);
+        Administrador GetAdministrador(string usuario, string contrasena);
     }
 }
