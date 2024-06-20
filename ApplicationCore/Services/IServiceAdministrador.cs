@@ -9,6 +9,11 @@ namespace ApplicationCore.Services
 {
     public interface IServiceAdministrador
     {
+        Administrador GetAdministrador(string usuario, string contrasena);
         Administrador GetAdministrador(string usuario);
+        Task EnviarCodigo(Administrador administrador);
+
+        bool RestablecerContrasena(Administrador administrador, int codigoIngresado, string nuevaContrasena);
+
     }
 }

@@ -125,6 +125,7 @@
     <Compile Include="Services\ServiceAdministrador.cs" />
     <Compile Include="Services\ServiceEvento.cs" />
     <Compile Include="Services\ServiceUsuario.cs" />
+    <Compile Include="Utils\Cryptography.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Infraestructura\Infraestructura.csproj">
@@ -133,7 +134,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Utils\" />
+    <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

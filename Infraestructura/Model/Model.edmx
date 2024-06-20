@@ -12,6 +12,9 @@
           <Property Name="ID_Administrador" Type="int" Nullable="false" />
           <Property Name="Usuario" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="Contraseña" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Correo" Type="varchar" MaxLength="100" />
+          <Property Name="CodigoVerificacion" Type="int" />
+          <Property Name="ID_Rol" Type="int" />
         </EntityType>
         <EntityType Name="Asistencia">
           <Key>
@@ -42,6 +45,13 @@
           <Property Name="ID_Usuario" Type="int" />
           <Property Name="ID_Evento" Type="int" />
           <Property Name="Confirmado" Type="varchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Rol">
+          <Key>
+            <PropertyRef Name="ID_Rol" />
+          </Key>
+          <Property Name="ID_Rol" Type="int" Nullable="false" />
+          <Property Name="Descripcion" Type="varchar" MaxLength="100" Nullable="false" />
         </EntityType>
         <EntityType Name="Usuario">
           <Key>
@@ -103,11 +113,24 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Administrador_Rol">
+          <End Role="Rol" Type="Self.Rol" Multiplicity="0..1" />
+          <End Role="Administrador" Type="Self.Administrador" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Rol">
+              <PropertyRef Name="ID_Rol" />
+            </Principal>
+            <Dependent Role="Administrador">
+              <PropertyRef Name="ID_Rol" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="Proyecto_Calidad_SoftwareModelStoreContainer">
           <EntitySet Name="Administrador" EntityType="Self.Administrador" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Asistencia" EntityType="Self.Asistencia" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Evento" EntityType="Self.Evento" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Invitacion" EntityType="Self.Invitacion" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Rol" EntityType="Self.Rol" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Usuario" EntityType="Self.Usuario" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK__Asistenci__ID_Ev__2A4B4B5E" Association="Self.FK__Asistenci__ID_Ev__2A4B4B5E">
             <End Role="Evento" EntitySet="Evento" />
@@ -125,6 +148,10 @@
             <End Role="Usuario" EntitySet="Usuario" />
             <End Role="Invitacion" EntitySet="Invitacion" />
           </AssociationSet>
+          <AssociationSet Name="FK_Administrador_Rol" Association="Self.FK_Administrador_Rol">
+            <End Role="Rol" EntitySet="Rol" />
+            <End Role="Administrador" EntitySet="Administrador" />
+          </AssociationSet>
         </EntityContainer>
       </Schema>
     </edmx:StorageModels>
@@ -138,6 +165,10 @@
           <Property Name="ID_Administrador" Type="Int32" Nullable="false" />
           <Property Name="Usuario" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Contraseña" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Correo" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CodigoVerificacion" Type="Int32" />
+          <Property Name="ID_Rol" Type="Int32" />
+          <NavigationProperty Name="Rol" Relationship="Self.FK_Administrador_Rol" FromRole="Administrador" ToRole="Rol" />
         </EntityType>
         <EntityType Name="Asistencia">
           <Key>
@@ -175,6 +206,14 @@
           <NavigationProperty Name="Evento" Relationship="Self.FK__Invitacio__ID_Ev__2E1BDC42" FromRole="Invitacion" ToRole="Evento" />
           <NavigationProperty Name="Usuario" Relationship="Self.FK__Invitacio__ID_Us__2D27B809" FromRole="Invitacion" ToRole="Usuario" />
         </EntityType>
+        <EntityType Name="Rol">
+          <Key>
+            <PropertyRef Name="ID_Rol" />
+          </Key>
+          <Property Name="ID_Rol" Type="Int32" Nullable="false" />
+          <Property Name="Descripcion" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Administrador" Relationship="Self.FK_Administrador_Rol" FromRole="Rol" ToRole="Administrador" />
+        </EntityType>
         <EntityType Name="Usuario">
           <Key>
             <PropertyRef Name="Id_Usuario" />
@@ -189,6 +228,18 @@
           <NavigationProperty Name="Asistencia" Relationship="Self.FK__Asistenci__ID_Us__29572725" FromRole="Usuario" ToRole="Asistencia" />
           <NavigationProperty Name="Invitacion" Relationship="Self.FK__Invitacio__ID_Us__2D27B809" FromRole="Usuario" ToRole="Invitacion" />
         </EntityType>
+        <Association Name="FK_Administrador_Rol">
+          <End Role="Rol" Type="Self.Rol" Multiplicity="0..1" />
+          <End Role="Administrador" Type="Self.Administrador" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Rol">
+              <PropertyRef Name="ID_Rol" />
+            </Principal>
+            <Dependent Role="Administrador">
+              <PropertyRef Name="ID_Rol" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK__Asistenci__ID_Ev__2A4B4B5E">
           <End Role="Evento" Type="Self.Evento" Multiplicity="0..1" />
           <End Role="Asistencia" Type="Self.Asistencia" Multiplicity="*" />
@@ -242,7 +293,12 @@
           <EntitySet Name="Asistencia" EntityType="Self.Asistencia" />
           <EntitySet Name="Evento" EntityType="Self.Evento" />
           <EntitySet Name="Invitacion" EntityType="Self.Invitacion" />
+          <EntitySet Name="Rol" EntityType="Self.Rol" />
           <EntitySet Name="Usuario" EntityType="Self.Usuario" />
+          <AssociationSet Name="FK_Administrador_Rol" Association="Self.FK_Administrador_Rol">
+            <End Role="Rol" EntitySet="Rol" />
+            <End Role="Administrador" EntitySet="Administrador" />
+          </AssociationSet>
           <AssociationSet Name="FK__Asistenci__ID_Ev__2A4B4B5E" Association="Self.FK__Asistenci__ID_Ev__2A4B4B5E">
             <End Role="Evento" EntitySet="Evento" />
             <End Role="Asistencia" EntitySet="Asistencia" />
@@ -272,6 +328,9 @@
                 <ScalarProperty Name="ID_Administrador" ColumnName="ID_Administrador" />
                 <ScalarProperty Name="Usuario" ColumnName="Usuario" />
                 <ScalarProperty Name="Contraseña" ColumnName="Contraseña" />
+                <ScalarProperty Name="Correo" ColumnName="Correo" />
+                <ScalarProperty Name="CodigoVerificacion" ColumnName="CodigoVerificacion" />
+                <ScalarProperty Name="ID_Rol" ColumnName="ID_Rol" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -305,6 +364,14 @@
                 <ScalarProperty Name="ID_Usuario" ColumnName="ID_Usuario" />
                 <ScalarProperty Name="ID_Evento" ColumnName="ID_Evento" />
                 <ScalarProperty Name="Confirmado" ColumnName="Confirmado" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Rol">
+            <EntityTypeMapping TypeName="Proyecto_Calidad_SoftwareModel.Rol">
+              <MappingFragment StoreEntitySet="Rol">
+                <ScalarProperty Name="ID_Rol" ColumnName="ID_Rol" />
+                <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

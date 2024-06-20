@@ -9,6 +9,11 @@ namespace Infraestructura.Repository
 {
     public interface IRepositoryAdministrador
     {
+            Administrador GetAdministrador(string usuario, string contrasena);
+            Task EnviarCodigo(Administrador administrador);
+
             Administrador GetAdministrador(string usuario);
+
+        bool RestablecerContrasena(Administrador administrador, int codigoIngresado, string nuevaContrasena);
     }
 }
