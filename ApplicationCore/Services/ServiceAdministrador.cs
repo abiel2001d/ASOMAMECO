@@ -18,5 +18,23 @@ namespace ApplicationCore.Services
 
             return repository.GetAdministrador(usuario, cryptPassword);
         }
+        public Administrador GetAdministrador(string usuario)
+        {
+            IRepositoryAdministrador repository = new RepositoryAdministrador();
+
+            return repository.GetAdministrador(usuario);
+        }
+        public Task EnviarCodigo(Administrador administrador)
+        {
+            IRepositoryAdministrador repository = new RepositoryAdministrador();
+            return repository.EnviarCodigo(administrador);
+        }
+
+        public bool RestablecerContrasena(Administrador administrador, int codigoIngresado, string nuevaContrasena)
+        {
+            IRepositoryAdministrador repository = new RepositoryAdministrador();
+            string cryptPassword = Cryptography.EncrypthAES(nuevaContrasena);
+            return repository.RestablecerContrasena(administrador, codigoIngresado, cryptPassword);
+        }
     }
 }

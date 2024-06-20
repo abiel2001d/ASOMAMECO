@@ -17,5 +17,10 @@ namespace Infraestructura.Model
         public int ID_Administrador { get; set; }
         public string Usuario { get; set; }
         public string Contraseña { get; set; }
+        public string Correo { get; set; }
+        public Nullable<int> CodigoVerificacion { get; set; }
+        public Nullable<int> ID_Rol { get; set; }
+    
+        public virtual Rol Rol { get; set; }
     }
 }

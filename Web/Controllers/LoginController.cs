@@ -12,7 +12,6 @@ namespace Web.Controllers
 {
     public class LoginController : Controller
     {
-        // GET: Login
         public ActionResult Index()
         {
             if (Request.Cookies["UserLogin"] != null)
@@ -30,7 +29,6 @@ namespace Web.Controllers
 
             return View();
         }
-
 
         public ActionResult Login(Administrador administrador, bool RememberMe = false)
         {
@@ -97,20 +95,19 @@ namespace Web.Controllers
             return View("Index");
         }
 
-
-
         public ActionResult Logout()
         {
             try
             {
                 //Eliminar variable de sesion
-                Log.Info($"Inicio cerrada: {((Administrador)Session["User"]).Usuario}");
+                if (((Administrador)Session["User"]) != null)
+                    Log.Info($"Inicio cerrada: {((Administrador)Session["User"]).Usuario}");
                 Session["User"] = null;
                 Session.Remove("User");
 
                 TempData["mensaje"] = Util.SweetAlertHelper.Mensaje("Sesión Cerrada",
                     "Gracias por visitar ASOMAMECO", Util.SweetAlertMessageType.success
-                    );
+                );
                 return RedirectToAction("Index", "Home");
             }
             catch (Exception ex)
@@ -123,7 +120,64 @@ namespace Web.Controllers
             }
         }
 
+        [HttpPost]
+        public JsonResult EnviarCodigo(string user)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(user))
+                {
+                    return Json(new { success = false, message =  "Ingrese el usuario" });
+                }
+                IServiceAdministrador _serviceAdministrador = new ServiceAdministrador();
+                var oAdministrador = _serviceAdministrador.GetAdministrador(user);
+                if (oAdministrador == null)
+                {
+                    return Json(new { success = false, message = "Usuario no existe" });
+                }
+
+                _serviceAdministrador.EnviarCodigo(oAdministrador);
+                return Json(new { success = true, message = "El código de verificación se ha enviado al correo " + oAdministrador.Correo + " asociado a su usuario." });
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, MethodBase.GetCurrentMethod());
+                return Json(new { success = false, message = "Error al procesar los datos: " + ex.Message });
+            }
+        }
+
+        [HttpPost]
+        public JsonResult RestablecerContrasena(string user, string code, string newPassword)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(code) || string.IsNullOrWhiteSpace(newPassword))
+                {
+                    return Json(new { success = false, message = "Ingrese el código de verificación y nueva contraseña" });
+                }
+                IServiceAdministrador _serviceAdministrador = new ServiceAdministrador();
+                var oAdministrador = _serviceAdministrador.GetAdministrador(user);
+                if (oAdministrador == null)
+                {
+                    return Json(new { success = false, message = "Usuario no existe" });
+                }
+
+                bool result = _serviceAdministrador.RestablecerContrasena(oAdministrador, Int32.Parse(code), newPassword);
+
+                if (result)
+                {
+                    return Json(new { success = true, message = "Contraseña restablecida exitosamente!" });
+                }
+                else
+                {
+                    return Json(new { success = false, message = "El código de verificación no es correcto." });
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, MethodBase.GetCurrentMethod());
+                return Json(new { success = false, message = "Error al procesar los datos: " + ex.Message });
+            }
+        }
     }
 }
-
-

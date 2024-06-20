@@ -29,6 +29,7 @@ namespace Infraestructura.Model
         public virtual DbSet<Asistencia> Asistencia { get; set; }
         public virtual DbSet<Evento> Evento { get; set; }
         public virtual DbSet<Invitacion> Invitacion { get; set; }
+        public virtual DbSet<Rol> Rol { get; set; }
         public virtual DbSet<Usuario> Usuario { get; set; }
     }
 }
