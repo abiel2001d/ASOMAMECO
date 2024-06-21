@@ -75,7 +75,7 @@ namespace Web.Controllers
                             }
                         }
 
-                        TempData["mensaje"] = Util.SweetAlertHelper.Mensaje("Iniciar Sesión", "Bienvenido a ASOMAMECO", Util.SweetAlertMessageType.success);
+                        //TempData["mensaje"] = Util.SweetAlertHelper.Mensaje("Iniciar Sesión", "Bienvenido a ASOMAMECO", Util.SweetAlertMessageType.success);
                         return RedirectToAction("Index", "Home");
                     }
                     else
@@ -105,10 +105,10 @@ namespace Web.Controllers
                 Session["User"] = null;
                 Session.Remove("User");
 
-                TempData["mensaje"] = Util.SweetAlertHelper.Mensaje("Sesión Cerrada",
-                    "Gracias por visitar ASOMAMECO", Util.SweetAlertMessageType.success
-                );
-                return RedirectToAction("Index", "Home");
+                //TempData["mensaje"] = Util.SweetAlertHelper.Mensaje("Sesión Cerrada",
+                //    "Gracias por visitar ASOMAMECO", Util.SweetAlertMessageType.success
+                //);
+                return RedirectToAction("Index", "Login");
             }
             catch (Exception ex)
             {

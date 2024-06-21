@@ -10,47 +10,21 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="~/Utils/css/own-style.css" rel="stylesheet" />
     @Styles.Render("~/Content/css")
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <style>
-        .navbar {
-            padding: 0.5rem 1rem;
-           
+        .nav-link:hover, .nav-link:focus {
+            background-color: #37577D !important;
+            color: #fff !important;
         }
 
-        .navbar-brand {
-            display: flex;
-            align-items: center;
-            margin-right: 10px;
-        }
-
-            .navbar-brand img {
-                margin-left: 10px;
+            .nav-link:hover i, .nav-link:focus i {
+                color: #fff !important;
             }
 
         .nav-link {
-            padding: 0.25rem 0;
-            font-weight: 100;
-        }
-
-        .user-info {
             display: flex;
             align-items: center;
-            color: white;
-            margin-left: auto;
-        }
-
-            .user-info i {
-                margin-left: 10px;
-            }
-
-        .divider {
-            width: 1px;
-            height: 25px;
-            background-color: white;
-            margin: 0 20px;
-        }
-
-        .nav-item:last-child {
-            margin-left: 15px;
         }
     </style>
 </head>
@@ -64,182 +38,98 @@
         }
     }
 
-
-    <!-- ======= Header ======= -->
-    <header id="header" class="d-flex align-items-center">
-        <div class="container d-flex justify-content-between">
-            <div class="navbar-brand">
-                <h1 class="text-light">@Html.ActionLink("ASOMAMECO", "Index", "Home", null, new { @class = "nav-link scrollto", @style=""})</h1>
-                <img src="~/Utils/Img/logo.png" width="85px" height="50px" style="padding-bottom:13px">
-            </div>
-
-            <nav id="navbar" class="navbar">
-                <ul>
-                    <li>@Html.ActionLink("Inicio", "Index", "Home", null, new { @class = "nav-link scrollto" })</li>
-                    @if (Session["User"] != null)
-                    {
-                        <li>@Html.ActionLink("Miembros", "Index", "Usuario", null, new { @class = "nav-link scrollto" })</li>
-                        <li><a class="nav-link scrollto " href="#portfolio">Eventos</a></li>
-                        <li class="dropdown">
-                            <a href="#">Reportes <i class="bi bi-chevron-down"></i></a>
-                            <ul>
-                                <l
-                            <li><a href="#">Drop Down 2</a></li>
-                            <li><a href="#">Drop Down 3</a></li>
-                            <li><a href="#">Drop Down 4</a></li>
-                            </ul>
-                        </li>
-                    }
-
-                    <div class="divider"></div>
-                    @if (Session["User"] != null)
-                    {
-                        <li class="nav-item">
-                            <div class="user-info">
-                                <span>@nombre</span>
-                                <i class="fas fa-user-circle"></i>
-
-                                @Html.ActionLink("Cerrar Sesión", "Logout", "Login", null, new { @class = "nav-link text-white", @style = "padding:10px" })
-                            </div>
-                        </li>
-                    }
-                    else
-                    {
-                        <li class="nav-item">
-                            @Html.ActionLink("Iniciar Sesión", "Index", "Login", null, new { @class = "nav-link text-white", @style = "padding:0px" })
-                        </li>
-                    }
-                </ul>
-                <i class="bi bi-list mobile-nav-toggle"></i>
-            </nav><!-- .navbar -->
+    @if (Session["User"] == null)
+    {
+        <div style="height:100vh">
+            @RenderBody()
         </div>
-    </header><!-- End Header -->
+    }
+    else
+    {
+        <div class="wrapper">
+            <!-- Sidebar  -->
+            <div class="d-flex flex-column flex-shrink-0 p-3 bg-light" style="width: 250px;">
+                <div class="d-flex align-items-center link-dark text-decoration-none">
 
-    <div>
-        @RenderBody()
-
-        <!-- ======= Footer ======= -->
-
-    </div>
-
-
-    <!-- Footer -->
-    <footer class="text-center text-lg-start bg-body-tertiary text-muted">
-        <!-- Section: Social media -->
-        <section class="d-flex justify-content-center justify-content-lg-between p-4 border-bottom">
-            <!-- Left -->
-            <div class="me-5 d-none d-lg-block">
-               
-            </div>
-            <!-- Left -->
-            <!-- Right -->
-            <div>
-                <a href="" class="me-4 text-reset">
-                    <i class="fab fa-facebook-f"></i>
-                </a>
-                <a href="" class="me-4 text-reset">
-                    <i class="fab fa-twitter"></i>
-                </a>
-                <a href="" class="me-4 text-reset">
-                    <i class="fab fa-google"></i>
-                </a>
-                <a href="" class="me-4 text-reset">
-                    <i class="fab fa-instagram"></i>
-                </a>
-                <a href="" class="me-4 text-reset">
-                    <i class="fab fa-linkedin"></i>
-                </a>
-                <a href="" class="me-4 text-reset">
-                    <i class="fab fa-github"></i>
-                </a>
-            </div>
-            <!-- Right -->
-        </section>
-        <!-- Section: Social media -->
-        <!-- Section: Links  -->
-        <section class="">
-            <div class="container text-center text-md-start mt-5">
-                <!-- Grid row -->
-                <div class="row mt-3">
-                    <!-- Grid column -->
-                    <div class="col-md-3 col-lg-4 col-xl-3 mx-auto mb-4">
-                        <!-- Content -->
-                        <h6 class="text-uppercase fw-bold mb-4">
-                            <i class="fas fa-gem me-3"></i>ASOMAMECO
-                        </h6>
-                        <p> Ofrecemos recursos, apoyo y una comunidad
-                            sólida para ayudarte a alcanzar tus metas. Únete a nosotros
-                            y descubre las ventajas de ser parte de ASOMAMECO.
-                        </p>
-                    </div>
-                    <!-- Grid column -->
-                    <!-- Grid column -->
-                    <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mb-4">
-                        <!-- Links -->
-                        <h6 class="text-uppercase fw-bold mb-4">
-                            Enalces Útiles
-                        </h6>
-                        <p>
-                            <a href="#!" class="text-reset">Angular</a>
-                        </p>
-                        <p>
-                            <a href="#!" class="text-reset">React</a>
-                        </p>
-                        <p>
-                            <a href="#!" class="text-reset">Vue</a>
-                        </p>
-                        <p>
-                            <a href="#!" class="text-reset">Laravel</a>
-                        </p>
-                    </div>
-                    <!-- Grid column -->
-                    <!-- Grid column -->
-                    <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mb-4">
-                        <!-- Links -->
-                        <h6 class="text-uppercase fw-bold mb-4">
-                            Páginas Adicionales
-                        </h6>
-                        <p>
-                            <a href="#!" class="text-reset">Pricing</a>
-                        </p>
-                        <p>
-                            <a href="#!" class="text-reset">Settings</a>
-                        </p>
-                        <p>
-                            <a href="#!" class="text-reset">Orders</a>
-                        </p>
-                        <p>
-                            <a href="#!" class="text-reset">Help</a>
-                        </p>
-                    </div>
-                    <!-- Grid column -->
-                    <!-- Grid column -->
-                    <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
-                        <!-- Links -->
-                        <h6 class="text-uppercase fw-bold mb-4">Contacto</h6>
-                        <p><i class="fas fa-home me-3"></i> New York, NY 10012, US</p>
-                        <p>
-                            <i class="fas fa-envelope me-3"></i>
-                            info@example.com
-                        </p>
-                        <p><i class="fas fa-phone me-3"></i> + 01 234 567 88</p>
-                        <p><i class="fas fa-print me-3"></i> + 01 234 567 89</p>
-                    </div>
-                    <!-- Grid column -->
+                    <img src="~/Utils/Img/logo.jpg" width="215" height="80" style="border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); " />
                 </div>
-                <!-- Grid row -->
+                <hr>
+                <ul class="nav nav-pills flex-column mb-auto">
+                    <li class="nav-item">
+                        <a href="@Url.Action("Index", "Home")" class="nav-link link-dark">
+                            <i class="fa-solid fa-chart-pie"  style="margin-right: 18px"></i>
+                            Dashboard
+                        </a>
+                    </li>
+                  
+                    <li class="nav-item w-100">
+                        <a href="@Url.Action("Index", "Usuario")" class="nav-link link-dark">
+                            <i class="fa-solid fa-user-group" style="margin-right: 15px"></i>
+                            Miembros
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="@Url.Action("Index", "Evento")" class="nav-link link-dark">
+                            <i class="fa-solid fa-calendar-days" style="margin-right:20px"></i>
+                      
+                            Eventos
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#submenu1" data-toggle="collapse" aria-expanded="false" class="nav-link link-dark dropdown-toggle">
+                            <i class="fa-solid fa-chart-bar" style="margin-right:18px"></i>
+
+                            Reportes
+                        </a>
+                        <ul class="collapse list-unstyled" id="submenu1">
+                            <li>
+                                <a href="@Url.Action("SubItem1", "Reporte")" class="nav-link link-dark">Sub-item 1</a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("SubItem2", "Reporte")" class="nav-link link-dark">Sub-item 2</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                <hr>
             </div>
-        </section>
-        <!-- Section: Links  -->
-        <!-- Copyright -->
-        <div class="text-center p-4" style="background-color: rgba(0, 0, 0, 0.05);">
-            © 2024 Copyright:
-            <a class="text-reset fw-bold" href="#">ASOMAMECO</a>
+            <!-- Page Content  -->
+
+            <div id="content">
+                <nav class="navbar navbar-expand-lg  bg-light" style="border-radius:30px;">
+                    <div class="container-fluid">
+                       
+                            @if (Session["User"] != null)
+                            {
+                                <div class="user-info">
+                                    <span style=" ">@nombre</span>
+                                    <div class="divider"></div>
+                                    @Html.ActionLink("Cerrar Sesión", "Logout", "Login", null, new { @id = "logout" })
+                                </div>
+                            }
+                     
+                    </div>
+                </nav>
+
+                <div style="height:100vh">
+                    @RenderBody()
+                </div>
+
+                <footer class="text-center text-lg-start bg-body-tertiary text-muted">
+                    <div class="text-center p-2" style="background-color: rgba(0, 0, 0, 0.05);">
+                        © 2024 Copyright:
+                        <a class="text-reset fw-bold" href="#">ASOMAMECO</a>
+                    </div>
+                </footer>
+            </div>
         </div>
-        <!-- Copyright -->
-    </footer>
+    }
+
     <!-- Footer -->
     <!-- Use Bootstrap 5 JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/sweetalert")
     @RenderSection("scripts", required: false)

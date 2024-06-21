@@ -256,8 +256,8 @@
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\sweetalert.min.js" />
     <Content Include="Utils\css\own-style.css" />
-    <Content Include="Utils\Img\hero-bg.jpg" />
-    <Content Include="Utils\Img\logo.png" />
+    <Content Include="Utils\Img\login.png" />
+    <Content Include="Utils\Img\logo.jpg" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

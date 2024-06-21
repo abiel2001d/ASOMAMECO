@@ -1734,3 +1734,85 @@ section {
   text-align: center;
   font-size: 13px;
 }
+
+
+
+/*
+    DEMO STYLE
+*/
+
+
+
+
+p {
+   
+    font-size: 1.1em;
+    font-weight: 300;
+    line-height: 1.7em;
+    color: #999;
+}
+
+a,
+a:hover,
+a:focus {
+    color: inherit;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
+
+.line {
+    width: 100%;
+    height: 4px;
+    border-bottom: 1px dashed #ddd;
+    margin: 40px 0;
+}
+
+/* ---------------------------------------------------
+    SIDEBAR STYLE
+----------------------------------------------------- */
+
+.wrapper {
+    display: flex;
+    width: 100%;
+    align-items: stretch;
+}
+
+
+/* ---------------------------------------------------
+    CONTENT STYLE
+----------------------------------------------------- */
+
+#content {
+    width: 100%;
+    padding: 20px;
+    min-height: 100vh;
+    transition: all 0.3s;
+}
+.user-info {
+    display: flex;
+    align-items: center;
+    color: gray;
+    margin-left: auto;
+}
+
+    .user-info i {
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+
+.divider {
+    width: 1px;
+    height: 25px;
+    background-color: lightgray;
+    margin: 0 20px;
+}
+
+#logout {
+    padding: 8px 12px;
+    background-color: #37577D;
+    border-radius: 30px;
+    color: white; /* Ensure text color is visible against the background */
+    text-decoration: none; /* Remove underline */
+    display: inline-block; /* Make it behave like a button */
+}

@@ -3,84 +3,47 @@
 @{
     ViewBag.Title = "Login";
 }
+<style>
+    .background-radial-gradient {
+        background-image: radial-gradient(circle at left, #07305d 30%, #305e90 100%);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    }
 
+    .bg-glass {
+        background-color: hsla(0, 0%, 100%, 0.9) !important;
+        backdrop-filter: saturate(200%) blur(25px);
+    }
+
+    .remember-me-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+        .remember-me-container .form-check-label {
+            padding-top: 5px;
+            margin-left: 15px;
+        }
+</style>
 <!-- Section: Design Block -->
-<section class="background-radial-gradient overflow-hidden m-5" style="border-radius:50px">
-    <style>
-        .background-radial-gradient {
-            background-color: hsl(218, 41%, 15%);
-            background-image: radial-gradient(650px circle at 0% 0%, hsl(218, 41%, 35%) 15%, hsl(218, 41%, 30%) 35%, hsl(218, 41%, 20%) 75%, hsl(218, 41%, 19%) 80%, transparent 100%), radial-gradient(1250px circle at 100% 100%, hsl(218, 41%, 45%) 15%, hsl(218, 41%, 30%) 35%, hsl(218, 41%, 20%) 75%, hsl(218, 41%, 19%) 80%, transparent 100%);
-        }
-
-        #radius-shape-1 {
-            height: 220px;
-            width: 220px;
-            top: -60px;
-            left: -130px;
-            background: radial-gradient(#44006b, #ad1fff);
-            overflow: hidden;
-        }
-
-        #radius-shape-2 {
-            border-radius: 38% 62% 63% 37% / 70% 33% 67% 30%;
-            bottom: -60px;
-            right: -110px;
-            width: 300px;
-            height: 300px;
-            background: radial-gradient(#44006b, #ad1fff);
-            overflow: hidden;
-        }
-
-        .bg-glass {
-            background-color: hsla(0, 0%, 100%, 0.9) !important;
-            backdrop-filter: saturate(200%) blur(25px);
-        }
-
-        .remember-me-container {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-            .remember-me-container .form-check-label {
-                padding-top: 5px;
-                margin-left: 15px;
-            }
-    </style>
-
-    <div class="container px-3 py-3 text-center text-lg-start my-3">
-        <div class="row gx-lg-5 align-items-center mb-5">
-            <div class="col-lg-6 mb-5 mb-lg-0" style="z-index: 10">
-                <h1 class="my-5 display-5 fw-bold ls-tight" style="color: hsl(218, 81%, 95%)">
-                    Tu mejor opción <br />
-                    <span style="color: hsl(218, 81%, 75%)">Únete y disfruta</span>
-                </h1>
-                <p class="mb-4 opacity-70" style="color: hsl(218, 81%, 85%)">
-                    Bienvenido a ASOMAMECO, la asociación que trabaja por el desarrollo y
-                    crecimiento tuyo. Ofrecemos recursos, apoyo y una comunidad
-                    sólida para ayudarte a alcanzar tus metas. Únete a nosotros
-                    y descubre las ventajas de ser parte de ASOMAMECO.
-                </p>
+<section style="display: flex; justify-content: center; align-items: center; height: 100vh;">
+    <div class=" text-center text-lg-start my-0">
+        <div class="row gx-lg-5 align-items-center background-radial-gradient overflow-hidden" style="border-radius:50px">
+            <div class="col-lg-6 mb-lg-0" style="z-index: 10">
+                <img src="~/Utils/Img/login.png" class="img-fluid" />
             </div>
-
-            <div class="col-lg-6 mb-5 mb-lg-0 position-relative">
-                <div id="radius-shape-1" class="position-absolute rounded-circle shadow-5-strong"></div>
-                <div id="radius-shape-2" class="position-absolute shadow-5-strong"></div>
-
-                <div class="card bg-glass" style="border-radius:50px">
+            <div class="col-lg-6 mb-lg-0">
+                <div class="card bg-glass" style="border-radius:50px; margin: 15px 0px">
                     <div class="card-body px-4 py-5 px-md-5">
                         <div id="login-form">
                             @using (Html.BeginForm("Login", "Login"))
                             {
                                 @Html.AntiForgeryToken()
-
                                 <p class="h3 fw-bold mb-3 pb-3 text-center">Ingresa tu cuenta</p>
-
                                 <div class="form-outline mb-4 text-center">
                                     @Html.Label("Usuario", new { @class = "form-label" })
                                     @Html.TextBox("Usuario", ViewBag.Usuario as string, new { @class = "form-control form-control mx-auto", style = "max-width: 800px; border-radius:15px" })
                                 </div>
-
                                 <div class="form-outline mb-4 text-center">
                                     @Html.Label("Contraseña", new { @class = "form-label" })
                                     <div class="input-group mx-auto" style="max-width: 800px;">
@@ -91,52 +54,43 @@
                                     </div>
                                     @Html.ValidationMessageFor(model => model.Contraseña, "", new { @class = "text-danger" })
                                 </div>
-
                                 <div class="remember-me-container mb-4">
                                     <div class="d-flex align-items-center">
                                         @Html.CheckBox("RememberMe", (bool?)ViewBag.RememberMe ?? false, new { @class = "form-check-input", style = "border-radius:15px" })
                                         @Html.Label("RememberMe", "Recordarme", new { @class = "form-check-label" })
                                     </div>
                                     <div class="d-flex align-items-center">
-                                        <a href="#" id="show-recover-password" class="ms-auto" style="padding-top:5px">Recuperar contraseña</a>
+                                        <a href="#" id="show-recover-password" class="ms-auto" style="padding-top:5px">Recuperar Contraseña</a>
                                     </div>
                                 </div>
-
                                 <div class="pt-1 mb-4 text-center">
-                                    <button type="submit" class="btn btn-dark btn-block mx-auto" style="max-width: 500px; border-radius:15px;">Ingresar</button>
+                                    <button type="submit" class="btn btn-dark btn-block mx-auto" id="login-button" style="max-width: 500px; border-radius:15px;">Ingresar</button>
                                 </div>
                             }
                         </div>
-
                         <div id="recover-password-form" style="display: none;">
                             <p class="h3 fw-bold mb-3 pb-3 text-center">Recuperar Contraseña</p>
-
                             <div class="form-outline mb-4 text-center">
                                 @Html.Label("Usuario", new { @class = "form-label" })
                                 @Html.TextBox("User", null, new { @class = "form-control form-control mx-auto", style = "max-width: 800px; border-radius:15px", id = "recover-user" })
                             </div>
-
                             <div class="pt-1 mb-4 text-center">
                                 <button type="button" class="btn btn-dark btn-block mx-auto" id="send-verification-code" style="max-width: 500px; border-radius:15px;">
                                     <span id="send-code-text">Enviar Código de Verificación</span>
                                     <span id="spinner" class="spinner-border spinner-border-sm" style="display: none;"></span>
                                 </button>
                             </div>
-
                             <div class="form-outline mb-4 text-center" id="verification-code-section" style="display: none;">
                                 @Html.Label("Código de Verificación", new { @class = "form-label" })
                                 @Html.TextBox("VerificationCode", null, new { @class = "form-control form-control mx-auto", style = "max-width: 800px; border-radius:15px", id = "verification-code" })
                             </div>
-
                             <div class="form-outline mb-4 text-center" id="new-password-section" style="display: none;">
                                 @Html.Label("Nueva Contraseña", new { @class = "form-label" })
                                 @Html.Password("NewPassword", null, new { @class = "form-control form-control mx-auto", style = "max-width: 800px; border-radius:15px", id = "new-password" })
                             </div>
-
                             <div class="pt-1 mb-4 text-center" id="submit-new-password-section" style="display: none;">
                                 <button type="button" class="btn btn-dark btn-block mx-auto" id="submit-new-password" style="max-width: 500px; border-radius:15px;">Cambiar Contraseña</button>
                             </div>
-
                             <div class="pt-1 mb-4 text-center">
                                 <button type="button" class="btn btn-secondary btn-block mx-auto" id="back-to-login" style="max-width: 500px; border-radius:15px;">Regresar</button>
                             </div>
@@ -147,13 +101,13 @@
         </div>
     </div>
 </section>
-<!-- Section: Design Block -->
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
 
+            // Toggle password visibility
             $('#togglePassword').click(function () {
                 var passwordField = $('#password');
                 var passwordFieldType = passwordField.attr('type');
@@ -166,52 +120,53 @@
                 }
             });
 
+            // Show recover password form
             $('#show-recover-password').click(function () {
                 resetRecoverPasswordForm();
                 $('#login-form').hide();
                 $('#recover-password-form').show();
             });
 
+            // Back to login form
             $('#back-to-login').click(function () {
                 resetRecoverPasswordForm();
                 $('#recover-password-form').hide();
                 $('#login-form').show();
             });
 
-           $('#send-verification-code').click(function () {
-            var user = $('#recover-user').val();
-            $('#send-code-text').hide();
-            $('#spinner').show();
+            // Send verification code
+            $('#send-verification-code').click(function () {
+                var user = $('#recover-user').val();
+                $('#send-code-text').hide();
+                $('#spinner').show();
 
-            $.ajax({
-                type: "POST",
-                url: '@Url.Action("EnviarCodigo", "Login")',
-                data: { user: user },
-                success: function (response) {
-                    $('#spinner').hide();
-                    $('#send-code-text').show();
-                    if (response.success) {
-                        // Display custom SweetAlert message from the server response
-                        swal({ title: '', text: response.message, type: 'success', customClass: 'swal-custom' });
-                        $('#recover-user').attr('readonly', true);
-                        $('#send-verification-code').hide();
-                        $('#verification-code-section').show();
-                        $('#new-password-section').show();
-                        $('#submit-new-password-section').show();
-                    } else {
-                        // Display custom SweetAlert message from the server response
-                        swal({ title:'',text: response.message , type:'error', customClass: 'swal-custom' });
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("EnviarCodigo", "Login")',
+                    data: { user: user },
+                    success: function (response) {
+                        $('#spinner').hide();
+                        $('#send-code-text').show();
+                        if (response.success) {
+                            swal({ title: '', text: response.message, type: 'success', customClass: 'swal-custom' });
+                            $('#recover-user').attr('readonly', true);
+                            $('#send-verification-code').hide();
+                            $('#verification-code-section').show();
+                            $('#new-password-section').show();
+                            $('#submit-new-password-section').show();
+                        } else {
+                            swal({ title:'',text: response.message , type:'error', customClass: 'swal-custom' });
+                        }
+                    },
+                    error: function () {
+                        $('#spinner').hide();
+                        $('#send-code-text').show();
+                        swal({ title: 'Error', text: response.message, type: 'error', customClass: 'swal-custom' });
                     }
-                },
-                error: function () {
-                    $('#spinner').hide();
-                    $('#send-code-text').show();
-                    swal({ title: 'Error', text: response.message, type: 'error', customClass: 'swal-custom' });
-                }
+                });
             });
-        });
 
-
+            // Submit new password
             $('#submit-new-password').click(function () {
                 var user = $('#recover-user').val();
                 var code = $('#verification-code').val();
@@ -237,6 +192,7 @@
                 });
             });
 
+            // Reset recover password form
             function resetRecoverPasswordForm() {
                 $('#recover-user').val('').removeAttr('readonly');
                 $('#verification-code').val('');
@@ -248,6 +204,59 @@
                 $('#send-code-text').show();
                 $('#spinner').hide();
             }
+
+            // Check if inputs are empty
+            function checkInputs() {
+                var usuario = $('#Usuario').val();
+                var contrasena = $('#password').val();
+
+                if (usuario === '' || contrasena === '') {
+                    $('#login-button').attr('disabled', 'disabled');
+                } else {
+                    $('#login-button').removeAttr('disabled');
+                }
+            }
+
+            // Check if recover user input is empty
+            function checkRecoverUserInput() {
+                var recoverUser = $('#recover-user').val();
+
+                if (recoverUser === '') {
+                    $('#send-verification-code').attr('disabled', 'disabled');
+                } else {
+                    $('#send-verification-code').removeAttr('disabled');
+                }
+            }
+
+            // Check if verification code and new password inputs are empty
+            function checkVerificationAndPasswordInputs() {
+                var verificationCode = $('#verification-code').val();
+                var newPassword = $('#new-password').val();
+
+                if (verificationCode === '' || newPassword === '') {
+                    $('#submit-new-password').attr('disabled', 'disabled');
+                } else {
+                    $('#submit-new-password').removeAttr('disabled');
+                }
+            }
+
+            // Initial checks
+            checkInputs();
+            checkRecoverUserInput();
+            checkVerificationAndPasswordInputs();
+
+            // Check on input
+            $('#Usuario, #password').on('input', function () {
+                checkInputs();
+            });
+
+            $('#recover-user').on('input', function () {
+                checkRecoverUserInput();
+            });
+
+            $('#verification-code, #new-password').on('input', function () {
+                checkVerificationAndPasswordInputs();
+            });
         });
     </script>
 }
