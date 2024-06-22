@@ -11,7 +11,9 @@ namespace Infraestructura.Model
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel;
+    using System.ComponentModel.DataAnnotations;
+
     public partial class Evento
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -20,9 +22,14 @@ namespace Infraestructura.Model
             this.Asistencia = new HashSet<Asistencia>();
             this.Invitacion = new HashSet<Invitacion>();
         }
-    
+
+        [DisplayName("Código")]
         public int ID_Evento { get; set; }
+
+        [DisplayName("Nombre del Evento")]
         public string Nombre_Evento { get; set; }
+        [DisplayName("Fecha del Evento")]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public System.DateTime Fecha_Evento { get; set; }
         public string Descripcion { get; set; }
         public string Lugar { get; set; }

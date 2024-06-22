@@ -11,7 +11,8 @@ namespace Infraestructura.Model
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel;
+
     public partial class Usuario
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -24,7 +25,11 @@ namespace Infraestructura.Model
         public int Id_Usuario { get; set; }
         public string Nombre { get; set; }
         public string Cedula { get; set; }
+
+        [DisplayName("Estado del usuario")]
         public string Estado_usuario { get; set; }
+
+        [DisplayName("Confirmación")]
         public string Estado_2 { get; set; }
         public string Correo { get; set; }
         public string Telefono { get; set; }
