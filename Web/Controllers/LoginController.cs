@@ -49,7 +49,7 @@ namespace Web.Controllers
 
                 if (ModelState.IsValid)
                 {
-                    var oAdministrador = _serviceAdministrador.GetAdministrador(administrador.Usuario, administrador.Contraseña);
+                    Administrador oAdministrador = _serviceAdministrador.GetAdministrador(administrador.Usuario, administrador.Contraseña);
                     if (oAdministrador != null)
                     {
                         Session["User"] = oAdministrador;

@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <title>ASOMAMECO</title>
     <!-- Use Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css" rel="stylesheet">
     <!-- Font Awesome for icons -->
@@ -13,6 +13,16 @@
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .content {
+            flex: 1;
+        }
+
         .nav-link:hover, .nav-link:focus {
             background-color: #37577D !important;
             color: #fff !important;
@@ -40,28 +50,33 @@
 
     @if (Session["User"] == null)
     {
-        <div style="height:100vh">
+        <div class="content">
             @RenderBody()
         </div>
     }
     else
     {
-        <div class="wrapper">
+        <div class="wrapper d-flex">
             <!-- Sidebar  -->
             <div class="d-flex flex-column flex-shrink-0 p-3 bg-light" style="width: 250px;">
                 <div class="d-flex align-items-center link-dark text-decoration-none">
-
-                    <img src="~/Utils/Img/logo.jpg" width="215" height="80" style="border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); " />
+                    <img src="~/Utils/Img/logo.jpg" width="215" height="80" style="border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);" />
                 </div>
                 <hr>
                 <ul class="nav nav-pills flex-column mb-auto">
-                    <li class="nav-item">
-                        <a href="@Url.Action("Index", "Home")" class="nav-link link-dark">
-                            <i class="fa-solid fa-chart-pie"  style="margin-right: 18px"></i>
-                            Dashboard
-                        </a>
-                    </li>
-                  
+                    @if (Session["User"] != null)
+                    {
+                        Infraestructura.Model.Administrador usuario = (Infraestructura.Model.Administrador)Session["User"];
+                        if (usuario.Rol.ID_Rol == 1)
+                        {
+                            <li class="nav-item">
+                                <a href="@Url.Action("Index", "Home")" class="nav-link link-dark">
+                                    <i class="fa-solid fa-chart-pie" style="margin-right: 18px"></i>
+                                    Dashboard
+                                </a>
+                            </li>
+                        }
+                    }
                     <li class="nav-item w-100">
                         <a href="@Url.Action("Index", "Usuario")" class="nav-link link-dark">
                             <i class="fa-solid fa-user-group" style="margin-right: 15px"></i>
@@ -71,59 +86,60 @@
                     <li class="nav-item">
                         <a href="@Url.Action("Index", "Evento")" class="nav-link link-dark">
                             <i class="fa-solid fa-calendar-days" style="margin-right:20px"></i>
-                      
                             Eventos
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a href="#submenu1" data-toggle="collapse" aria-expanded="false" class="nav-link link-dark dropdown-toggle">
-                            <i class="fa-solid fa-chart-bar" style="margin-right:18px"></i>
-
-                            Reportes
-                        </a>
-                        <ul class="collapse list-unstyled" id="submenu1">
-                            <li>
-                                <a href="@Url.Action("SubItem1", "Reporte")" class="nav-link link-dark">Sub-item 1</a>
+                    @if (Session["User"] != null)
+                    {
+                        Infraestructura.Model.Administrador usuario = (Infraestructura.Model.Administrador)Session["User"];
+                        if (usuario.Rol.ID_Rol == 1)
+                        {
+                            <li class="nav-item">
+                                <a href="#submenu1" data-toggle="collapse" aria-expanded="false" class="nav-link link-dark dropdown-toggle">
+                                    <i class="fa-solid fa-chart-bar" style="margin-right:18px"></i>
+                                    Reportes
+                                </a>
+                                <ul class="collapse list-unstyled" id="submenu1">
+                                    <li>
+                                        <a href="@Url.Action("SubItem1", "Reporte")" class="nav-link link-dark">Sub-item 1</a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("SubItem2", "Reporte")" class="nav-link link-dark">Sub-item 2</a>
+                                    </li>
+                                </ul>
                             </li>
-                            <li>
-                                <a href="@Url.Action("SubItem2", "Reporte")" class="nav-link link-dark">Sub-item 2</a>
-                            </li>
-                        </ul>
-                    </li>
+                        }
+                    }
                 </ul>
                 <hr>
             </div>
             <!-- Page Content  -->
-
-            <div id="content">
-                <nav class="navbar navbar-expand-lg  bg-light" style="border-radius:30px;">
+            <div id="content" class="content flex-grow-1">
+                <nav class="navbar navbar-expand-lg bg-light" style="border-radius:30px;">
                     <div class="container-fluid">
-                       
-                            @if (Session["User"] != null)
-                            {
-                                <div class="user-info">
-                                    <span style=" ">@nombre</span>
-                                    <div class="divider"></div>
-                                    @Html.ActionLink("Cerrar Sesión", "Logout", "Login", null, new { @id = "logout" })
-                                </div>
-                            }
-                     
+                        @if (Session["User"] != null)
+                        {
+                            <div class="user-info">
+                                <span style=" ">@nombre</span>
+                                <div class="divider"></div>
+                                @Html.ActionLink("Cerrar Sesión", "Logout", "Login", null, new { @id = "logout" })
+                            </div>
+                        }
                     </div>
                 </nav>
-
-                <div style="height:100vh">
+                <div class="content">
                     @RenderBody()
                 </div>
-
-                <footer class="text-center text-lg-start bg-body-tertiary text-muted">
-                    <div class="text-center p-2" style="background-color: rgba(0, 0, 0, 0.05);">
-                        © 2024 Copyright:
-                        <a class="text-reset fw-bold" href="#">ASOMAMECO</a>
-                    </div>
-                </footer>
             </div>
         </div>
     }
+    <!-- Footer -->
+    <footer class="text-center text-lg-start bg-body-tertiary text-muted mt-auto">
+        <div class="text-center p-2" style="background-color: rgba(0, 0, 0, 0.05);">
+            © 2024 Copyright:
+            <a class="text-reset fw-bold" href="#">ASOMAMECO</a>
+        </div>
+    </footer>
 
     <!-- Footer -->
     <!-- Use Bootstrap 5 JS -->

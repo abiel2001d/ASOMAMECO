@@ -4,66 +4,92 @@
     ViewBag.Title = "Index";
 }
 
-<h2 style="text-align: center;">Lista de miembros</h2>
-
-@using (Html.BeginForm("ImportarMiembros", "Usuario", FormMethod.Post, new { enctype = "multipart/form-data" }))
-{
-    <input type="file" name="file" required />
-    <input type="submit" value="Importar miembros" />
-}
-
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Nombre)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Cedula)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Estado_usuario)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Estado_2)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Correo)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Telefono)
-        </th>
-
-        <th></th>
-    </tr>
-
-    @foreach (var item in Model)
-    {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nombre)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Cedula)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Estado_usuario)
-            </td>
-            <th>
-                @Html.DisplayFor(modelItem => item.Estado_2)
-            </th>
-            <td>
-                @Html.DisplayFor(modelItem => item.Correo)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Telefono)
-            </td>
-
-            <td>
-                @Html.ActionLink("Editar", "Edit", new { id = item.Id_Usuario }) |
-                @Html.ActionLink("Detalles", "Details", new { id = item.Id_Usuario }) |
-                @Html.ActionLink("Borrar", "Delete", new { id = item.Id_Usuario })
-            </td>
-        </tr>
+<style>
+    .table thead th {
+        border-bottom: 2px solid #dee2e6;
     }
 
-</table>
+    .table tbody tr:hover {
+        background-color: #f8f9fa;
+    }
+
+    .action-buttons a {
+        margin-right: 5px;
+    }
+
+    .centered-title {
+        text-align: center;
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+
+    .import-button {
+        margin-bottom: 20px;
+    }
+</style>
+
+<div class="container">
+    <h2 class="centered-title">Lista de miembros</h2>
+
+    @using (Html.BeginForm("ImportarMiembros", "Usuario", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+       // <input type="file" name="file" required />
+        <input type="submit" value="Agregar Miembro" class="btn btn-primary import-button" />
+    }
+
+    <table class="table table-hover">
+        <thead class="thead-light">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Nombre)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Cedula)
+                </th>
+                <th>
+                   Estado
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Correo)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Telefono)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td class="w-25">
+                        @Html.DisplayFor(modelItem => item.Nombre)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Cedula)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Estado_usuario)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Correo)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Telefono)
+                    </td>
+                    <td class="action-buttons">
+                        <a href="@Url.Action("Edit", new { id = item.Id_Usuario })" class="btn btn-secondary btn-sm" title="Editar">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <a href="@Url.Action("Details", new { id = item.Id_Usuario })" class="btn btn-info btn-sm" title="Detalles">
+                            <i class="fas fa-info-circle"></i>
+                        </a>
+                        <a href="@Url.Action("Delete", new { id = item.Id_Usuario })" class="btn btn-danger btn-sm" title="Borrar">
+                            <i class="fas fa-trash-alt"></i>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
