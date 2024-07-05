@@ -59,7 +59,9 @@
             </td>
 
             <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.Id_Usuario })
+                @Html.ActionLink("Editar", "Edit", new { id = item.Id_Usuario }) |
+                @Html.ActionLink("Detalles", "Details", new { id = item.Id_Usuario }) |
+                @Html.ActionLink("Borrar", "Delete", new { id = item.Id_Usuario })
             </td>
         </tr>
     }
