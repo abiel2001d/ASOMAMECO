@@ -20,7 +20,7 @@
           <Key>
             <PropertyRef Name="ID_Asistencia" />
           </Key>
-          <Property Name="ID_Asistencia" Type="int" Nullable="false" />
+          <Property Name="ID_Asistencia" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ID_Usuario" Type="int" />
           <Property Name="ID_Evento" Type="int" />
           <Property Name="Fecha_Asistencia" Type="datetime" Nullable="false" />
@@ -31,7 +31,7 @@
           <Key>
             <PropertyRef Name="ID_Evento" />
           </Key>
-          <Property Name="ID_Evento" Type="int" Nullable="false" />
+          <Property Name="ID_Evento" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Nombre_Evento" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="Fecha_Evento" Type="date" Nullable="false" />
           <Property Name="Descripcion" Type="varchar" MaxLength="255" />
@@ -174,7 +174,7 @@
           <Key>
             <PropertyRef Name="ID_Asistencia" />
           </Key>
-          <Property Name="ID_Asistencia" Type="Int32" Nullable="false" />
+          <Property Name="ID_Asistencia" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="ID_Usuario" Type="Int32" />
           <Property Name="ID_Evento" Type="Int32" />
           <Property Name="Fecha_Asistencia" Type="DateTime" Nullable="false" Precision="3" />
@@ -187,7 +187,7 @@
           <Key>
             <PropertyRef Name="ID_Evento" />
           </Key>
-          <Property Name="ID_Evento" Type="Int32" Nullable="false" />
+          <Property Name="ID_Evento" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Nombre_Evento" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Fecha_Evento" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="Descripcion" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />

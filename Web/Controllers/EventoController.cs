@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using ApplicationCore.Services;
 using Infraestructura.Model;
 
 namespace Web.Controllers
@@ -17,17 +18,20 @@ namespace Web.Controllers
         // GET: Evento
         public ActionResult Index()
         {
-            return View(db.Evento.ToList());
+
+            ServiceEvento serviceEvento = new ServiceEvento();
+      
+            return View(serviceEvento.GetEventos());
         }
 
         // GET: Evento/Details/5
-        public ActionResult Details(int? id)
+        public ActionResult Details(int id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Evento evento = db.Evento.Find(id);
+          
+
+            ServiceEvento serviceEvento = new ServiceEvento();
+
+            Evento evento = serviceEvento.GetEventoByID(id);
             if (evento == null)
             {
                 return HttpNotFound();
@@ -46,12 +50,13 @@ namespace Web.Controllers
         // más detalles, vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID_Evento,Nombre_Evento,Fecha_Evento,Descripcion,Lugar")] Evento evento)
+        public ActionResult Create([Bind(Include = "Nombre_Evento,Fecha_Evento,Descripcion,Lugar")] Evento evento)
         {
             if (ModelState.IsValid)
             {
-                db.Evento.Add(evento);
-                db.SaveChanges();
+
+                ServiceEvento serviceEvento = new ServiceEvento();
+                serviceEvento.Save(evento);
                 return RedirectToAction("Index");
             }
 
@@ -59,13 +64,12 @@ namespace Web.Controllers
         }
 
         // GET: Evento/Edit/5
-        public ActionResult Edit(int? id)
+        public ActionResult Edit(int id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Evento evento = db.Evento.Find(id);
+           
+            ServiceEvento serviceEvento = new ServiceEvento();
+
+            Evento evento = serviceEvento.GetEventoByID(id);
             if (evento == null)
             {
                 return HttpNotFound();
@@ -123,5 +127,19 @@ namespace Web.Controllers
             }
             base.Dispose(disposing);
         }
+
+
+        // GET: Evento/Invitaciones/5
+        public ActionResult Invitaciones(int id)
+        {
+            ServiceEvento serviceEvento = new ServiceEvento();
+            Evento evento = serviceEvento.GetEventoByID(id);
+            if (evento == null)
+            {
+                return HttpNotFound();
+            }
+            return View(evento);
+        }
+
     }
 }

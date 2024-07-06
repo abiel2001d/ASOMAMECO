@@ -45,9 +45,7 @@
                 <th>
                     @Html.DisplayNameFor(model => model.Fecha_Evento)
                 </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Descripcion)
-                </th>
+              
                 <th>
                     @Html.DisplayNameFor(model => model.Lugar)
                 </th>
@@ -64,13 +62,19 @@
                     <td>
                         @Html.DisplayFor(modelItem => item.Fecha_Evento)
                     </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Descripcion)
-                    </td>
+                  
                     <td>
                         @Html.DisplayFor(modelItem => item.Lugar)
                     </td>
                     <td class="action-buttons">
+
+                        <a href="@Url.Action("Invitaciones", new { id = item.ID_Evento })" class="btn btn-outline-primary btn-sm" title="Invitaciones">
+                            <i class="fas fa-paper-plane"></i> Invitaciones
+                        </a>
+                        <a href="@Url.Action("Edit", new { id = item.ID_Evento })" class="btn btn-outline-primary btn-sm" title="Asistencia">
+                            <i class="fas fa-list-check"></i> Asistencia
+                        </a>
+
                         <a href="@Url.Action("Edit", new { id = item.ID_Evento })" class="btn btn-secondary btn-sm" title="Editar">
                             <i class="fas fa-edit"></i>
                         </a>
