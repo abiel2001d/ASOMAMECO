@@ -39,8 +39,21 @@
 
 <script>
     document.getElementById("send-invitation-button").addEventListener("click", function() {
-        // Add your logic to send invitation
-        alert("Invitaciones enviadas!");
+        var eventId = @Model.ID_Evento;
+        $.ajax({
+            url: '@Url.Action("EnviarInvitaciones", "Evento")/' + eventId,
+            type: 'POST',
+            success: function(result) {
+                if (result.success) {
+                    alert("Invitaciones enviadas!");
+                } else {
+                    alert("Error al enviar invitaciones.");
+                }
+            },
+            error: function() {
+                alert("Error al enviar invitaciones.");
+            }
+        });
     });
 </script>
 

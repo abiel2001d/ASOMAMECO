@@ -14,5 +14,7 @@ namespace Infraestructura.Repository
         Evento Save(Evento evento);
 
         Evento GetEventoByID(int id);
+
+        Task EnviarInvitaciones(Evento evento);
     }
 }

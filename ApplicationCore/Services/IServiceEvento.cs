@@ -14,5 +14,7 @@ namespace ApplicationCore.Services
         Evento GetEventoByID(int id);
 
         Evento Save(Evento evento);
+
+        Task EnviarInvitaciones(Evento evento);
     }
 }

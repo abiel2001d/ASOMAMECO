@@ -29,5 +29,10 @@ namespace ApplicationCore.Services
             return repository.GetEventoByID(id);
         }
 
+        public Task EnviarInvitaciones(Evento evento)
+        {
+            IRepositoryEvento repository = new RepositoryEvento();
+            return repository.EnviarInvitaciones(evento);
+        }
     }
 }

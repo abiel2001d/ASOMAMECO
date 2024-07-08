@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using ApplicationCore.Services;
@@ -139,6 +140,18 @@ namespace Web.Controllers
                 return HttpNotFound();
             }
             return View(evento);
+        }
+
+        public async Task<ActionResult> EnviarInvitaciones(int id)
+        {
+            ServiceEvento serviceEvento = new ServiceEvento();
+            Evento evento = serviceEvento.GetEventoByID(id);
+            if (evento == null)
+            {
+                return HttpNotFound();
+            }
+            await serviceEvento.EnviarInvitaciones(evento);
+            return Json(new { success = true });
         }
 
     }
