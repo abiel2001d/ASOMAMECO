@@ -7,14 +7,11 @@ using System.Threading.Tasks;
 
 namespace ApplicationCore.Services
 {
-    public interface IServiceEvento
+    public interface IServiceInvitacion
     {
-        IEnumerable<Evento> GetEventos();
 
-        Evento GetEventoByID(int id);
+         IEnumerable<Invitacion> GetInvitacionesByEvento(int id_evento);
 
-        Evento Save(Evento evento);
-
-      
+        Task EnviarInvitaciones(Evento evento);
     }
 }

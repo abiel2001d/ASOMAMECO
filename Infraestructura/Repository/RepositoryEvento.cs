@@ -107,56 +107,6 @@ namespace Infraestructura.Repository
         }
 
 
-        public async Task EnviarInvitaciones(Evento evento)
-        {
-            IEnumerable<Usuario> lista = null;
-            try
-            {
-                using (MyContext ctx = new MyContext())
-                {
-                    ctx.Configuration.LazyLoadingEnabled = false;
-                    lista = ctx.Usuario.Where(u => u.Estado_usuario == "Activo").ToList();
-                }
-
-                foreach (var usuario in lista)
-                {
-                    // Build email subject and body
-                    string subject = $"Invitación al evento: {evento.Nombre_Evento}";
-                    string body = $@"
-                <html>
-                <body>
-                    <h2>Estimado/a {usuario.Nombre},</h2>
-                    <p>Nos complace invitarle al evento <strong>{evento.Nombre_Evento}</strong>.</p>
-                    <p>Detalles del evento:</p>
-                    <ul>
-                        <li><strong>Fecha:</strong> {evento.Fecha_Evento}</li>
-                        <li><strong>Lugar:</strong> {evento.Lugar}</li>
-                        <li><strong>Descripción:</strong> {evento.Descripcion}</li>
-                    </ul>
-                    <p>Esperamos contar con su presencia.</p>
-                    <p>Saludos,</p>
-                    <p>El equipo de ASOMAMECO</p>
-                </body>
-                </html>";
-
-                    // Send email
-                    var correo = new Correo(usuario.Correo, subject, body);
-                    await correo.EnviarCorreo();
-                }
-            }
-            catch (DbUpdateException dbEx)
-            {
-                string mensaje = "";
-                Log.Error(dbEx, System.Reflection.MethodBase.GetCurrentMethod(), ref mensaje);
-                throw new Exception(mensaje);
-            }
-            catch (Exception ex)
-            {
-                string mensaje = "";
-                Log.Error(ex, System.Reflection.MethodBase.GetCurrentMethod(), ref mensaje);
-                throw;
-            }
-        }
-
+        
     }
 }

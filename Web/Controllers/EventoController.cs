@@ -7,6 +7,7 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using ApplicationCore;
 using ApplicationCore.Services;
 using Infraestructura.Model;
 
@@ -134,25 +135,44 @@ namespace Web.Controllers
         public ActionResult Invitaciones(int id)
         {
             ServiceEvento serviceEvento = new ServiceEvento();
+            ServiceInvitacion serviceInvitacion = new ServiceInvitacion();
+
             Evento evento = serviceEvento.GetEventoByID(id);
             if (evento == null)
             {
                 return HttpNotFound();
             }
+
+            var invitaciones = serviceInvitacion.GetInvitacionesByEvento(id);
+            ViewBag.Invitaciones = invitaciones;
+
             return View(evento);
         }
 
         public async Task<ActionResult> EnviarInvitaciones(int id)
         {
             ServiceEvento serviceEvento = new ServiceEvento();
+            ServiceInvitacion serviceInvitacion = new ServiceInvitacion();
+
             Evento evento = serviceEvento.GetEventoByID(id);
             if (evento == null)
             {
                 return HttpNotFound();
             }
-            await serviceEvento.EnviarInvitaciones(evento);
-            return Json(new { success = true });
+
+            await serviceInvitacion.EnviarInvitaciones(evento);
+
+            var invitaciones = serviceInvitacion.GetInvitacionesByEvento(id)
+                .Select(i => new
+                {
+                    Cedula = i.Usuario.Cedula,
+                    Nombre = i.Usuario.Nombre,
+                    Confirmado = i.Confirmado
+                });
+
+            return Json(new { success = true, invitaciones = invitaciones.ToList() });
         }
+
 
     }
 }

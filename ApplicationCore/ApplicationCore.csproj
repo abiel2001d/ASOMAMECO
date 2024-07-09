@@ -119,8 +119,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\ServiceInvitacion.cs" />
     <Compile Include="Services\IServiceAdministrador.cs" />
     <Compile Include="Services\IServiceEvento.cs" />
+    <Compile Include="Services\IServiceInvitacion.cs" />
     <Compile Include="Services\IServiceUsuario.cs" />
     <Compile Include="Services\ServiceAdministrador.cs" />
     <Compile Include="Services\ServiceEvento.cs" />

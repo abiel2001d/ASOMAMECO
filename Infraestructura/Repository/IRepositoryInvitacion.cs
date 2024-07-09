@@ -7,14 +7,10 @@ using System.Threading.Tasks;
 
 namespace Infraestructura.Repository
 {
-   public interface IRepositoryEvento
+    public interface IRepositoryInvitacion
     {
-        IEnumerable<Evento> GetEventos();
+        IEnumerable<Invitacion> GetInvitacionesByEvento(int id_evento);
 
-        Evento Save(Evento evento);
-
-        Evento GetEventoByID(int id);
-
-     
+        Task EnviarInvitaciones(Evento evento);
     }
 }

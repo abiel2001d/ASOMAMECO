@@ -1,14 +1,16 @@
 ﻿@model Infraestructura.Model.Evento
-
 @{
     ViewBag.Title = "Invitaciones";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var invitaciones = ViewBag.Invitaciones as IEnumerable<Infraestructura.Model.Invitacion>;
 }
 
 <div class="container">
-
-    <p class="text-center mt-3">
-        <button class="btn btn-primary" id="send-invitation-button">Enviar Invitaciones</button>
+    <p class="mt-3">
+        <button class="btn btn-primary" id="send-invitation-button" style="@(invitaciones.Any() ? "display:none;" : "")">Enviar Invitaciones</button>
+        <div id="spinner" class="spinner-border text-primary" style="display: none;" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
     </p>
     <div class="card mb-3">
         <div class="card-header">
@@ -21,45 +23,84 @@
         </div>
     </div>
 
-
-
     <h3>Lista de invitaciones</h3>
     <table class="table table-hover">
         <thead class="thead-light">
             <tr>
-                <th>Nombre</th>
                 <th>Cédula</th>
+                <th>Nombre</th>
                 <th>Estado</th>
             </tr>
         </thead>
-        <tbody>
-
-            <tr>
-                <td colspan="3">No hay invitaciones enviadas aún.</td>
-            </tr>
-
+        <tbody id="invitaciones-table-body">
+            @if (invitaciones.Any())
+            {
+                foreach (var invitacion in invitaciones)
+                {
+                    <tr>
+                        <td>@invitacion.Usuario.Cedula</td>
+                        <td>@invitacion.Usuario.Nombre</td>
+                        <td>@invitacion.Confirmado</td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="3">No hay invitaciones enviadas aún.</td>
+                </tr>
+            }
         </tbody>
     </table>
 </div>
 
 <script>
     document.getElementById("send-invitation-button").addEventListener("click", function() {
+        var button = this;
+        var spinner = document.getElementById("spinner");
+        button.style.display = "none";
+        spinner.style.display = "inline-block";
+
         var eventId = @Model.ID_Evento;
         $.ajax({
             url: '@Url.Action("EnviarInvitaciones", "Evento")/' + eventId,
             type: 'POST',
             success: function(result) {
+                spinner.style.display = "none";
                 if (result.success) {
                     alert("Invitaciones enviadas!");
+                    updateTable(result.invitaciones);
                 } else {
                     alert("Error al enviar invitaciones.");
+                    button.style.display = "inline-block";
                 }
             },
             error: function() {
+                spinner.style.display = "none";
                 alert("Error al enviar invitaciones.");
+                button.style.display = "inline-block";
             }
         });
     });
+
+    function updateTable(invitaciones) {
+        var tbody = document.getElementById("invitaciones-table-body");
+        tbody.innerHTML = "";
+
+        invitaciones.forEach(function(invitacion) {
+            var row = "<tr>";
+            row += "<td>" + invitacion.Cedula + "</td>";
+            row += "<td>" + invitacion.Nombre + "</td>";
+            row += "<td>" + invitacion.Confirmado + "</td>";
+            row += "</tr>";
+            tbody.innerHTML += row;
+        });
+
+        // Hide the send invitation button if there are invitations
+        if (invitaciones.length > 0) {
+            document.getElementById("send-invitation-button").style.display = "none";
+        }
+    }
 </script>
 
 <style>
@@ -69,5 +110,10 @@
 
     .text-center {
         text-align: center;
+    }
+
+    .spinner-border {
+        width: 2rem;
+        height: 2rem;
     }
 </style>
