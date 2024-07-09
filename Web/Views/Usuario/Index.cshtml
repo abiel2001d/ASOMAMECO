@@ -33,8 +33,9 @@
 
     @using (Html.BeginForm("ImportarMiembros", "Usuario", FormMethod.Post, new { enctype = "multipart/form-data" }))
     {
-       // <input type="file" name="file" required />
-        <input type="submit" value="Agregar Miembro" class="btn btn-primary import-button" />
+        // <input type="file" name="file" required />
+
+        @Html.ActionLink("Agregar Nuevo Miembro", "Create", null, new { @class = "btn btn-primary" })
     }
 
     <table class="table table-hover">
@@ -47,7 +48,7 @@
                     @Html.DisplayNameFor(model => model.Cedula)
                 </th>
                 <th>
-                   Estado
+                    Estado
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.Correo)
