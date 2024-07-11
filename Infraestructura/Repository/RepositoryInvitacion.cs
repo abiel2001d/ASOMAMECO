@@ -29,8 +29,8 @@ namespace Infraestructura.Repository
                 foreach (var usuario in lista)
                 {
                     // Generate response URLs
-                    string yesUrl = urlHelper.Action("ConfirmarAsistencia", "Evento", new { eventoId = evento.ID_Evento, usuarioId = usuario.Id_Usuario, respuesta = "Sí Asistirá" }, protocol: HttpContext.Current.Request.Url.Scheme);
-                    string noUrl = urlHelper.Action("ConfirmarAsistencia", "Evento", new { eventoId = evento.ID_Evento, usuarioId = usuario.Id_Usuario, respuesta = "No Asistirá" }, protocol: HttpContext.Current.Request.Url.Scheme);
+                    string yesUrl = urlHelper.Action("RespuestaInvitacion", "Evento", new { eventoId = evento.ID_Evento, usuarioId = usuario.Id_Usuario, respuesta = "Sí Asistirá" }, protocol: HttpContext.Current.Request.Url.Scheme);
+                    string noUrl = urlHelper.Action("RespuestaInvitacion", "Evento", new { eventoId = evento.ID_Evento, usuarioId = usuario.Id_Usuario, respuesta = "No Asistirá" }, protocol: HttpContext.Current.Request.Url.Scheme);
 
                     // Build email subject and body
                     string subject = $"Invitación al evento: {evento.Nombre_Evento}";

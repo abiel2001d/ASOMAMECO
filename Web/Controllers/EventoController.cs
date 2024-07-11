@@ -190,21 +190,23 @@ namespace Web.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> ConfirmarAsistencia(int eventoId, int usuarioId, string respuesta)
+        public async Task<ActionResult> RespuestaInvitacion(int eventoId, int usuarioId, string respuesta)
         {
             try
             {
-
                 ServiceInvitacion serviceInvitacion = new ServiceInvitacion();
                 await serviceInvitacion.ActualizarConfirmacion(eventoId, usuarioId, respuesta);
-                return Content("Thank you for your response.");
+                return View("RespuestaInvitacion");
             }
             catch (Exception ex)
             {
-                return Content($"Error: {ex.Message}");
+                // Optionally handle the error in a user-friendly way
+                ViewBag.ErrorMessage = "Hubo un error al registrar tu respuesta. Por favor, intenta nuevamente.";
+                return View("Error");
             }
         }
 
+        [HttpPost]
         public async Task<ActionResult> EnviarInvitaciones(int id)
         {
             ServiceEvento serviceEvento = new ServiceEvento();
@@ -224,11 +226,13 @@ namespace Web.Controllers
                 {
                     Cedula = i.Usuario.Cedula,
                     Nombre = i.Usuario.Nombre,
+                    Correo = i.Usuario.Correo,
                     Confirmado = i.Confirmado
                 });
 
             return Json(new { success = true, invitaciones = invitaciones.ToList() });
         }
+
 
 
     }
