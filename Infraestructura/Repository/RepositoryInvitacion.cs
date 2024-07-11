@@ -60,7 +60,7 @@ namespace Infraestructura.Repository
         <p>Nos complace invitarle al evento <strong>{evento.Nombre_Evento}</strong>.</p>
         <p>Detalles del evento:</p>
         <ul>
-            <li><strong>Fecha:</strong> {evento.Fecha_Evento.ToString("dd/MMMM/yyyy hh:mm tt")}</li>
+            <li><strong>Fecha y Hora:</strong> {evento.Fecha_Evento.ToString("dd/MMMM/yyyy hh:mm tt")}</li>
             <li><strong>Lugar:</strong> {evento.Lugar}</li>
             <li><strong>Descripción:</strong> {evento.Descripcion}</li>
         </ul>
