@@ -6,6 +6,11 @@
 }
 
 <style>
+
+    .table-sm {
+        font-size: 0.875rem;
+    }
+
     .table thead th {
         border-bottom: 2px solid #dee2e6;
     }
@@ -36,18 +41,18 @@
         @Html.ActionLink("Crear evento", "Create", null, new { @class = "btn btn-primary" })
     </p>
 
-    <table class="table table-hover">
+    <table class="table table-hover table-sm">
         <thead class="thead-light">
             <tr>
                 <th>
-                    @Html.DisplayNameFor(model => model.Nombre_Evento)
+                    Evento
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Fecha_Evento)
+                   Fecha & Hora
                 </th>
               
                 <th>
-                    @Html.DisplayNameFor(model => model.Lugar)
+                   Lugar
                 </th>
                 <th></th>
             </tr>
@@ -60,7 +65,7 @@
                         @Html.DisplayFor(modelItem => item.Nombre_Evento)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Fecha_Evento)
+                        @item.Fecha_Evento.ToString("dd/MMMM/yyyy hh:mmtt")
                     </td>
                   
                     <td>
