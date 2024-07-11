@@ -1,22 +1,71 @@
 ﻿@model Infraestructura.Model.Usuario
 
 @{
-    ViewBag.Title = "Create";
+    ViewBag.Title = "Creación de miembro";
 }
 
-<h2>Create</h2>
+<style>
+    .form-container {
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-title {
+        text-align: center;
+        margin-top: 20px;
+        margin-bottom: 20px;
+        font-size: 24px;
+        font-weight: bold;
+    }
+
+    .form-horizontal .form-group label {
+        color: #07305d;
+    }
+
+    .form-horizontal .form-group .form-control {
+        border: 1px solid #07305d;
+    }
+
+    .form-horizontal .form-group .btn-create {
+        background-color: #eaa159;
+        border-color: #eaa159;
+        color: #ffffff;
+    }
+
+        .form-horizontal .form-group .btn-create:hover {
+            background-color: #f0bb86;
+            border-color: #f0bb86;
+        }
+
+    .form-horizontal .form-group .btn-default {
+        background-color: #07305d;
+        border-color: #07305d;
+        color: #ffffff;
+    }
+
+        .form-horizontal .form-group .btn-default:hover {
+            background-color: #0b488c;
+            border-color: #0b488c;
+        }
+</style>
 
 
-@using (Html.BeginForm()) 
+<h2 class="form-title">@ViewBag.Title</h2>
+
+
+@using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
-        <h4>Usuario</h4>
+        @*<h4>Usuario</h4>*@
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
         <div class="form-group">
-            @Html.LabelFor(model => model.Id_Usuario, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.Id_Usuario, "Id miembro", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.EditorFor(model => model.Id_Usuario, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.Id_Usuario, "", new { @class = "text-danger" })
@@ -32,26 +81,10 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.Cedula, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.Cedula, "Cédula", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.EditorFor(model => model.Cedula, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.Cedula, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Estado_usuario, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Estado_usuario, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Estado_usuario, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Estado_2, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Estado_2, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Estado_2, "", new { @class = "text-danger" })
             </div>
         </div>
 
@@ -64,7 +97,7 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.Telefono, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.Telefono, "Teléfono", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.EditorFor(model => model.Telefono, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.Telefono, "", new { @class = "text-danger" })
@@ -72,15 +105,47 @@
         </div>
 
         <div class="form-group">
+            @Html.LabelFor(model => model.Estado_usuario, "Estado del miembro", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @*@Html.EditorFor(model => model.Estado_usuario, new { htmlAttributes = new { @class = "form-control" } })*@
+                <div class="col-md-10">
+                    <span style="margin-right: 20px;">
+                        @Html.RadioButtonFor(model => model.Estado_usuario, "Activo") Activo
+                    </span>
+                    <span style="margin-right: 20px;">
+                        @Html.RadioButtonFor(model => model.Estado_usuario, "Inactivo") Inactivo
+                    </span>
+                    @Html.ValidationMessageFor(model => model.Estado_usuario, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Estado_2, "Estado invitación", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @*@Html.EditorFor(model => model.Estado_2, new { htmlAttributes = new { @class = "form-control" } })*@
+                <div class="col-md-10">
+                    <span style="margin-right: 20px;">
+                        @Html.RadioButtonFor(model => model.Estado_2, "Confirmado") Confirmado
+                    </span>
+                    <span style="margin-right: 20px;">
+                        @Html.RadioButtonFor(model => model.Estado_2, "No") No
+                    </span>
+                    @Html.ValidationMessageFor(model => model.Estado_2, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <input type="submit" value="Crear miembro" class="btn btn-create" />
             </div>
         </div>
     </div>
 }
 
 <div>
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Volver a la lista", "Index")
 </div>
 
 @section Scripts {
