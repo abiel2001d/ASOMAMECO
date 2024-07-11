@@ -4,8 +4,54 @@
     ViewBag.Title = "Creación de evento";
 }
 
-<h2>Create</h2>
+<style>
+    .form-container {
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
 
+    .form-title {
+        text-align: center;
+        margin-top: 20px;
+        margin-bottom: 20px;
+        font-size: 24px;
+        font-weight: bold;
+    }
+
+    .form-horizontal .form-group label {
+        color: #07305d;
+    }
+
+    .form-horizontal .form-group .form-control {
+        border: 1px solid #07305d;
+    }
+
+    .form-horizontal .form-group .btn-create {
+        background-color: #eaa159;
+        border-color: #eaa159;
+        color: #ffffff;
+    }
+
+        .form-horizontal .form-group .btn-create:hover {
+            background-color: #f0bb86;
+            border-color: #f0bb86;
+        }
+
+    .form-horizontal .form-group .btn-default {
+        background-color: #07305d;
+        border-color: #07305d;
+        color: #ffffff;
+    }
+
+        .form-horizontal .form-group .btn-default:hover {
+            background-color: #0b488c;
+            border-color: #0b488c;
+        }
+</style>
+
+<h2 class="form-title">@ViewBag.Title</h2>
 
 @using (Html.BeginForm()) 
 {
