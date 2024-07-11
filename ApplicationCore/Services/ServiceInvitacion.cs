@@ -6,16 +6,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Mvc;
 
 namespace ApplicationCore
 {
     public class ServiceInvitacion : IServiceInvitacion
     {
-
-        public Task EnviarInvitaciones(Evento evento)
+        public Task ActualizarConfirmacion(int eventoId, int usuarioId, string respuesta)
         {
             IRepositoryInvitacion repository = new RepositoryInvitacion();
-            return repository.EnviarInvitaciones(evento);
+            return repository.ActualizarConfirmacion(eventoId,usuarioId,respuesta);
+        }
+
+        public Task EnviarInvitaciones(Evento evento, UrlHelper urlHelper)
+        {
+            IRepositoryInvitacion repository = new RepositoryInvitacion();
+            return repository.EnviarInvitaciones(evento, urlHelper);
         }
 
         public IEnumerable<Invitacion> GetInvitacionesByEvento(int id_evento)

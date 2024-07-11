@@ -5,6 +5,11 @@
 }
 
 <style>
+
+    .table-sm {
+        font-size: 0.875rem;
+    }
+
     .table thead th {
         border-bottom: 2px solid #dee2e6;
     }
@@ -38,7 +43,7 @@
         @Html.ActionLink("Agregar Nuevo Miembro", "Create", null, new { @style = "margin-bottom: 20px;" ,@class = "btn btn-primary" })
     }
 
-    <table class="table table-hover">
+    <table class="table table-hover table-sm">
         <thead class="thead-light">
             <tr>
                 <th>
