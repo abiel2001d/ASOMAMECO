@@ -3,9 +3,6 @@
 @{ ViewBag.Title = "Creación de evento";
                 Layout = "~/Views/Shared/_Layout.cshtml"; // Ensure you have a layout to exten
                                                           }
-
-<h2 class="centered-title">Crear Evento</h2>
-
 <style>
     .centered-title {
         text-align: center;
@@ -16,9 +13,6 @@
     .regresar-link {
         margin-left: 95px;
     }
-
-
-<style>
     .form-container {
         background-color: #ffffff;
         padding: 20px;
@@ -66,11 +60,6 @@
 </style>
 
 <h2 class="form-title">@ViewBag.Title</h2>
-
-        .time-input-group .form-control-1 {
-            margin-right: 95px;
-        }
-</style>
 
 @using (Html.BeginForm())
 {
@@ -132,13 +121,15 @@
                     <div class="form-group">
                         <div class="col-md-offset-2 col-md-10">
                             <input type="submit" value="Crear" class="btn btn-default" />
+                            @Html.ActionLink("Regresar", "Index", null, new { @class = "btn btn-secondary regresar-link" })
+          
                         </div>
                     </div>
-                </div>}
+                </div>
+                }
 
 <div>
-    @Html.ActionLink("Regresar", "Index", null, new { @class = "btn btn-secondary regresar-link" })
-
+   
 </div>
 
 @section Scripts {
