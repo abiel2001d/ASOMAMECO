@@ -1,8 +1,12 @@
 ﻿@model Infraestructura.Model.Evento
 
-@{ ViewBag.Title = "Creación de evento";
-                Layout = "~/Views/Shared/_Layout.cshtml"; // Ensure you have a layout to exten
-                                                          }
+@{
+    ViewBag.Title = "Creación de evento";
+    Layout = "~/Views/Shared/_Layout.cshtml"; // Ensure you have a layout to extend
+}
+
+<h2 class="centered-title">Crear Evento</h2>
+
 <style>
     .centered-title {
         text-align: center;
@@ -13,130 +17,101 @@
     .regresar-link {
         margin-left: 95px;
     }
-    .form-container {
-        background-color: #ffffff;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+    input[type=submit] {
+        background-color: #0069D9;
+        color: white;
+        margin-right: 5px;
+        margin-bottom: -88px;
     }
 
-    .form-title {
-        text-align: center;
-        margin-top: 20px;
-        margin-bottom: 20px;
-        font-size: 24px;
-        font-weight: bold;
+    .time-input-group {
+        display: flex;
+        align-items: center;
     }
 
-    .form-horizontal .form-group label {
-        color: #07305d;
-    }
-
-    .form-horizontal .form-group .form-control {
-        border: 1px solid #07305d;
-    }
-
-    .form-horizontal .form-group .btn-create {
-        background-color: #eaa159;
-        border-color: #eaa159;
-        color: #ffffff;
-    }
-
-        .form-horizontal .form-group .btn-create:hover {
-            background-color: #f0bb86;
-            border-color: #f0bb86;
-        }
-
-    .form-horizontal .form-group .btn-default {
-        background-color: #07305d;
-        border-color: #07305d;
-        color: #ffffff;
-    }
-
-        .form-horizontal .form-group .btn-default:hover {
-            background-color: #0b488c;
-            border-color: #0b488c;
+        .time-input-group .form-control-1 {
+            margin-right: 95px;
         }
 </style>
 
-<h2 class="form-title">@ViewBag.Title</h2>
-
 @using (Html.BeginForm())
 {
-@Html.AntiForgeryToken()
+    @Html.AntiForgeryToken()
 
-                <div class="form-horizontal">
-                    @*<h4>Evento</h4>*@
-                    <hr />
-                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="form-horizontal">
+        @*<h4>Evento</h4>*@
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.Nombre_Evento, "Nombre del evento", htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.EditorFor(model => model.Nombre_Evento, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.Nombre_Evento, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.Nombre_Evento, "Nombre del evento", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Nombre_Evento, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Nombre_Evento, "", new { @class = "text-danger" })
+            </div>
+        </div>
 
-                    @*nuevo codigo para la fecha y la hora -sofy *@
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.Fecha_Evento, "Fecha del Evento", htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-4">
-                            @Html.TextBoxFor(model => model.Fecha_Evento, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
-                        </div>
-                        <br />
-                        <div class="form-group">
-                            @Html.Label("Hora_Evento", "Hora del Evento", htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-2">
-                                <div class="time-input-group">
-                                    @Html.TextBox("Hora_Evento", null, new { @class = "form-control", type = "time" })
-                                    <select class="form-control-1" id="timePeriod" name="timePeriod">
-                                        <option value="AM">AM</option>
-                                        <option value="PM">PM</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-2">
-                            @Html.ValidationMessageFor(model => model.Fecha_Evento, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.Descripcion, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.EditorFor(model => model.Descripcion, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.Descripcion, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.Lugar, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.EditorFor(model => model.Lugar, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.Lugar, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <div class="col-md-offset-2 col-md-10">
-                            <input type="submit" value="Crear" class="btn btn-default" />
-                            @Html.ActionLink("Regresar", "Index", null, new { @class = "btn btn-secondary regresar-link" })
-          
-                        </div>
+        @*nuevo codigo para la fecha y la hora -sofy *@
+        <div class="form-group">
+            @Html.LabelFor(model => model.Fecha_Evento, "Fecha del Evento", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-4">
+                @Html.TextBoxFor(model => model.Fecha_Evento, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
+            </div>
+            <br />
+            <div class="form-group">
+                @Html.Label("Hora_Evento", "Hora del Evento", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-2">
+                    <div class="time-input-group">
+                        @Html.TextBox("Hora_Evento", null, new { @class = "form-control", type = "time" })
+                        <select class="form-control-1" id="timePeriod" name="timePeriod">
+                            <option value="AM">AM</option>
+                            <option value="PM">PM</option>
+                        </select>
                     </div>
                 </div>
-                }
+            </div>
+            <div class="col-md-2">
+                @Html.ValidationMessageFor(model => model.Fecha_Evento, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Descripcion, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Descripcion, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Descripcion, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Lugar, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Lugar, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Lugar, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Crear" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
 
 <div>
-   
+    @Html.ActionLink("Regresar", "Index", null, new { @class = "btn btn-secondary regresar-link" })
+
 </div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
-    <script type="text/javascript">$(function () {
+    <script type="text/javascript">
+        $(function () {
             $('#datetimepicker1').datetimepicker({
                 format: 'MM/DD/YYYY hh:mm A'
             });
-        });</script>
+        });
+    </script>
 }
