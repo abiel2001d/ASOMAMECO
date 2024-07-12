@@ -19,7 +19,7 @@ namespace Infraestructura.Model
         public Nullable<int> ID_Evento { get; set; }
         public System.DateTime Fecha_Asistencia { get; set; }
         public System.TimeSpan Hora_Asistencia { get; set; }
-        public string Confirmado_Previamente { get; set; }
+        public string Presente { get; set; }
     
         public virtual Evento Evento { get; set; }
         public virtual Usuario Usuario { get; set; }

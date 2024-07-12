@@ -111,20 +111,6 @@
         </div>
     </div>
 
-    <div class="form-group">
-        @Html.LabelFor(model => model.Estado_2, "Estado invitación", htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            <div class="col-md-10">
-                <span style="margin-right: 20px;">
-                    @Html.RadioButtonFor(model => model.Estado_2, "Confirmado") Confirmado
-                </span>
-                <span style="margin-right: 20px;">
-                    @Html.RadioButtonFor(model => model.Estado_2, "No") No
-                </span>
-                @Html.ValidationMessageFor(model => model.Estado_2, "", new { @class = "text-danger" })
-            </div>
-        </div>
-    </div>
 
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">

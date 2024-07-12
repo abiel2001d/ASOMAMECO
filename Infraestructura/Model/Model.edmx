@@ -23,9 +23,9 @@
           <Property Name="ID_Asistencia" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ID_Usuario" Type="int" />
           <Property Name="ID_Evento" Type="int" />
-          <Property Name="Fecha_Asistencia" Type="datetime" Nullable="false" />
+          <Property Name="Fecha_Asistencia" Type="date" Nullable="false" />
           <Property Name="Hora_Asistencia" Type="time" Precision="7" Nullable="false" />
-          <Property Name="Confirmado_Previamente" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Presente" Type="varchar" MaxLength="100" Nullable="false" />
         </EntityType>
         <EntityType Name="Evento">
           <Key>
@@ -33,9 +33,10 @@
           </Key>
           <Property Name="ID_Evento" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Nombre_Evento" Type="varchar" MaxLength="100" Nullable="false" />
-          <Property Name="Fecha_Evento" Type="date" Nullable="false" />
+          <Property Name="Fecha_Evento" Type="datetime" Nullable="false" />
           <Property Name="Descripcion" Type="varchar" MaxLength="255" />
           <Property Name="Lugar" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Estado" Type="bit" />
         </EntityType>
         <EntityType Name="Invitacion">
           <Key>
@@ -57,11 +58,10 @@
           <Key>
             <PropertyRef Name="Id_Usuario" />
           </Key>
-          <Property Name="Id_Usuario" Type="int" Nullable="false" />
+          <Property Name="Id_Usuario" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Nombre" Type="nvarchar" MaxLength="100" Nullable="false" />
           <Property Name="Cedula" Type="nvarchar" MaxLength="100" Nullable="false" />
           <Property Name="Estado_usuario" Type="nvarchar" MaxLength="100" Nullable="false" />
-          <Property Name="Estado_2" Type="nvarchar" MaxLength="100" Nullable="false" />
           <Property Name="Correo" Type="nvarchar" MaxLength="100" Nullable="false" />
           <Property Name="Telefono" Type="nvarchar" MaxLength="100" Nullable="false" />
         </EntityType>
@@ -177,9 +177,9 @@
           <Property Name="ID_Asistencia" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="ID_Usuario" Type="Int32" />
           <Property Name="ID_Evento" Type="Int32" />
-          <Property Name="Fecha_Asistencia" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Fecha_Asistencia" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="Hora_Asistencia" Type="Time" Nullable="false" Precision="7" />
-          <Property Name="Confirmado_Previamente" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Presente" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
           <NavigationProperty Name="Evento" Relationship="Self.FK__Asistenci__ID_Ev__2A4B4B5E" FromRole="Asistencia" ToRole="Evento" />
           <NavigationProperty Name="Usuario" Relationship="Self.FK__Asistenci__ID_Us__29572725" FromRole="Asistencia" ToRole="Usuario" />
         </EntityType>
@@ -189,9 +189,10 @@
           </Key>
           <Property Name="ID_Evento" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Nombre_Evento" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Fecha_Evento" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="Fecha_Evento" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="Descripcion" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
           <Property Name="Lugar" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Estado" Type="Boolean" />
           <NavigationProperty Name="Asistencia" Relationship="Self.FK__Asistenci__ID_Ev__2A4B4B5E" FromRole="Evento" ToRole="Asistencia" />
           <NavigationProperty Name="Invitacion" Relationship="Self.FK__Invitacio__ID_Ev__2E1BDC42" FromRole="Evento" ToRole="Invitacion" />
         </EntityType>
@@ -218,11 +219,10 @@
           <Key>
             <PropertyRef Name="Id_Usuario" />
           </Key>
-          <Property Name="Id_Usuario" Type="Int32" Nullable="false" />
+          <Property Name="Id_Usuario" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Nombre" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Cedula" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Estado_usuario" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Estado_2" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Correo" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Telefono" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
           <NavigationProperty Name="Asistencia" Relationship="Self.FK__Asistenci__ID_Us__29572725" FromRole="Usuario" ToRole="Asistencia" />
@@ -342,7 +342,7 @@
                 <ScalarProperty Name="ID_Evento" ColumnName="ID_Evento" />
                 <ScalarProperty Name="Fecha_Asistencia" ColumnName="Fecha_Asistencia" />
                 <ScalarProperty Name="Hora_Asistencia" ColumnName="Hora_Asistencia" />
-                <ScalarProperty Name="Confirmado_Previamente" ColumnName="Confirmado_Previamente" />
+                <ScalarProperty Name="Presente" ColumnName="Presente" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -354,6 +354,7 @@
                 <ScalarProperty Name="Fecha_Evento" ColumnName="Fecha_Evento" />
                 <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
                 <ScalarProperty Name="Lugar" ColumnName="Lugar" />
+                <ScalarProperty Name="Estado" ColumnName="Estado" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -382,7 +383,6 @@
                 <ScalarProperty Name="Nombre" ColumnName="Nombre" />
                 <ScalarProperty Name="Cedula" ColumnName="Cedula" />
                 <ScalarProperty Name="Estado_usuario" ColumnName="Estado_usuario" />
-                <ScalarProperty Name="Estado_2" ColumnName="Estado_2" />
                 <ScalarProperty Name="Correo" ColumnName="Correo" />
                 <ScalarProperty Name="Telefono" ColumnName="Telefono" />
               </MappingFragment>

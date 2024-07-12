@@ -74,7 +74,7 @@ namespace Web.Controllers
         // POST: Usuario/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id_Usuario,Nombre,Cedula,Estado_usuario,Estado_2,Correo,Telefono")] Usuario usuario)
+        public ActionResult Create([Bind(Include = "Nombre,Cedula,Estado_usuario,Correo,Telefono")] Usuario usuario)
         {
             if (ModelState.IsValid)
             {
@@ -124,7 +124,6 @@ namespace Web.Controllers
                                 Nombre = worksheet.Cells[row, 2].Value.ToString(),
                                 Cedula = worksheet.Cells[row, 3].Value.ToString(),
                                 Estado_usuario = worksheet.Cells[row, 4].Value.ToString(),
-                                Estado_2 = worksheet.Cells[row, 5].Value.ToString(),
                                 Correo = worksheet.Cells[row, 6].Value.ToString(),
                                 Telefono = worksheet.Cells[row, 7].Value.ToString()
                             };
@@ -167,7 +166,7 @@ namespace Web.Controllers
         // POST: Usuario/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id_Usuario,Nombre,Cedula,Estado_usuario,Estado_2,Correo,Telefono")] Usuario usuario)
+        public ActionResult Edit([Bind(Include = "Id_Usuario,Nombre,Cedula,Estado_usuario,Correo,Telefono")] Usuario usuario)
         {
             if (ModelState.IsValid)
             {
@@ -203,6 +202,8 @@ namespace Web.Controllers
             db.SaveChanges();
             return RedirectToAction("Index");
         }
+
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)

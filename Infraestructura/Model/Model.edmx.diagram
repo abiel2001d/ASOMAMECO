@@ -4,10 +4,10 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="35b0a37565ee41e98e303424c130a76f" Name="Diagram1">
+      <Diagram DiagramId="5b29a69444b84c55a9290da157e02299" Name="Diagram1">
         <EntityTypeShape EntityType="Proyecto_Calidad_SoftwareModel.Administrador" Width="1.5" PointX="8" PointY="6" IsExpanded="true" />
         <EntityTypeShape EntityType="Proyecto_Calidad_SoftwareModel.Asistencia" Width="1.5" PointX="3" PointY="2.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="Proyecto_Calidad_SoftwareModel.Evento" Width="1.5" PointX="0.75" PointY="7.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="Proyecto_Calidad_SoftwareModel.Evento" Width="1.5" PointX="0.75" PointY="7.5" IsExpanded="true" />
         <EntityTypeShape EntityType="Proyecto_Calidad_SoftwareModel.Invitacion" Width="1.5" PointX="6" PointY="2.75" IsExpanded="true" />
         <EntityTypeShape EntityType="Proyecto_Calidad_SoftwareModel.Rol" Width="1.5" PointX="5.75" PointY="6.375" IsExpanded="true" />
         <EntityTypeShape EntityType="Proyecto_Calidad_SoftwareModel.Usuario" Width="1.5" PointX="0.75" PointY="2.5" IsExpanded="true" />

@@ -13,7 +13,7 @@ namespace ApplicationCore.Services
 
          IEnumerable<Invitacion> GetInvitacionesByEvento(int id_evento);
 
-        Task EnviarInvitaciones(Evento evento, UrlHelper urlHelper);
+        Task<bool> EnviarInvitaciones(Evento evento, UrlHelper urlHelper);
 
         Task ActualizarConfirmacion(int eventoId, int usuarioId, string respuesta);
 

@@ -21,7 +21,7 @@ namespace Infraestructura.Repository
                 {
                     ctx.Configuration.LazyLoadingEnabled = false;
 
-                    lista = ctx.Evento.ToList();
+                    lista = ctx.Evento.Where(x => x.Estado == true).ToList();
                 }
                 return lista;
         }
@@ -52,7 +52,7 @@ namespace Infraestructura.Repository
 
                 if (oEvento == null)
                 {
-
+                    evento.Estado = true;
                     //Insertar Evento
                     ctx.Evento.Add(evento);
                     //SaveChanges

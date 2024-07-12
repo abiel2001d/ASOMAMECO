@@ -15,26 +15,31 @@ namespace Infraestructura.Repository
     public class RepositoryInvitacion : IRepositoryInvitacion
     {
 
-        public async Task EnviarInvitaciones(Evento evento, UrlHelper urlHelper)
+        public async Task<bool> EnviarInvitaciones(Evento evento, UrlHelper urlHelper)
+{
+    IEnumerable<Usuario> lista = null;
+    try
+    {
+        using (MyContext ctx = new MyContext())
         {
-            IEnumerable<Usuario> lista = null;
-            try
-            {
-                using (MyContext ctx = new MyContext())
-                {
-                    ctx.Configuration.LazyLoadingEnabled = false;
-                    lista = ctx.Usuario.Where(u => u.Estado_usuario == "Activo").ToList();
-                }
+            ctx.Configuration.LazyLoadingEnabled = false;
+            lista = ctx.Usuario.Where(u => u.Estado_usuario == "Activo").ToList();
+        }
 
-                foreach (var usuario in lista)
-                {
-                    // Generate response URLs
-                    string yesUrl = urlHelper.Action("RespuestaInvitacion", "Evento", new { eventoId = evento.ID_Evento, usuarioId = usuario.Id_Usuario, respuesta = "Sí Asistirá" }, protocol: HttpContext.Current.Request.Url.Scheme);
-                    string noUrl = urlHelper.Action("RespuestaInvitacion", "Evento", new { eventoId = evento.ID_Evento, usuarioId = usuario.Id_Usuario, respuesta = "No Asistirá" }, protocol: HttpContext.Current.Request.Url.Scheme);
+        if (!lista.Any())
+        {
+            return false; // No users to send invitations to
+        }
 
-                    // Build email subject and body
-                    string subject = $"Invitación al evento: {evento.Nombre_Evento}";
-                    string body = $@"
+        foreach (var usuario in lista)
+        {
+            // Generate response URLs
+            string yesUrl = urlHelper.Action("RespuestaInvitacion", "Evento", new { eventoId = evento.ID_Evento, usuarioId = usuario.Id_Usuario, respuesta = "Sí Asistirá" }, protocol: HttpContext.Current.Request.Url.Scheme);
+            string noUrl = urlHelper.Action("RespuestaInvitacion", "Evento", new { eventoId = evento.ID_Evento, usuarioId = usuario.Id_Usuario, respuesta = "No Asistirá" }, protocol: HttpContext.Current.Request.Url.Scheme);
+
+            // Build email subject and body
+            string subject = $"Invitación al evento: {evento.Nombre_Evento}";
+            string body = $@"
 <html>
 <head>
     <style>
@@ -76,43 +81,39 @@ namespace Infraestructura.Repository
 </body>
 </html>";
 
+            // Send email
+            var correo = new Correo(usuario.Correo, subject, body);
+            await correo.EnviarCorreo();
 
-
-
-
-
-
-                    // Send email
-                    var correo = new Correo(usuario.Correo, subject, body);
-                    await correo.EnviarCorreo();
-
-                    // Insert invitation into the database
-                    using (MyContext ctx = new MyContext())
-                    {
-                        ctx.Invitacion.Add(new Invitacion
-                        {
-                            ID_Usuario = usuario.Id_Usuario,
-                            ID_Evento = evento.ID_Evento,
-                            Confirmado = "Enviado sin respuesta aún"
-                        });
-
-                        await ctx.SaveChangesAsync();
-                    }
-                }
-            }
-            catch (DbUpdateException dbEx)
+            // Insert invitation into the database
+            using (MyContext ctx = new MyContext())
             {
-                string mensaje = "";
-                Log.Error(dbEx, System.Reflection.MethodBase.GetCurrentMethod(), ref mensaje);
-                throw new Exception(mensaje);
-            }
-            catch (Exception ex)
-            {
-                string mensaje = "";
-                Log.Error(ex, System.Reflection.MethodBase.GetCurrentMethod(), ref mensaje);
-                throw;
+                ctx.Invitacion.Add(new Invitacion
+                {
+                    ID_Usuario = usuario.Id_Usuario,
+                    ID_Evento = evento.ID_Evento,
+                    Confirmado = "Enviado sin respuesta aún"
+                });
+
+                await ctx.SaveChangesAsync();
             }
         }
+
+        return true;
+    }
+    catch (DbUpdateException dbEx)
+    {
+        string mensaje = "";
+        Log.Error(dbEx, System.Reflection.MethodBase.GetCurrentMethod(), ref mensaje);
+        throw new Exception(mensaje);
+    }
+    catch (Exception ex)
+    {
+        string mensaje = "";
+        Log.Error(ex, System.Reflection.MethodBase.GetCurrentMethod(), ref mensaje);
+        throw;
+    }
+}
 
         public async Task ActualizarConfirmacion(int eventoId, int usuarioId, string respuesta)
         {

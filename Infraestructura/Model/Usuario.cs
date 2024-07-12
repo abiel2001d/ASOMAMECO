@@ -12,11 +12,10 @@ namespace Infraestructura.Model
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-
     [MetadataType(typeof(UsuarioMetadata))]
-
     public partial class Usuario
     {
+      
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Usuario()
         {
@@ -28,7 +27,6 @@ namespace Infraestructura.Model
         public string Nombre { get; set; }
         public string Cedula { get; set; }
         public string Estado_usuario { get; set; }
-        public string Estado_2 { get; set; }
         public string Correo { get; set; }
         public string Telefono { get; set; }
     

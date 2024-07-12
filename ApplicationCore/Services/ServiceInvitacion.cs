@@ -18,7 +18,7 @@ namespace ApplicationCore
             return repository.ActualizarConfirmacion(eventoId,usuarioId,respuesta);
         }
 
-        public Task EnviarInvitaciones(Evento evento, UrlHelper urlHelper)
+        public Task<bool> EnviarInvitaciones(Evento evento, UrlHelper urlHelper)
         {
             IRepositoryInvitacion repository = new RepositoryInvitacion();
             return repository.EnviarInvitaciones(evento, urlHelper);

@@ -104,7 +104,7 @@ namespace Web.Controllers
         // más detalles, vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID_Evento,Nombre_Evento,Fecha_Evento,Descripcion,Lugar,timePeriod")] Evento evento, string timePeriod, string Hora_Evento)
+        public ActionResult Edit([Bind(Include = "ID_Evento,Nombre_Evento,Fecha_Evento,Descripcion,Lugar,timePeriod,Estado")] Evento evento, string timePeriod, string Hora_Evento)
         {
             if (ModelState.IsValid)
             {
@@ -125,7 +125,7 @@ namespace Web.Controllers
 
                 // Asigna el valor ajustado al modelo
                 evento.Fecha_Evento = fechaEvento;
-
+                evento.Estado = true;
                 // Guardar los cambios en la base de datos
                 db.Entry(evento).State = EntityState.Modified;
                 db.SaveChanges();
@@ -206,6 +206,7 @@ namespace Web.Controllers
             }
         }
 
+   
         [HttpPost]
         public async Task<ActionResult> EnviarInvitaciones(int id)
         {
@@ -219,7 +220,12 @@ namespace Web.Controllers
             }
 
             UrlHelper urlHelper = new UrlHelper(Request.RequestContext);
-            await serviceInvitacion.EnviarInvitaciones(evento, urlHelper);
+            bool invitationsSent =  await serviceInvitacion.EnviarInvitaciones(evento, urlHelper);
+
+            if (!invitationsSent)
+            {
+                return Json(new { success = false, message = "No hay usuarios activos para enviar invitaciones." });
+            }
 
             var invitaciones = serviceInvitacion.GetInvitacionesByEvento(id)
                 .Select(i => new
@@ -232,6 +238,7 @@ namespace Web.Controllers
 
             return Json(new { success = true, invitaciones = invitaciones.ToList() });
         }
+
 
 
 

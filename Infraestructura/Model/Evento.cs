@@ -26,6 +26,7 @@ namespace Infraestructura.Model
         public System.DateTime Fecha_Evento { get; set; }
         public string Descripcion { get; set; }
         public string Lugar { get; set; }
+        public Nullable<bool> Estado { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Asistencia> Asistencia { get; set; }

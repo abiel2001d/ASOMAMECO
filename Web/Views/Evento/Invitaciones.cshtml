@@ -70,37 +70,43 @@
 </div>
 
 <script>
-    document.getElementById("send-invitation-button").addEventListener("click", function() {
-        var button = this;
-        var spinnerContainer = document.getElementById("spinner-container");
-        button.style.display = "none";
-        spinnerContainer.style.display = "inline-block";
+  document.getElementById("send-invitation-button").addEventListener("click", function() {
+    var button = this;
+    var spinnerContainer = document.getElementById("spinner-container");
+    button.style.display = "none";
+    spinnerContainer.style.display = "inline-block";
 
-        var eventId = @Model.ID_Evento;
-        $.ajax({
-            url: '@Url.Action("EnviarInvitaciones", "Evento")/' + eventId,
-            type: 'POST',
-            success: function(result) {
-                spinnerContainer.style.display = "none";
-                if (result.success) {
-                    updateTable(result.invitaciones);
-                } else {
-                    alert("Error al enviar invitaciones.");
-                    button.style.display = "inline-block";
-                }
-            },
-            error: function() {
-                spinnerContainer.style.display = "none";
-                alert("Error al enviar invitaciones.");
+    var eventId = @Model.ID_Evento;
+    $.ajax({
+        url: '@Url.Action("EnviarInvitaciones", "Evento")/' + eventId,
+        type: 'POST',
+        success: function(result) {
+            spinnerContainer.style.display = "none";
+            if (result.success) {
+
+                swal({ title: '', text: '¡Invitaciones enviadas con éxito!', type: 'success', customClass: 'swal-custom' });
+                updateTable(result.invitaciones);
+            } else {
+                swal({ title: '', text: result.message, type: 'error', customClass: 'swal-custom' });
                 button.style.display = "inline-block";
             }
-        });
+        },
+        error: function() {
+            spinnerContainer.style.display = "none";
+            swal({ title: '', text: 'Error al enviar invitaciones', type: 'error', customClass: 'swal-custom' });
+            button.style.display = "inline-block";
+        }
     });
+});
 
-    function updateTable(invitaciones) {
-        var tbody = document.getElementById("invitaciones-table-body");
-        tbody.innerHTML = "";
+function updateTable(invitaciones) {
+    var tbody = document.getElementById("invitaciones-table-body");
+    tbody.innerHTML = "";
 
+    if (invitaciones.length === 0) {
+        tbody.innerHTML = "<tr><td colspan='4'>No hay invitaciones enviadas aún.</td></tr>";
+        document.getElementById("send-invitation-button").style.display = "inline-block";
+    } else {
         invitaciones.forEach(function(invitacion) {
             var row = "<tr>";
             row += "<td>" + invitacion.Cedula + "</td>";
@@ -111,10 +117,10 @@
             tbody.innerHTML += row;
         });
 
-        if (invitaciones.length > 0) {
-            document.getElementById("send-invitation-button").style.display = "none";
-        }
+        document.getElementById("send-invitation-button").style.display = "none";
     }
+}
+
 </script>
 
 <style>
