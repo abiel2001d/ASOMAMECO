@@ -285,6 +285,8 @@
     <Content Include="Views\Evento\Invitaciones.cshtml" />
     <Content Include="Views\Usuario\Create.cshtml" />
     <Content Include="Views\Evento\RespuestaInvitacion.cshtml" />
+    <Content Include="Views\Evento\Asistencias.cshtml" />
+    <Content Include="Views\Usuario\UsuarioPorEstadoList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

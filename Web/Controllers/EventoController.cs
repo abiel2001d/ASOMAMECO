@@ -135,6 +135,51 @@ namespace Web.Controllers
             return View(evento);
         }
 
+
+
+
+        public ActionResult Asistencias(int id)
+        {
+            ServiceAsistencia serviceAsistencia = new ServiceAsistencia();
+            ServiceInvitacion serviceInvitacion = new ServiceInvitacion();
+
+            var asistencias = serviceAsistencia.GetAsistenciasByEvento(id);
+            var invitaciones = serviceInvitacion.GetInvitacionesByEvento(id);
+
+            ViewBag.Asistencias = asistencias;
+            ViewBag.Invitaciones = invitaciones;
+
+            var evento = invitaciones.FirstOrDefault()?.Evento ?? new Evento();
+            return View(evento);
+        }
+
+     
+        [HttpPost]
+        public JsonResult MarcarAsistencia(int idUsuario, int idEvento)
+        {
+            ServiceAsistencia serviceAsistencia = new ServiceAsistencia();
+            var result = serviceAsistencia.MarcarAsistencia(idUsuario, idEvento);
+            if (result != null)
+            {
+                var asistenciaDto = new
+                {
+                    Usuario = new
+                    {
+                        Cedula = result.Usuario.Cedula,
+                        Nombre = result.Usuario.Nombre,
+                        Correo = result.Usuario.Correo
+                    },
+                    Presente = result.Presente,
+                    Hora_Asistencia = DateTime.Today.Add(result.Hora_Asistencia).ToString("hh:mm tt")
+                };
+
+                return Json(new { success = true, asistencia = asistenciaDto });
+            }
+            return Json(new { success = false, message = "Error al marcar asistencia" });
+        }
+
+
+
         // GET: Evento/Delete/5
         public ActionResult Delete(int? id)
         {

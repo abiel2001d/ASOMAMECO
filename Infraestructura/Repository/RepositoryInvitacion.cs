@@ -154,7 +154,7 @@ namespace Infraestructura.Repository
                 {
                     ctx.Configuration.LazyLoadingEnabled = false;
 
-                    lista = ctx.Invitacion.Include("Usuario").Where(x => x.ID_Evento == id_evento).ToList();
+                    lista = ctx.Invitacion.Include("Usuario").Include("Evento").Where(x => x.ID_Evento == id_evento).ToList();
                 }
                 return lista;
             }

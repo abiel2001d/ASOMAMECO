@@ -1,0 +1,170 @@
+﻿@model Infraestructura.Model.Evento
+@{
+    ViewBag.Title = "Asistencias";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var asistencias = ViewBag.Asistencias as IEnumerable<Infraestructura.Model.Asistencia>;
+    var invitaciones = ViewBag.Invitaciones as IEnumerable<Infraestructura.Model.Invitacion>;
+}
+
+<div class="container">
+    <p class="mt-3">
+        <div id="spinner-container" style="display: none;">
+            <div id="spinner" class="spinner-border spinner-border-sm text-primary" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+            <span id="sending-text">Actualizando Asistencia</span>
+        </div>
+    </p>
+    <div class="card mb-3">
+        <div class="card-header">
+            <h5>Evento: @Model.Nombre_Evento</h5>
+        </div>
+        <div class="card-body">
+            <p><strong>Fecha & Hora:</strong> @Model.Fecha_Evento.ToString("dd/MMMM/yyyy hh:mm tt")</p>
+            <p><strong>Lugar:</strong> @Model.Lugar</p>
+            <p><strong>Descripción:</strong> @Model.Descripcion</p>
+        </div>
+    </div>
+
+    <div class="card mb-3">
+        <div class="card-header">
+            <h5>Lista de Asistencias</h5>
+        </div>
+        <div class="card-body">
+            <table class="table table-hover table-sm">
+                <thead class="thead-light">
+                    <tr>
+                        <th>Cédula</th>
+                        <th>Nombre</th>
+                        <th>Respuesta Invitación</th>
+                        <th class="text-center">Hora de Marca</th>
+                        <th class="text-center">Marcar</th>
+                    </tr>
+                </thead>
+                <tbody id="asistencias-table-body">
+                    @foreach (var invitacion in invitaciones)
+                    {
+                        var asistencia = asistencias.FirstOrDefault(a => a.ID_Usuario == invitacion.ID_Usuario);
+                    <tr>
+                        <td>@invitacion.Usuario.Cedula</td>
+                        <td>@invitacion.Usuario.Nombre</td>
+                        <td>
+                            <span class="status-box @(invitacion.Confirmado == "Enviado sin respuesta aún" ? "status-gray" : invitacion.Confirmado == "No Asistirá" ? "status-red" : "status-green")">
+                                @invitacion.Confirmado
+                            </span>
+                        </td>
+                        <td class="text-center">
+                            @(asistencia != null && asistencia.Presente == "Presente" ? DateTime.Today.Add(asistencia.Hora_Asistencia).ToString("hh:mm tt") : "-")
+                        </td>
+                        <td class="text-center">
+                            @if (asistencia != null && asistencia.Presente == "Presente")
+                            {
+                                <span class="status-box status-green">Presente</span>
+                            }
+                            else
+                            {
+                                <button class="btn btn-outline-primary mark-attendance-button"
+                                      
+                                        data-usuario="@invitacion.ID_Usuario"
+                                        data-evento="@invitacion.ID_Evento">
+                                    <i class="fas fa-user-check"></i>
+                                </button>
+
+                            }
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var buttons = document.querySelectorAll('.mark-attendance-button');
+        buttons.forEach(function (button) {
+            button.addEventListener('click', function () {
+                var usuarioId = button.getAttribute('data-usuario');
+                var eventoId = button.getAttribute('data-evento');
+
+                button.disabled = true;
+
+                // AJAX request using XMLHttpRequest
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', '@Url.Action("MarcarAsistencia", "Evento")', true);
+                xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === 4) {
+                        if (xhr.status === 200) {
+                            var result = JSON.parse(xhr.responseText);
+                            if (result.success) {
+                                swal({ title: '', text: '¡Asistencia marcada con éxito!', type: 'success', customClass: 'swal-custom' });
+                                updateTable(result.asistencia);
+                            } else {
+                                swal({ title: '', text: result.message, type: 'error', customClass: 'swal-custom' });
+                                button.disabled = false;
+                            }
+                        } else {
+                            swal({ title: '', text: 'Error al marcar asistencia', type: 'error', customClass: 'swal-custom' });
+                            button.disabled = false;
+                        }
+                    }
+                };
+
+                xhr.send('idUsuario=' + encodeURIComponent(usuarioId) + '&idEvento=' + encodeURIComponent(eventoId));
+            });
+        });
+    });
+
+    function updateTable(asistencia) {
+        if (!asistencia || !asistencia.Usuario) {
+            console.error('Invalid asistencia object', asistencia);
+            return;
+        }
+
+        var tbody = document.getElementById("asistencias-table-body");
+        var rows = tbody.querySelectorAll("tr");
+        rows.forEach(function (row) {
+            var cedula = row.querySelector("td:first-child").textContent;
+            if (cedula === asistencia.Usuario.Cedula) {
+                row.querySelector("td:nth-child(4)").textContent = asistencia.Hora_Asistencia;
+                row.querySelector("td:nth-child(5)").innerHTML = '<span class="status-box status-green">Presente</span>';
+            }
+        });
+    }
+</script>
+
+<style>
+    .table-sm {
+        font-size: 0.875rem;
+    }
+
+    .status-box {
+        display: inline-block;
+        padding: 0.2em 0.6em;
+        border-radius: 0.25em;
+        color: white;
+    }
+
+    .status-gray {
+        background-color: gray;
+    }
+
+    .status-green {
+        background-color: mediumseagreen;
+    }
+
+    .status-red {
+        background-color: crimson;
+    }
+
+    .card-body p {
+        margin: 5px 0;
+    }
+
+    .text-center {
+        text-align: center;
+    }
+</style>

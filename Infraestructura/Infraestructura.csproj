@@ -156,10 +156,12 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\IRepositoryAdministrador.cs" />
+    <Compile Include="Repository\IRepositoryAsistencia.cs" />
     <Compile Include="Repository\IRepositoryEvento.cs" />
     <Compile Include="Repository\IRepositoryInvitacion.cs" />
     <Compile Include="Repository\IRepositoryUsuario.cs" />
     <Compile Include="Repository\RepositoryAdministrador.cs" />
+    <Compile Include="Repository\RepositoryAsistencia.cs" />
     <Compile Include="Repository\RepositoryEvento.cs" />
     <Compile Include="Repository\RepositoryInvitacion.cs" />
     <Compile Include="Repository\RepositoryUsuario.cs" />
