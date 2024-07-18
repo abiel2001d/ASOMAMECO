@@ -30,5 +30,16 @@ namespace ApplicationCore.Services
             return repository.Save(usuario);
         }
 
+        public IEnumerable<Usuario> GetUsuariosPorEstado(string estado)
+        {
+            IRepositoryUsuario repository = new RepositoryUsuario();
+            return repository.GetUsuariosPorEstado(estado);
+        }
+
+        public bool Delete(int id)
+        {
+            IRepositoryUsuario repository = new RepositoryUsuario();
+            return repository.Delete(id);
+        }
     }
 }

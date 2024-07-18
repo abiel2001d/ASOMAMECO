@@ -12,5 +12,9 @@ namespace ApplicationCore.Services
         IEnumerable<Usuario> GetUsuarios();
         Usuario GetUsuarioByID(int id);
         Usuario Save(Usuario usuario);
+
+        bool Delete(int id);
+
+        IEnumerable<Usuario> GetUsuariosPorEstado(string estado);
     }
 }
