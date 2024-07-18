@@ -1,1 +1,103 @@
-﻿
+﻿@model IEnumerable<Infraestructura.Model.Usuario>
+
+<style>
+    .table-sm {
+        font-size: 0.875rem;
+    }
+
+    .table thead th {
+        border-bottom: 2px solid #dee2e6;
+    }
+
+    .table tbody tr:hover {
+        background-color: #f8f9fa;
+    }
+
+    .action-buttons a {
+        margin-right: 5px;
+    }
+
+    .centered-title {
+        text-align: center;
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+
+    .filter-input {
+        width: 100%;
+        padding: 5px;
+        box-sizing: border-box;
+    }
+
+    thead .thead-light {
+        margin-bottom: 20px;
+    }
+
+</style>
+
+<div class="container">
+    <table class="table table-hover table-sm">
+        <thead class="thead-light">
+            <tr>
+                <th>
+                    <input type="text" id="filterNombre" class="filter-input" placeholder="Filtrar por Nombre">
+                    @Html.DisplayNameFor(model => model.Nombre)
+                </th>
+                <th>
+                    <input type="text" id="filterCedula" class="filter-input" placeholder="Filtrar por Cédula">
+                    @Html.DisplayNameFor(model => model.Cedula)
+                </th>
+                <th>
+                    <input type="text" id="filterEstado" class="filter-input" placeholder="Filtrar por Estado">
+                    Estado
+                </th>
+                <th>
+                    <input type="text" id="filterCorreo" class="filter-input" placeholder="Filtrar por Correo">
+                    @Html.DisplayNameFor(model => model.Correo)
+                </th>
+                <th>
+                    <input type="text" id="filterTelefono" class="filter-input" placeholder="Filtrar por Teléfono">
+                    @Html.DisplayNameFor(model => model.Telefono)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td class="w-25">
+                        @Html.DisplayFor(modelItem => item.Nombre)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Cedula)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Estado_usuario)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Correo)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Telefono)
+                    </td>
+                    <td class="action-buttons">
+                        <a href="@Url.Action("Edit", new { id = item.Id_Usuario })" class="btn btn-secondary btn-sm" title="Editar">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <a href="@Url.Action("Details", new { id = item.Id_Usuario })" class="btn btn-info btn-sm" title="Detalles">
+                            <i class="fas fa-info-circle"></i>
+                        </a>
+                        <a href="@Url.Action("Delete", new { id = item.Id_Usuario })" class="btn btn-danger btn-sm" title="Borrar">
+                            <i class="fas fa-trash-alt"></i>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="centered-title">
+        @Html.ActionLink("Regresar a la Lista Principal", "Index", null, new { @class = "btn btn-primary" })
+    </div>
+</div>

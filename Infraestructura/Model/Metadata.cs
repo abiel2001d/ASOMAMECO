@@ -17,6 +17,7 @@ namespace Infraestructura.Model
         [RegularExpression(@"^\d{1,3}-?\d{3,4}-?\d{4}$", ErrorMessage = "El número de cédula no tiene un formato válido.")]
         public string Cedula { get; set; }
         [Display(Name = "Estado miembro")]
+        [Required(ErrorMessage = "{0} es un dato requerido")]
         public string Estado_usuario { get; set; }
        [Required(ErrorMessage = "{0} es un dato requerido")]
         [RegularExpression(@"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$", ErrorMessage = "El correo electrónico introducido no tiene un formato válido.")]
