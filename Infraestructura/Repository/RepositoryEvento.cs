@@ -21,7 +21,7 @@ namespace Infraestructura.Repository
                 {
                     ctx.Configuration.LazyLoadingEnabled = false;
 
-                    lista = ctx.Evento.Where(x => x.Estado == true).ToList();
+                    lista = ctx.Evento.Include("Invitacion").Where(x => x.Estado == true).ToList();
                 }
                 return lista;
         }

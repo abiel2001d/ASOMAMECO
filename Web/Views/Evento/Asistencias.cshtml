@@ -26,11 +26,33 @@
         </div>
     </div>
 
+    <div class="mb-3">
+        <a href="@Url.Action("Index", "Evento")" class="btn btn-secondary">Volver a Eventos</a>
+    </div>
+
     <div class="card mb-3">
         <div class="card-header">
             <h5>Lista de Asistencias</h5>
         </div>
         <div class="card-body">
+            <!-- Search Inputs -->
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <input type="text" id="search-cedula" class="form-control" placeholder="Buscar por Cédula">
+                </div>
+                <div class="col-md-4">
+                    <input type="text" id="search-nombre" class="form-control" placeholder="Buscar por Nombre">
+                </div>
+
+                <div class="col-md-4">
+                    <select id="search-estado" class="form-control">
+                        <option value="">Todos</option>
+                        <option value="Presente">Presente</option>
+                        <option value="No Presente">No Presente</option>
+                    </select>
+                </div>
+            </div>
+
             <table class="table table-hover table-sm">
                 <thead class="thead-light">
                     <tr>
@@ -45,34 +67,33 @@
                     @foreach (var invitacion in invitaciones)
                     {
                         var asistencia = asistencias.FirstOrDefault(a => a.ID_Usuario == invitacion.ID_Usuario);
-                    <tr>
-                        <td>@invitacion.Usuario.Cedula</td>
-                        <td>@invitacion.Usuario.Nombre</td>
-                        <td>
-                            <span class="status-box @(invitacion.Confirmado == "Enviado sin respuesta aún" ? "status-gray" : invitacion.Confirmado == "No Asistirá" ? "status-red" : "status-green")">
-                                @invitacion.Confirmado
-                            </span>
-                        </td>
-                        <td class="text-center">
-                            @(asistencia != null && asistencia.Presente == "Presente" ? DateTime.Today.Add(asistencia.Hora_Asistencia).ToString("hh:mm tt") : "-")
-                        </td>
-                        <td class="text-center">
-                            @if (asistencia != null && asistencia.Presente == "Presente")
-                            {
-                                <span class="status-box status-green">Presente</span>
-                            }
-                            else
-                            {
-                                <button class="btn btn-outline-primary mark-attendance-button"
-                                      
-                                        data-usuario="@invitacion.ID_Usuario"
-                                        data-evento="@invitacion.ID_Evento">
-                                    <i class="fas fa-user-check"></i>
-                                </button>
+                        <tr>
+                            <td>@invitacion.Usuario.Cedula</td>
+                            <td>@invitacion.Usuario.Nombre</td>
+                            <td>
+                                <span class="status-box @(invitacion.Confirmado == "Enviado sin respuesta aún" ? "status-gray" : invitacion.Confirmado == "No Asistirá" ? "status-red" : "status-green")">
+                                    @invitacion.Confirmado
+                                </span>
+                            </td>
+                            <td class="text-center">
+                                @(asistencia != null && asistencia.Presente == "Presente" ? DateTime.Today.Add(asistencia.Hora_Asistencia).ToString("hh:mm tt") : "-")
+                            </td>
+                            <td class="text-center">
+                                @if (asistencia != null && asistencia.Presente == "Presente")
+                                {
+                                    <span class="status-box status-green">Presente</span>
+                                }
+                                else
+                                {
+                                    <button class="btn btn-outline-primary mark-attendance-button"
+                                            data-usuario="@invitacion.ID_Usuario"
+                                            data-evento="@invitacion.ID_Evento">
+                                        <i class="fas fa-user-check"></i>
+                                    </button>
 
-                            }
-                        </td>
-                    </tr>
+                                }
+                            </td>
+                        </tr>
                     }
                 </tbody>
             </table>
@@ -116,7 +137,35 @@
                 xhr.send('idUsuario=' + encodeURIComponent(usuarioId) + '&idEvento=' + encodeURIComponent(eventoId));
             });
         });
+
+        document.getElementById('search-nombre').addEventListener('input', filterTable);
+        document.getElementById('search-cedula').addEventListener('input', filterTable);
+        document.getElementById('search-estado').addEventListener('change', filterTable);
     });
+
+    function filterTable() {
+        var nombreInput = document.getElementById('search-nombre').value.toLowerCase();
+        var cedulaInput = document.getElementById('search-cedula').value.toLowerCase();
+        var estadoInput = document.getElementById('search-estado').value;
+
+        var rows = document.querySelectorAll('#asistencias-table-body tr');
+
+        rows.forEach(function (row) {
+            var nombre = row.children[1].textContent.toLowerCase();
+            var cedula = row.children[0].textContent.toLowerCase();
+            var estado = row.children[4].textContent.trim();
+
+            var nombreMatch = nombre.includes(nombreInput);
+            var cedulaMatch = cedula.includes(cedulaInput);
+            var estadoMatch = (estadoInput === "" || (estadoInput === "Presente" && estado === "Presente") || (estadoInput === "No Presente" && estado !== "Presente"));
+
+            if (nombreMatch && cedulaMatch && estadoMatch) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    }
 
     function updateTable(asistencia) {
         if (!asistencia || !asistencia.Usuario) {

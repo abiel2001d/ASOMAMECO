@@ -6,7 +6,6 @@
 }
 
 <style>
-
     .table-sm {
         font-size: 0.875rem;
     }
@@ -44,16 +43,9 @@
     <table class="table table-hover table-sm">
         <thead class="thead-light">
             <tr>
-                <th>
-                    Evento
-                </th>
-                <th>
-                   Fecha & Hora
-                </th>
-              
-                <th>
-                   Lugar
-                </th>
+                <th>Evento</th>
+                <th>Fecha & Hora</th>
+                <th>Lugar</th>
                 <th></th>
             </tr>
         </thead>
@@ -65,21 +57,27 @@
                         @Html.DisplayFor(modelItem => item.Nombre_Evento)
                     </td>
                     <td>
-                        @item.Fecha_Evento.ToString("dd/MMMM/yyyy hh:mmtt")
+                        @item.Fecha_Evento.ToString("dd/MMMM/yyyy hh:mm tt")
                     </td>
-                  
                     <td>
                         @Html.DisplayFor(modelItem => item.Lugar)
                     </td>
                     <td class="action-buttons">
-
                         <a href="@Url.Action("Invitaciones", new { id = item.ID_Evento })" class="btn btn-outline-primary btn-sm" title="Invitaciones">
                             <i class="fas fa-paper-plane"></i> Invitaciones
                         </a>
-                        <a href="@Url.Action("Asistencias", new { id = item.ID_Evento })" class="btn btn-outline-primary btn-sm" title="Asistencia">
-                            <i class="fas fa-list-check"></i> Asistencia
-                        </a>
-
+                        @if (item.Invitacion != null && item.Invitacion.Any())
+                        {
+                            <a href="@Url.Action("Asistencias", new { id = item.ID_Evento })" class="btn btn-outline-primary btn-sm" title="Asistencia">
+                                <i class="fas fa-list-check"></i> Asistencia
+                            </a>
+                        }
+                        else
+                        {
+                            <a href="#" class="btn btn-outline-dark btn-sm disabled" title="Asistencia">
+                                <i class="fas fa-list-check"></i> Asistencia
+                            </a>
+                        }
                         <a href="@Url.Action("Edit", new { id = item.ID_Evento })" class="btn btn-secondary btn-sm" title="Editar">
                             <i class="fas fa-edit"></i>
                         </a>

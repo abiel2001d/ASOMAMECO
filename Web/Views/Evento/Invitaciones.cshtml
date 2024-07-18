@@ -26,11 +26,35 @@
         </div>
     </div>
 
+    <!-- Button to return to Evento Index -->
+    <div class="mb-3">
+        <a href="@Url.Action("Index", "Evento")" class="btn btn-secondary">Volver a Eventos</a>
+    </div>
+
     <div class="card mb-3">
         <div class="card-header">
             <h5>Lista de invitaciones</h5>
         </div>
         <div class="card-body">
+            <!-- Search Inputs -->
+            <div class="row mb-3">
+
+                <div class="col-md-4">
+                    <input type="text" id="search-cedula" class="form-control" placeholder="Buscar por Cédula">
+                </div>
+                <div class="col-md-4">
+                    <input type="text" id="search-nombre" class="form-control" placeholder="Buscar por Nombre">
+                </div>
+                <div class="col-md-4">
+                    <select id="search-estado" class="form-control">
+                        <option value="">Todos</option>
+                        <option value="Enviado sin respuesta aún">Sin Respuesta</option>
+                        <option value="No Asistirá">No Asistirá</option>
+                        <option value="Sí Asistirá">Sí Asistirá</option>
+                    </select>
+                </div>
+            </div>
+
             <table class="table table-hover table-sm">
                 <thead class="thead-light">
                     <tr>
@@ -45,23 +69,23 @@
                     {
                         foreach (var invitacion in invitaciones)
                         {
-                    <tr>
-                        <td>@invitacion.Usuario.Cedula</td>
-                        <td>@invitacion.Usuario.Nombre</td>
-                        <td>@invitacion.Usuario.Correo</td>
-                        <td>
-                            <span class="status-box @(invitacion.Confirmado == "Enviado sin respuesta aún" ? "status-gray" : invitacion.Confirmado == "No Asistirá" ? "status-red" : "status-green")">
-                                @invitacion.Confirmado
-                            </span>
-                        </td>
-                    </tr>
+                            <tr>
+                                <td>@invitacion.Usuario.Cedula</td>
+                                <td>@invitacion.Usuario.Nombre</td>
+                                <td>@invitacion.Usuario.Correo</td>
+                                <td>
+                                    <span class="status-box @(invitacion.Confirmado == "Enviado sin respuesta aún" ? "status-gray" : invitacion.Confirmado == "No Asistirá" ? "status-red" : "status-green")">
+                                        @invitacion.Confirmado
+                                    </span>
+                                </td>
+                            </tr>
                         }
                     }
                     else
                     {
-                    <tr>
-                        <td colspan="4">No hay invitaciones enviadas aún.</td>
-                    </tr>
+                        <tr>
+                            <td colspan="4">No hay invitaciones enviadas aún.</td>
+                        </tr>
                     }
                 </tbody>
             </table>
@@ -70,57 +94,83 @@
 </div>
 
 <script>
-  document.getElementById("send-invitation-button").addEventListener("click", function() {
-    var button = this;
-    var spinnerContainer = document.getElementById("spinner-container");
-    button.style.display = "none";
-    spinnerContainer.style.display = "inline-block";
+    document.getElementById("send-invitation-button").addEventListener("click", function() {
+        var button = this;
+        var spinnerContainer = document.getElementById("spinner-container");
+        button.style.display = "none";
+        spinnerContainer.style.display = "inline-block";
 
-    var eventId = @Model.ID_Evento;
-    $.ajax({
-        url: '@Url.Action("EnviarInvitaciones", "Evento")/' + eventId,
-        type: 'POST',
-        success: function(result) {
-            spinnerContainer.style.display = "none";
-            if (result.success) {
-
-                swal({ title: '', text: '¡Invitaciones enviadas con éxito!', type: 'success', customClass: 'swal-custom' });
-                updateTable(result.invitaciones);
-            } else {
-                swal({ title: '', text: result.message, type: 'error', customClass: 'swal-custom' });
+        var eventId = @Model.ID_Evento;
+        $.ajax({
+            url: '@Url.Action("EnviarInvitaciones", "Evento")/' + eventId,
+            type: 'POST',
+            success: function(result) {
+                spinnerContainer.style.display = "none";
+                if (result.success) {
+                    swal({ title: '', text: '¡Invitaciones enviadas con éxito!', type: 'success', customClass: 'swal-custom' });
+                    updateTable(result.invitaciones);
+                } else {
+                    swal({ title: '', text: result.message, type: 'error', customClass: 'swal-custom' });
+                    button.style.display = "inline-block";
+                }
+            },
+            error: function() {
+                spinnerContainer.style.display = "none";
+                swal({ title: '', text: 'Error al enviar invitaciones', type: 'error', customClass: 'swal-custom' });
                 button.style.display = "inline-block";
             }
-        },
-        error: function() {
-            spinnerContainer.style.display = "none";
-            swal({ title: '', text: 'Error al enviar invitaciones', type: 'error', customClass: 'swal-custom' });
-            button.style.display = "inline-block";
-        }
-    });
-});
-
-function updateTable(invitaciones) {
-    var tbody = document.getElementById("invitaciones-table-body");
-    tbody.innerHTML = "";
-
-    if (invitaciones.length === 0) {
-        tbody.innerHTML = "<tr><td colspan='4'>No hay invitaciones enviadas aún.</td></tr>";
-        document.getElementById("send-invitation-button").style.display = "inline-block";
-    } else {
-        invitaciones.forEach(function(invitacion) {
-            var row = "<tr>";
-            row += "<td>" + invitacion.Cedula + "</td>";
-            row += "<td>" + invitacion.Nombre + "</td>";
-            row += "<td>" + invitacion.Correo + "</td>";
-            row += "<td><span class='status-box " + (invitacion.Confirmado == "Enviado sin respuesta aún" ? "status-gray" : invitacion.Confirmado == "No asistirá" ? "status-red" : "status-green") + "'>" + invitacion.Confirmado + "</span></td>";
-            row += "</tr>";
-            tbody.innerHTML += row;
         });
+    });
 
-        document.getElementById("send-invitation-button").style.display = "none";
+    document.getElementById('search-nombre').addEventListener('input', filterTable);
+    document.getElementById('search-cedula').addEventListener('input', filterTable);
+    document.getElementById('search-estado').addEventListener('change', filterTable);
+
+    function filterTable() {
+        var nombreInput = document.getElementById('search-nombre').value.toLowerCase();
+        var cedulaInput = document.getElementById('search-cedula').value.toLowerCase();
+        var estadoInput = document.getElementById('search-estado').value;
+
+        var rows = document.querySelectorAll('#invitaciones-table-body tr');
+
+        rows.forEach(function(row) {
+            var nombre = row.children[1].textContent.toLowerCase();
+            var cedula = row.children[0].textContent.toLowerCase();
+            var estado = row.children[3].textContent.trim();
+
+            var nombreMatch = nombre.includes(nombreInput);
+            var cedulaMatch = cedula.includes(cedulaInput);
+            var estadoMatch = (estadoInput === "" || estado === estadoInput);
+
+            if (nombreMatch && cedulaMatch && estadoMatch) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
     }
-}
 
+    function updateTable(invitaciones) {
+        var tbody = document.getElementById("invitaciones-table-body");
+        tbody.innerHTML = "";
+
+        if (invitaciones.length === 0) {
+            tbody.innerHTML = "<tr><td colspan='4'>No hay invitaciones enviadas aún.</td></tr>";
+            document.getElementById("send-invitation-button").style.display = "inline-block";
+        } else {
+            invitaciones.forEach(function(invitacion) {
+                var row = "<tr>";
+                row += "<td>" + invitacion.Cedula + "</td>";
+                row += "<td>" + invitacion.Nombre + "</td>";
+                row += "<td>" + invitacion.Correo + "</td>";
+                row += "<td><span class='status-box " + (invitacion.Confirmado == "Enviado sin respuesta aún" ? "status-gray" : invitacion.Confirmado == "No asistirá" ? "status-red" : "status-green") + "'>" + invitacion.Confirmado + "</span></td>";
+                row += "</tr>";
+                tbody.innerHTML += row;
+            });
+
+            document.getElementById("send-invitation-button").style.display = "none";
+        }
+    }
 </script>
 
 <style>

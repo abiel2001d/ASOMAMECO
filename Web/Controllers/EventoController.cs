@@ -138,13 +138,35 @@ namespace Web.Controllers
 
 
 
-        public ActionResult Asistencias(int id)
+        public ActionResult Asistencias(int id, string nombre = "", string cedula = "", string estado = "")
         {
             ServiceAsistencia serviceAsistencia = new ServiceAsistencia();
             ServiceInvitacion serviceInvitacion = new ServiceInvitacion();
 
             var asistencias = serviceAsistencia.GetAsistenciasByEvento(id);
             var invitaciones = serviceInvitacion.GetInvitacionesByEvento(id);
+
+            if (!string.IsNullOrEmpty(nombre))
+            {
+                invitaciones = invitaciones.Where(i => i.Usuario.Nombre.ToLower().Contains(nombre.ToLower()));
+            }
+
+            if (!string.IsNullOrEmpty(cedula))
+            {
+                invitaciones = invitaciones.Where(i => i.Usuario.Cedula.ToLower().Contains(cedula.ToLower()));
+            }
+
+            if (!string.IsNullOrEmpty(estado))
+            {
+                if (estado == "Presente")
+                {
+                    invitaciones = invitaciones.Where(i => asistencias.Any(a => a.ID_Usuario == i.ID_Usuario && a.Presente == "Presente"));
+                }
+                else if (estado == "No Presente")
+                {
+                    invitaciones = invitaciones.Where(i => !asistencias.Any(a => a.ID_Usuario == i.ID_Usuario && a.Presente == "Presente"));
+                }
+            }
 
             ViewBag.Asistencias = asistencias;
             ViewBag.Invitaciones = invitaciones;
@@ -153,7 +175,8 @@ namespace Web.Controllers
             return View(evento);
         }
 
-     
+
+
         [HttpPost]
         public JsonResult MarcarAsistencia(int idUsuario, int idEvento)
         {
