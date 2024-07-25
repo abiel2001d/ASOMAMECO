@@ -43,15 +43,18 @@
     {
         // <input type="file" name="file" required />
 
+
 @Html.ActionLink("Agregar Nuevo Miembro", "Create", null, new { @style = "margin-bottom: 20px;", @class = "btn btn-primary" })}
 
 
- 
+
+
 
     <table class="table table-hover table-sm">
         <thead class="thead-light">
             <tr>
                 <th>
+
                     <input type="text" id="filterNombre" class="form-control mb-3" placeholder="Filtrar por Nombre">
                     @Html.DisplayNameFor(model => model.Nombre)
                 </th>
@@ -69,6 +72,7 @@
                 </th>
                 <th>
                     <input type="text" id="filterTelefono"  class="form-control mb-3" placeholder="Filtrar por Teléfono">
+
                     @Html.DisplayNameFor(model => model.Telefono)
                 </th>
                 <th></th>
@@ -112,7 +116,9 @@
 
 @section Scripts{
     @Scripts.Render("~/bundles/jqueryajax")
+
     <script>$(document).ready(function () {
+
             function filterTable() {
                 var nombre = $('#filterNombre').val().toLowerCase();
                 var cedula = $('#filterCedula').val().toLowerCase();
@@ -145,6 +151,8 @@
                 });
             }
 
+
     $('.form-control').on('keyup', filterTable);
         });</script>
+
 }

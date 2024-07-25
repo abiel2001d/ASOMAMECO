@@ -55,6 +55,7 @@
 
 @using (Html.BeginForm())
 {
+
 @Html.AntiForgeryToken()
 
                 <div class="form-horizontal form-container">
@@ -115,6 +116,7 @@
                         @Html.ActionLink("Regresar", "Index", new { @class = "btn btn-link" })
                     </div>
                 </div>}
+
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
