@@ -12,7 +12,7 @@ namespace Infraestructura.Repository
 {
     public class RepositoryUsuario : IRepositoryUsuario
     {
-      
+
         public IEnumerable<Usuario> GetUsuarios()
         {
             IEnumerable<Usuario> lista = null;

@@ -162,7 +162,7 @@ namespace Web.Controllers
                 {
                     invitaciones = invitaciones.Where(i => asistencias.Any(a => a.ID_Usuario == i.ID_Usuario && a.Presente == "Presente"));
                 }
-                else if (estado == "No Presente")
+                else if (estado == "Ausente")
                 {
                     invitaciones = invitaciones.Where(i => !asistencias.Any(a => a.ID_Usuario == i.ID_Usuario && a.Presente == "Presente"));
                 }
@@ -274,7 +274,19 @@ namespace Web.Controllers
             }
         }
 
-   
+        [HttpPost]
+        public JsonResult ConcluirAsistencia(int idEvento)
+        {
+            ServiceAsistencia serviceAsistencia = new ServiceAsistencia();
+            var result = serviceAsistencia.ConcluirAsistencia(idEvento);
+            if (result)
+            {
+                return Json(new { success = true });
+            }
+            return Json(new { success = false, message = "Error al concluir asistencia" });
+        }
+
+
         [HttpPost]
         public async Task<ActionResult> EnviarInvitaciones(int id)
         {

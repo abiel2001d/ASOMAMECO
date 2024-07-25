@@ -4,6 +4,10 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     var asistencias = ViewBag.Asistencias as IEnumerable<Infraestructura.Model.Asistencia>;
     var invitaciones = ViewBag.Invitaciones as IEnumerable<Infraestructura.Model.Invitacion>;
+    var presentes = asistencias.Count(a => a.Presente == "Presente");
+    var ausentes = invitaciones.Count() - presentes;
+    var totalAsistencias = asistencias.Where(a => a.Evento != null).ToList().Count();
+    var totalInvitaciones = invitaciones.Count();
 }
 
 <div class="container">
@@ -15,8 +19,10 @@
             <span id="sending-text">Actualizando Asistencia</span>
         </div>
     </p>
+
+
     <div class="card mb-3">
-        <div class="card-header">
+        <div class="card-header d-flex justify-content-between align-items-center">
             <h5>Evento: @Model.Nombre_Evento</h5>
         </div>
         <div class="card-body">
@@ -26,13 +32,24 @@
         </div>
     </div>
 
-    <div class="mb-3">
-        <a href="@Url.Action("Index", "Evento")" class="btn btn-secondary">Volver a Eventos</a>
+
+    <div class="d-flex mb-3">
+        <a href="@Url.Action("Index", "Evento")" class="btn btn-secondary" style="margin-right:10px">Volver a Eventos</a>
+        @if (totalAsistencias != totalInvitaciones)
+        {
+            <button class="btn btn-primary" id="concluir-asistencia-button">Concluir Asistencia</button>
+        }
     </div>
 
+
+
     <div class="card mb-3">
-        <div class="card-header">
-            <h5>Lista de Asistencias</h5>
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5>Lista de Asistencia</h5>
+            <div class="status-indicators">
+                <span class="status-box status-green">Presentes: @presentes</span>
+                <span class="status-box status-gray">Ausentes: @ausentes</span>
+            </div>
         </div>
         <div class="card-body">
             <!-- Search Inputs -->
@@ -43,12 +60,11 @@
                 <div class="col-md-4">
                     <input type="text" id="search-nombre" class="form-control" placeholder="Buscar por Nombre">
                 </div>
-
                 <div class="col-md-4">
                     <select id="search-estado" class="form-control">
                         <option value="">Todos</option>
                         <option value="Presente">Presente</option>
-                        <option value="No Presente">No Presente</option>
+                        <option value="Ausente">Ausente</option>
                     </select>
                 </div>
             </div>
@@ -71,7 +87,7 @@
                             <td>@invitacion.Usuario.Cedula</td>
                             <td>@invitacion.Usuario.Nombre</td>
                             <td>
-                                <span class="status-box @(invitacion.Confirmado == "Enviado sin respuesta aún" ? "status-gray" : invitacion.Confirmado == "No Asistirá" ? "status-red" : "status-green")">
+                                <span class="invitation-box @(invitacion.Confirmado == "Sin Respuesta" ? "status-gray" : invitacion.Confirmado == "Rechazada" ? "status-red" : "status-green")">
                                     @invitacion.Confirmado
                                 </span>
                             </td>
@@ -83,14 +99,17 @@
                                 {
                                     <span class="status-box status-green">Presente</span>
                                 }
-                                else
+                                else if (totalAsistencias != totalInvitaciones)
                                 {
                                     <button class="btn btn-outline-primary mark-attendance-button"
                                             data-usuario="@invitacion.ID_Usuario"
                                             data-evento="@invitacion.ID_Evento">
                                         <i class="fas fa-user-check"></i>
                                     </button>
-
+                                }
+                                else
+                                {
+                                    <span class="status-box status-gray">Ausente</span>
                                 }
                             </td>
                         </tr>
@@ -141,6 +160,51 @@
         document.getElementById('search-nombre').addEventListener('input', filterTable);
         document.getElementById('search-cedula').addEventListener('input', filterTable);
         document.getElementById('search-estado').addEventListener('change', filterTable);
+
+        document.getElementById('concluir-asistencia-button').addEventListener('click', function() {
+            var eventoId = @Model.ID_Evento;
+
+            // AJAX request using XMLHttpRequest
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '@Url.Action("ConcluirAsistencia", "Evento")', true);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        var result = JSON.parse(xhr.responseText);
+                        if (result.success) {
+                            swal({ title: '', text: '¡Asistencia concluida con éxito!', type: 'success', customClass: 'swal-custom' });
+
+                            // Hide "Concluir Asistencia" button
+                            document.getElementById('concluir-asistencia-button').style.display = 'none';
+
+                            // Update table
+                            var rows = document.querySelectorAll('#asistencias-table-body tr');
+                            rows.forEach(function(row) {
+                                var statusBox = row.querySelector('.status-box');
+                                var markButton = row.querySelector('.mark-attendance-button');
+                                if (markButton && (!statusBox || statusBox.textContent !== 'Presente')) {
+                                    markButton.style.display = 'none';
+                                    var newStatusBox = document.createElement('span');
+                                    newStatusBox.className = 'status-box status-gray';
+                                    newStatusBox.textContent = 'Ausente';
+                                    row.querySelector('td:nth-child(5)').appendChild(newStatusBox);
+                                }
+                            });
+
+
+                        } else {
+                            swal({ title: '', text: result.message, type: 'error', customClass: 'swal-custom' });
+                        }
+                    } else {
+                        swal({ title: '', text: 'Error al concluir asistencia', type: 'error', customClass: 'swal-custom' });
+                    }
+                }
+            };
+
+            xhr.send('idEvento=' + encodeURIComponent(eventoId));
+        });
     });
 
     function filterTable() {
@@ -157,7 +221,7 @@
 
             var nombreMatch = nombre.includes(nombreInput);
             var cedulaMatch = cedula.includes(cedulaInput);
-            var estadoMatch = (estadoInput === "" || (estadoInput === "Presente" && estado === "Presente") || (estadoInput === "No Presente" && estado !== "Presente"));
+            var estadoMatch = (estadoInput === "" || (estadoInput === "Presente" && estado === "Presente") || (estadoInput === "Ausente" && estado !== "Presente"));
 
             if (nombreMatch && cedulaMatch && estadoMatch) {
                 row.style.display = '';
@@ -175,13 +239,30 @@
 
         var tbody = document.getElementById("asistencias-table-body");
         var rows = tbody.querySelectorAll("tr");
+        var updatedRow;
         rows.forEach(function (row) {
             var cedula = row.querySelector("td:first-child").textContent;
             if (cedula === asistencia.Usuario.Cedula) {
-                row.querySelector("td:nth-child(4)").textContent = asistencia.Hora_Asistencia;
+                row.querySelector("td:nth-child(4)").textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
                 row.querySelector("td:nth-child(5)").innerHTML = '<span class="status-box status-green">Presente</span>';
+                updatedRow = row;
             }
         });
+
+        // Update present and absent counts
+        var presentes = tbody.querySelectorAll('.status-box.status-green').length;
+        var ausentes = tbody.querySelectorAll('.mark-attendance-button').length;
+
+        document.querySelector(".status-indicators").innerHTML = `
+            <span class="status-box status-green">Presentes: ${presentes}</span>
+            <span class="status-box status-gray">Ausentes: ${ausentes}</span>
+        `;
+
+
+        
+        if (presentes === @totalInvitaciones) {
+            document.getElementById('concluir-asistencia-button').style.display = 'none';
+        }
     }
 </script>
 
@@ -195,6 +276,15 @@
         padding: 0.2em 0.6em;
         border-radius: 0.25em;
         color: white;
+        margin-left: 10px;
+    }
+
+    .invitation-box {
+        display: inline-block;
+        padding: 0.2em 0.6em;
+        border-radius: 0.25em;
+        color: white;
+        margin-left: 10px;
     }
 
     .status-gray {
@@ -215,5 +305,25 @@
 
     .text-center {
         text-align: center;
+    }
+
+    .spinner-border {
+        width: 2rem;
+        height: 2rem;
+        border-width: 2px;
+    }
+
+    #sending-text {
+        margin-left: 0.6rem;
+        padding-bottom: 0.8rem;
+        font-size: 1rem;
+        vertical-align: middle;
+        color: grey
+    }
+
+    .status-indicators {
+        display: flex;
+        align-items: center;
+        font-size: 14px;
     }
 </style>

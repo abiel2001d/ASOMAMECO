@@ -9,7 +9,7 @@ namespace Infraestructura.Model
 {
     internal partial class UsuarioMetadata
     {
-        
+
         [Required(ErrorMessage = "{0} es un dato requerido")]
         public string Nombre { get; set; }
         [Display(Name = "Cédula")]
@@ -19,7 +19,7 @@ namespace Infraestructura.Model
         [Display(Name = "Estado miembro")]
         [Required(ErrorMessage = "{0} es un dato requerido")]
         public string Estado_usuario { get; set; }
-       [Required(ErrorMessage = "{0} es un dato requerido")]
+        [Required(ErrorMessage = "{0} es un dato requerido")]
         [RegularExpression(@"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$", ErrorMessage = "El correo electrónico introducido no tiene un formato válido.")]
         public string Correo { get; set; }
         [Display(Name = "Teléfono")]

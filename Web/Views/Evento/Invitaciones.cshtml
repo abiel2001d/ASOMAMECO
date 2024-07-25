@@ -3,6 +3,9 @@
     ViewBag.Title = "Invitaciones";
     Layout = "~/Views/Shared/_Layout.cshtml";
     var invitaciones = ViewBag.Invitaciones as IEnumerable<Infraestructura.Model.Invitacion>;
+    var confirmadas = invitaciones.Count(i => i.Confirmado == "Confirmada");
+    var rechazadas = invitaciones.Count(i => i.Confirmado == "Rechazada");
+    var sinRespuesta = invitaciones.Count(i => i.Confirmado == "Sin Respuesta");
 }
 
 <div class="container">
@@ -16,7 +19,7 @@
         </div>
     </p>
     <div class="card mb-3">
-        <div class="card-header">
+        <div class="card-header d-flex justify-content-between align-items-center">
             <h5>Evento: @Model.Nombre_Evento</h5>
         </div>
         <div class="card-body">
@@ -32,13 +35,17 @@
     </div>
 
     <div class="card mb-3">
-        <div class="card-header">
+        <div class="card-header d-flex justify-content-between align-items-center">
             <h5>Lista de invitaciones</h5>
+            <div class="status-indicators">
+                <span class="status-box status-green">Confirmadas: @confirmadas</span>
+                <span class="status-box status-red">Rechazadas: @rechazadas</span>
+                <span class="status-box status-gray">Sin Respuesta: @sinRespuesta</span>
+            </div>
         </div>
         <div class="card-body">
             <!-- Search Inputs -->
             <div class="row mb-3">
-
                 <div class="col-md-4">
                     <input type="text" id="search-cedula" class="form-control" placeholder="Buscar por Cédula">
                 </div>
@@ -48,9 +55,9 @@
                 <div class="col-md-4">
                     <select id="search-estado" class="form-control">
                         <option value="">Todos</option>
-                        <option value="Enviado sin respuesta aún">Sin Respuesta</option>
-                        <option value="No Asistirá">No Asistirá</option>
-                        <option value="Sí Asistirá">Sí Asistirá</option>
+                        <option value="Confirmada">Confirmada</option>
+                        <option value="Rechazada">Rechazada</option>
+                        <option value="Sin Respuesta">Sin Respuesta</option>
                     </select>
                 </div>
             </div>
@@ -61,7 +68,7 @@
                         <th>Cédula</th>
                         <th>Nombre</th>
                         <th>Correo</th>
-                        <th>Estado</th>
+                        <th>Respuesta</th>
                     </tr>
                 </thead>
                 <tbody id="invitaciones-table-body">
@@ -74,7 +81,7 @@
                                 <td>@invitacion.Usuario.Nombre</td>
                                 <td>@invitacion.Usuario.Correo</td>
                                 <td>
-                                    <span class="status-box @(invitacion.Confirmado == "Enviado sin respuesta aún" ? "status-gray" : invitacion.Confirmado == "No Asistirá" ? "status-red" : "status-green")">
+                                    <span class="status-box @(invitacion.Confirmado == "Sin Respuesta" ? "status-gray" : invitacion.Confirmado == "Rechazada" ? "status-red" : "status-green")">
                                         @invitacion.Confirmado
                                     </span>
                                 </td>
@@ -158,17 +165,32 @@
             tbody.innerHTML = "<tr><td colspan='4'>No hay invitaciones enviadas aún.</td></tr>";
             document.getElementById("send-invitation-button").style.display = "inline-block";
         } else {
+            var confirmadas = 0;
+            var rechazadas = 0;
+            var sinRespuesta = 0;
+
             invitaciones.forEach(function(invitacion) {
                 var row = "<tr>";
                 row += "<td>" + invitacion.Cedula + "</td>";
                 row += "<td>" + invitacion.Nombre + "</td>";
                 row += "<td>" + invitacion.Correo + "</td>";
-                row += "<td><span class='status-box " + (invitacion.Confirmado == "Enviado sin respuesta aún" ? "status-gray" : invitacion.Confirmado == "No asistirá" ? "status-red" : "status-green") + "'>" + invitacion.Confirmado + "</span></td>";
+                row += "<td><span class='status-box " + (invitacion.Confirmado == "Sin Respuesta" ? "status-gray" : invitacion.Confirmado == "Rechazada" ? "status-red" : "status-green") + "'>" + invitacion.Confirmado + "</span></td>";
                 row += "</tr>";
                 tbody.innerHTML += row;
+
+                if (invitacion.Confirmado == "Confirmada") confirmadas++;
+                else if (invitacion.Confirmado == "Rechazada") rechazadas++;
+                else if (invitacion.Confirmado == "Sin Respuesta") sinRespuesta++;
             });
 
             document.getElementById("send-invitation-button").style.display = "none";
+
+            // Update event header with new counts
+            document.querySelector(".status-indicators").innerHTML = `
+                <span class="status-box status-green">Confirmadas: ${confirmadas}</span>
+                <span class="status-box status-red">Rechazadas: ${rechazadas}</span>
+                <span class="status-box status-gray">Sin Respuesta: ${sinRespuesta}</span>
+            `;
         }
     }
 </script>
@@ -183,6 +205,7 @@
         padding: 0.2em 0.6em;
         border-radius: 0.25em;
         color: white;
+        margin-left: 10px;
     }
 
     .status-gray {
@@ -217,5 +240,11 @@
         font-size: 1rem;
         vertical-align: middle;
         color: grey
+    }
+
+    .status-indicators {
+        display: flex;
+        align-items: center;
+        font-size: 14px
     }
 </style>

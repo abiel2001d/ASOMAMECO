@@ -1,8 +1,6 @@
 ﻿@model Infraestructura.Model.Usuario
 
-@{
-    ViewBag.Title = "¿Seguro quiere borrar este usuario?";
-}
+@{ ViewBag.Title = "¿Seguro quiere borrar este usuario?"; }
 
 <style>
     .form-title {
@@ -96,14 +94,15 @@
 
         @using (Html.BeginForm("Delete", "Usuario", FormMethod.Post))
         {
-            @Html.AntiForgeryToken()
-            @Html.HiddenFor(model => model.Id_Usuario)
 
-            <div class="btn-container">
-                <input type="submit" value="Borrar" class="btn btn-delete" /> | 
-                @Html.ActionLink("Regresar", "Index", new { @class = "btn btn-link" })
-            </div>
-        }
+@Html.AntiForgeryToken()
+                @Html.HiddenFor(model => model.Id_Usuario)
+
+                                <div class="btn-container">
+                                    <input type="submit" value="Borrar" class="btn btn-delete" /> |
+                                    @Html.ActionLink("Regresar", "Index", new { @class = "btn btn-link" })
+                                </div>}
+
     </div>
 </div>
 

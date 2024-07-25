@@ -1,8 +1,6 @@
 ﻿@model IEnumerable<Infraestructura.Model.Usuario>
 
-@{
-    ViewBag.Title = "Index";
-}
+@{ ViewBag.Title = "Index"; }
 
 <style>
     .table-sm {
@@ -45,31 +43,36 @@
     {
         // <input type="file" name="file" required />
 
-        @Html.ActionLink("Agregar Nuevo Miembro", "Create", null, new { @style = "margin-bottom: 20px;", @class = "btn btn-primary" })
-    }
+
+@Html.ActionLink("Agregar Nuevo Miembro", "Create", null, new { @style = "margin-bottom: 20px;", @class = "btn btn-primary" })}
+
+
+
 
 
     <table class="table table-hover table-sm">
         <thead class="thead-light">
             <tr>
                 <th>
-                    <input type="text" id="filterNombre" class="filter-input" placeholder="Filtrar por Nombre">
+
+                    <input type="text" id="filterNombre" class="form-control mb-3" placeholder="Filtrar por Nombre">
                     @Html.DisplayNameFor(model => model.Nombre)
                 </th>
                 <th>
-                    <input type="text" id="filterCedula" class="filter-input" placeholder="Filtrar por Cédula">
+                    <input type="text" id="filterCedula"  class="form-control mb-3" placeholder="Filtrar por Cédula">
                     @Html.DisplayNameFor(model => model.Cedula)
                 </th>
                 <th>
-                    <input type="text" id="filterEstado" class="filter-input" placeholder="Filtrar por Estado">
+                    <input type="text" id="filterEstado" class="form-control mb-3" placeholder="Filtrar por Estado">
                     @Html.DisplayNameFor(model => model.Estado_usuario)
                 </th>
                 <th>
-                    <input type="text" id="filterCorreo" class="filter-input" placeholder="Filtrar por Correo">
+                    <input type="text" id="filterCorreo" class="form-control mb-3" placeholder="Filtrar por Correo">
                     @Html.DisplayNameFor(model => model.Correo)
                 </th>
                 <th>
-                    <input type="text" id="filterTelefono" class="filter-input" placeholder="Filtrar por Teléfono">
+                    <input type="text" id="filterTelefono"  class="form-control mb-3" placeholder="Filtrar por Teléfono">
+
                     @Html.DisplayNameFor(model => model.Telefono)
                 </th>
                 <th></th>
@@ -78,43 +81,44 @@
         <tbody id="resultado">
             @foreach (var item in Model)
             {
-                <tr>
-                    <td class="w-25">
-                        @Html.DisplayFor(modelItem => item.Nombre)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Cedula)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Estado_usuario)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Correo)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Telefono)
-                    </td>
-                    <td class="action-buttons">
-                        <a href="@Url.Action("Edit", new { id = item.Id_Usuario })" class="btn btn-secondary btn-sm" title="Editar">
-                            <i class="fas fa-edit"></i>
-                        </a>
-                        <a href="@Url.Action("Details", new { id = item.Id_Usuario })" class="btn btn-info btn-sm" title="Detalles">
-                            <i class="fas fa-info-circle"></i>
-                        </a>
-                        <a href="@Url.Action("Delete", new { id = item.Id_Usuario })" class="btn btn-danger btn-sm" title="Borrar">
-                            <i class="fas fa-trash-alt"></i>
-                        </a>
-                    </td>
-                </tr>
-            }
+<tr>
+    <td class="w-25">
+        @Html.DisplayFor(modelItem => item.Nombre)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Cedula)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Estado_usuario)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Correo)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Telefono)
+    </td>
+    <td class="action-buttons" style="width:130px">
+        <a href="@Url.Action("Edit", new { id = item.Id_Usuario })" class="btn btn-secondary btn-sm" title="Editar">
+            <i class="fas fa-edit"></i>
+        </a>
+        <a href="@Url.Action("Details", new { id = item.Id_Usuario })" class="btn btn-info btn-sm" title="Detalles">
+            <i class="fas fa-info-circle"></i>
+        </a>
+        <a href="@Url.Action("Delete", new { id = item.Id_Usuario })" class="btn btn-danger btn-sm" title="Borrar">
+            <i class="fas fa-trash-alt"></i>
+        </a>
+    </td>
+</tr>
+       }
         </tbody>
     </table>
 </div>
 
 @section Scripts{
     @Scripts.Render("~/bundles/jqueryajax")
-    <script>
-        $(document).ready(function () {
+
+    <script>$(document).ready(function () {
+
             function filterTable() {
                 var nombre = $('#filterNombre').val().toLowerCase();
                 var cedula = $('#filterCedula').val().toLowerCase();
@@ -147,7 +151,8 @@
                 });
             }
 
-            $('.filter-input').on('keyup', filterTable);
-        });
-    </script>
+
+    $('.form-control').on('keyup', filterTable);
+        });</script>
+
 }

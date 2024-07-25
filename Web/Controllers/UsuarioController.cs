@@ -159,7 +159,7 @@ namespace Web.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Usuario usuario= db.Usuario.Find(id);
+            Usuario usuario = db.Usuario.Find(id);
             if (usuario == null)
             {
                 return HttpNotFound();
@@ -176,7 +176,7 @@ namespace Web.Controllers
             {
                 db.Entry(usuario).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Index");  
+                return RedirectToAction("Index");
             }
             return View(usuario);
         }

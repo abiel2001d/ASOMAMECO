@@ -12,5 +12,7 @@ namespace ApplicationCore.Services
         IEnumerable<Asistencia> GetAsistenciasByEvento(int idEvento);
 
         Asistencia MarcarAsistencia(int idUsuario, int idEvento);
+
+        bool ConcluirAsistencia(int idEvento);
     }
 }

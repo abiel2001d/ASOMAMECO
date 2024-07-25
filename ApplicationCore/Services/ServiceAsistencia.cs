@@ -10,6 +10,12 @@ namespace ApplicationCore.Services
 {
     public class ServiceAsistencia : IServiceAsistencia
     {
+        public bool ConcluirAsistencia(int idEvento)
+        {
+            IRepositoryAsistencia repository = new RepositoryAsistencia();
+            return repository.ConcluirAsistencia(idEvento);
+        }
+
         public IEnumerable<Asistencia> GetAsistenciasByEvento(int idEvento)
         {
             IRepositoryAsistencia repository = new RepositoryAsistencia();

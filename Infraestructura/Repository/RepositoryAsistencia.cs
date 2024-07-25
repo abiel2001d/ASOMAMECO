@@ -33,7 +33,7 @@ namespace Infraestructura.Repository
                                 ID_Usuario = invitacion.ID_Usuario,
                                 ID_Evento = invitacion.ID_Evento,
                                 Usuario = invitacion.Usuario,
-                                Presente = "No"
+                                Presente = "Ausente"
                             });
                         }
                     }
@@ -103,6 +103,51 @@ namespace Infraestructura.Repository
                 throw;
             }
         }
+
+        public bool ConcluirAsistencia(int idEvento)
+        {
+            try
+            {
+                using (MyContext ctx = new MyContext())
+                {
+                    ctx.Configuration.LazyLoadingEnabled = false;
+                    var asistencias = GetAsistenciasByEvento(idEvento);
+
+                    foreach (var asistencia in asistencias)
+                    {
+                        if (asistencia.Presente == "Ausente")
+                        {
+                            ctx.Asistencia.Add(new Asistencia
+                            {
+                                ID_Usuario = asistencia.ID_Usuario,
+                                ID_Evento = asistencia.ID_Evento,
+                                Presente = asistencia.Presente,
+                                Fecha_Asistencia = DateTime.Now,
+                                Hora_Asistencia = DateTime.Now.TimeOfDay,
+
+                            });
+                        }
+                       
+                    }
+
+                    ctx.SaveChanges();
+                    return true;
+                }
+            }
+            catch (DbUpdateException dbEx)
+            {
+                string mensaje = "";
+                Log.Error(dbEx, System.Reflection.MethodBase.GetCurrentMethod(), ref mensaje);
+                throw new Exception(mensaje);
+            }
+            catch (Exception ex)
+            {
+                string mensaje = "";
+                Log.Error(ex, System.Reflection.MethodBase.GetCurrentMethod(), ref mensaje);
+                throw;
+            }
+        }
+
 
 
 
