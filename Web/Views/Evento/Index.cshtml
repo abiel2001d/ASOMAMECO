@@ -18,6 +18,7 @@
         background-color: #f8f9fa;
     }
 
+   
     .action-buttons a {
         margin-right: 5px;
     }
@@ -62,7 +63,7 @@
                     <td>
                         @Html.DisplayFor(modelItem => item.Lugar)
                     </td>
-                    <td class="action-buttons">
+                    <td class="action-buttons" >
                         <a href="@Url.Action("Invitaciones", new { id = item.ID_Evento })" class="btn btn-outline-primary btn-sm" title="Invitaciones">
                             <i class="fas fa-paper-plane"></i> Invitaciones
                         </a>

@@ -9,6 +9,7 @@ using System.Net;
 using System.Reflection;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.UI;
 using Web.Utils;
 
 namespace Web.Controllers
@@ -25,7 +26,13 @@ namespace Web.Controllers
             {
                 IServiceUsuario _ServiceUsuario = new ServiceUsuario();
                 lista = _ServiceUsuario.GetUsuarios();
+
                 ViewBag.title = "Lista Usuarios";
+                ViewBag.Estados = new SelectList(new List<SelectListItem>
+        {
+            new SelectListItem { Text = "Activo", Value = "Activo" },
+            new SelectListItem { Text = "Inactivo", Value = "Inactivo" }
+        }, "Value", "Text");
                 return View(lista);
 
 
@@ -45,13 +52,10 @@ namespace Web.Controllers
 
             }
         }
-        
 
-      
-      
 
-    // GET: Usuario/Details/5
-    public ActionResult Details(int id)
+        // GET: Usuario/Details/5
+        public ActionResult Details(int id)
         {
             if (id == null)
             {
@@ -155,7 +159,7 @@ namespace Web.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Usuario usuario= db.Usuario.Find(id);
+            Usuario usuario = db.Usuario.Find(id);
             if (usuario == null)
             {
                 return HttpNotFound();
@@ -172,7 +176,7 @@ namespace Web.Controllers
             {
                 db.Entry(usuario).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Index");  
+                return RedirectToAction("Index");
             }
             return View(usuario);
         }
@@ -195,12 +199,29 @@ namespace Web.Controllers
         // POST: Usuario/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id)
+        public ActionResult DeleteConfirmed(int id)
         {
-            Usuario usuario = db.Usuario.Find(id);
-            db.Usuario.Remove(usuario);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+            try
+            {
+                IServiceUsuario _ServiceUsuario = new ServiceUsuario();
+                bool result = _ServiceUsuario.Delete(id);
+                if (result)
+                {
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    return HttpNotFound();
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, MethodBase.GetCurrentMethod());
+                TempData["Message"] = "Error al procesar los datos! " + ex.Message;
+                TempData["Redirect"] = "Usuario";
+                TempData["Redirect-Action"] = "Index";
+                return RedirectToAction("Default", "Error");
+            }
         }
 
 

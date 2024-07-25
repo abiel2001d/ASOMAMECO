@@ -12,7 +12,7 @@ namespace Infraestructura.Repository
 {
     public class RepositoryUsuario : IRepositoryUsuario
     {
-      
+
         public IEnumerable<Usuario> GetUsuarios()
         {
             IEnumerable<Usuario> lista = null;
@@ -95,6 +95,64 @@ namespace Infraestructura.Repository
                 if (retorno >= 0)
                     oUsuario = GetUsuarioByID(usuario.Id_Usuario);
                 return oUsuario;
+            }
+            catch (DbUpdateException dbEx)
+            {
+                string mensaje = "";
+                Log.Error(dbEx, System.Reflection.MethodBase.GetCurrentMethod(), ref mensaje);
+                throw new Exception(mensaje);
+            }
+            catch (Exception ex)
+            {
+                string mensaje = "";
+                Log.Error(ex, System.Reflection.MethodBase.GetCurrentMethod(), ref mensaje);
+                throw;
+            }
+        }
+
+        public IEnumerable<Usuario> GetUsuariosPorEstado(string estado)
+        {
+            IEnumerable<Usuario> lista = null;
+            try
+            {
+                using (MyContext ctx = new MyContext())
+                {
+                    ctx.Configuration.LazyLoadingEnabled = false;
+                    lista = ctx.Usuario.Where(u => u.Estado_usuario == estado).ToList();
+                }
+                return lista;
+            }
+            catch (DbUpdateException dbEx)
+            {
+                string mensaje = "";
+                Log.Error(dbEx, System.Reflection.MethodBase.GetCurrentMethod(), ref mensaje);
+                throw new Exception(mensaje);
+            }
+            catch (Exception ex)
+            {
+                string mensaje = "";
+                Log.Error(ex, System.Reflection.MethodBase.GetCurrentMethod(), ref mensaje);
+                throw;
+            }
+        }
+
+        public bool Delete(int id_Usuario)
+        {
+            try
+            {
+                using (MyContext ctx = new MyContext())
+                {
+                    ctx.Configuration.LazyLoadingEnabled = false;
+                    var usuario = GetUsuarioByID(id_Usuario);
+                    if (usuario != null)
+                    {
+                        usuario.Estado_usuario = "Inactivo";
+                        ctx.Entry(usuario).State = EntityState.Modified;
+                        ctx.SaveChanges();
+                        return true;
+                    }
+                    return false;
+                }
             }
             catch (DbUpdateException dbEx)
             {
