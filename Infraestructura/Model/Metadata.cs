@@ -27,4 +27,19 @@ namespace Infraestructura.Model
         [RegularExpression(@"^\d{4}-?\d{4}$", ErrorMessage = "El número de teléfono no tiene un formato válido.")]
         public string Telefono { get; set; }
     }
+
+    internal partial class EventoMetadata
+    {
+        [Required(ErrorMessage = "{0} es un dato requerido")]
+        [Display(Name = "Nombre del Evento")]
+        public string Nombre_Evento { get; set; }
+        [Display(Name = "Fecha del Evento")]
+        [Required(ErrorMessage = "{0} es un dato requerido")]
+        public DateTime Fecha_Evento { get; set; }
+        [Display(Name = "Descripción")]
+        [Required(ErrorMessage = "{0} es un dato requerido")]
+        public string Descripcion { get; set; }
+        [Required(ErrorMessage = "{0} es un dato requerido")]
+        public string Lugar { get; set; }
+    }
 }
