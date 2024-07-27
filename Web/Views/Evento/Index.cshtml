@@ -6,6 +6,7 @@
 }
 
 <style>
+
     .table-sm {
         font-size: 0.875rem;
     }
@@ -18,7 +19,6 @@
         background-color: #f8f9fa;
     }
 
-   
     .action-buttons a {
         margin-right: 5px;
     }
@@ -34,12 +34,26 @@
     }
 </style>
 
-<div class="container">
+
+<div class="container mt-5">
     <h2 class="centered-title">Eventos</h2>
 
     <p class="create-button">
         @Html.ActionLink("Crear evento", "Create", null, new { @class = "btn btn-primary" })
     </p>
+    <form id="filterForm" class="mb-lg-3">
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                <input type="text" class="form-control" id="evento" placeholder="Buscar por evento">
+            </div>
+            <div class="form-group col-md-4">
+                <input type="text" class="form-control" id="fecha" placeholder="Buscar por fecha">
+            </div>
+            <div class="form-group col-md-4">
+                <input type="text" class="form-control" id="lugar" placeholder="Buscar por lugar">
+            </div>
+        </div>
+    </form>
 
     <table class="table table-hover table-sm">
         <thead class="thead-light">
@@ -48,49 +62,67 @@
                 <th>Fecha & Hora</th>
                 <th>Lugar</th>
                 <th></th>
+                <th></th>
             </tr>
         </thead>
-        <tbody>
+        <tbody id="eventTableBody">
             @foreach (var item in Model)
             {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Nombre_Evento)
-                    </td>
-                    <td>
-                        @item.Fecha_Evento.ToString("dd/MMMM/yyyy hh:mm tt")
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Lugar)
-                    </td>
-                    <td class="action-buttons" >
-                        <a href="@Url.Action("Invitaciones", new { id = item.ID_Evento })" class="btn btn-outline-primary btn-sm" title="Invitaciones">
-                            <i class="fas fa-paper-plane"></i> Invitaciones
-                        </a>
-                        @if (item.Invitacion != null && item.Invitacion.Any())
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nombre_Evento)
+                </td>
+                <td>
+                    @item.Fecha_Evento.ToString("dd/MMMM/yyyy hh:mm tt")
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Lugar)
+                </td>
+                <td class="action-buttons">
+                    <a href="@Url.Action("Invitaciones", new { id = item.ID_Evento })" class="btn btn-outline-primary btn-sm" title="Invitaciones">
+                        <i class="fas fa-paper-plane"></i> Invitaciones
+                    </a>
+                    @if (item.Invitacion != null && item.Invitacion.Any())
                         {
-                            <a href="@Url.Action("Asistencias", new { id = item.ID_Evento })" class="btn btn-outline-primary btn-sm" title="Asistencia">
-                                <i class="fas fa-list-check"></i> Asistencia
-                            </a>
+                    <a href="@Url.Action("Asistencias", new { id = item.ID_Evento })" class="btn btn-outline-primary btn-sm" title="Asistencia">
+                        <i class="fas fa-list-check"></i> Asistencia
+                    </a>
                         }
                         else
                         {
-                            <a href="#" class="btn btn-outline-dark btn-sm disabled" title="Asistencia">
-                                <i class="fas fa-list-check"></i> Asistencia
-                            </a>
+                    <a href="#" class="btn btn-outline-dark btn-sm disabled" title="Asistencia">
+                        <i class="fas fa-list-check"></i> Asistencia
+                    </a>
                         }
-                        <a href="@Url.Action("Edit", new { id = item.ID_Evento })" class="btn btn-secondary btn-sm" title="Editar">
-                            <i class="fas fa-edit"></i>
-                        </a>
-                        <a href="@Url.Action("Details", new { id = item.ID_Evento })" class="btn btn-info btn-sm" title="Detalles">
-                            <i class="fas fa-info-circle"></i>
-                        </a>
-                        <a href="@Url.Action("Delete", new { id = item.ID_Evento })" class="btn btn-danger btn-sm" title="Borrar">
-                            <i class="fas fa-trash-alt"></i>
-                        </a>
-                    </td>
-                </tr>
+                    <a href="@Url.Action("Edit", new { id = item.ID_Evento })" class="btn btn-secondary btn-sm" title="Editar">
+                        <i class="fas fa-edit"></i>
+                    </a>
+                    <a href="@Url.Action("Details", new { id = item.ID_Evento })" class="btn btn-info btn-sm" title="Detalles">
+                        <i class="fas fa-info-circle"></i>
+                    </a>
+                    <a href="@Url.Action("Delete", new { id = item.ID_Evento })" class="btn btn-danger btn-sm" title="Borrar">
+                        <i class="fas fa-trash-alt"></i>
+                    </a>
+                </td>
+            </tr>
             }
         </tbody>
     </table>
 </div>
+<script>
+        $(document).ready(function () {
+            $('#filterForm input').on('keyup', function () {
+                var evento = $('#evento').val().toLowerCase();
+                var fecha = $('#fecha').val().toLowerCase();
+                var lugar = $('#lugar').val().toLowerCase();
+
+                $('#eventTableBody tr').filter(function () {
+                    $(this).toggle(
+                        $(this).find('td').eq(0).text().toLowerCase().indexOf(evento) > -1 &&
+                        $(this).find('td').eq(1).text().toLowerCase().indexOf(fecha) > -1 &&
+                        $(this).find('td').eq(2).text().toLowerCase().indexOf(lugar) > -1
+                    );
+                });
+            });
+        });
+</script>
