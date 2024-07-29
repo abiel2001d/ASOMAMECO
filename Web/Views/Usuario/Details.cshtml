@@ -11,6 +11,12 @@
         font-weight: bold;
     }
 
+    .btn-default {
+        background-color: #0069D9;
+        color: white;
+        margin-right: 5px;
+    }
+
     .details-view {
         margin-top: 20px;
     }
@@ -18,16 +24,6 @@
     .btn-container {
         text-align: center;
         margin-top: 20px;
-    }
-
-    .btn-edit, .btn-link {
-        background-color: #eaa159;
-        border-color: #eaa159;
-        color: #ffffff;
-        display: inline-block;
-        text-align: center;
-        transition: background-color 0.3s ease;
-        margin: 0 10px; /* Espacio entre los botones */
     }
 
         .btn-edit:hover, .btn-link:hover {
@@ -94,8 +90,8 @@
     </div>
 
     <div class="btn-container">
-        @Html.ActionLink("Editar", "Edit", new { id = Model.Id_Usuario }, new { @class = "btn btn-info btn-edit" }) |
-        @Html.ActionLink("Regresar", "Index", new { @class = "btn btn-info" })
+        @Html.ActionLink("Editar", "Edit", new { id = Model.Id_Usuario }, new { @class = "btn btn-default" }) 
+        @Html.ActionLink("Regresar", "Index", null, new { @class = "btn btn-secondary" })
     </div>
 </div>
 

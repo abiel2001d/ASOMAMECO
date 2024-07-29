@@ -10,6 +10,12 @@
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 
+    input[type=submit] {
+        background-color: #0069D9;
+        color: white;
+        margin-right: 5px;
+    }
+
     .form-title {
         text-align: center;
         margin-top: 20px;
@@ -26,47 +32,13 @@
         border: 1px solid #07305d;
     }
 
-    .form-horizontal .form-group .btn-create {
-        background-color: #eaa159;
-        border-color: #eaa159;
-        color: #ffffff;
-    }
-
-        .form-horizontal .form-group .btn-create:hover {
-            background-color: #f0bb86;
-            border-color: #f0bb86;
-        }
-
-    .form-horizontal .form-group .btn-default {
-        background-color: #07305d;
-        border-color: #07305d;
-        color: #ffffff;
-    }
-
-        .form-horizontal .form-group .btn-default:hover {
-            background-color: #0b488c;
-            border-color: #0b488c;
-        }
-
-    .btn-create, .btn-link {
-        background-color: #eaa159;
-        border-color: #eaa159;
-        color: #ffffff;
-        display: inline-block;
-        text-align: center;
-        transition: background-color 0.3s ease;
-        margin: 0 10px; /* Espacio entre los botones */
-    }
-
-        .btn-create:hover, .btn-link:hover {
-            background-color: #f0bb86;
-            border-color: #f0bb86;
-        }
-
-
     .btn-container {
         text-align: center;
         margin-top: 20px;
+    }
+
+    .regresar-link {
+        margin-left: 95px;
     }
 </style>
 
@@ -77,70 +49,69 @@
 @using (Html.BeginForm())
 {
 
-@Html.AntiForgeryToken()
+    @Html.AntiForgeryToken()
 
-                <div class="form-horizontal">
-                    @*<h4>Usuario</h4>*@
-                    <hr />
-                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-
-
-
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.Nombre, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.EditorFor(model => model.Nombre, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.Nombre, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.Cedula, "Cédula", htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.EditorFor(model => model.Cedula, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.Cedula, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.Correo, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.EditorFor(model => model.Correo, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.Correo, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.Telefono, "Teléfono", htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.EditorFor(model => model.Telefono, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.Telefono, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.Estado_usuario, "Estado del miembro", htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @*@Html.EditorFor(model => model.Estado_usuario, new { htmlAttributes = new { @class = "form-control" } })*@
-                            <div class="col-md-10">
-                                <span style="margin-right: 20px;">
-                                    @Html.RadioButtonFor(model => model.Estado_usuario, "Activo") Activo
-                                </span>
-                                <span style="margin-right: 20px;">
-                                    @Html.RadioButtonFor(model => model.Estado_usuario, "Inactivo") Inactivo
-                                </span>
-                                @Html.ValidationMessageFor(model => model.Estado_usuario, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
-                    </div>
+<div class="form-horizontal">
+    @*<h4>Usuario</h4>*@
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
 
-                    <div class="form-group btn-container">
-                        <input type="submit" value="Crear miembro" class="btn btn-create" /> |
-                        @Html.ActionLink("Regresar", "Index", new { @class = "btn btn-link" })
-                    </div>
-                </div>}
 
+    <div class="form-group">
+        @Html.LabelFor(model => model.Nombre, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Nombre, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Nombre, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Cedula, "Cédula", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Cedula, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Cedula, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Correo, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Correo, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Correo, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Telefono, "Teléfono", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Telefono, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Telefono, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Estado_usuario, "Estado del miembro", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @*@Html.EditorFor(model => model.Estado_usuario, new { htmlAttributes = new { @class = "form-control" } })*@
+            <div class="col-md-10">
+                <span style="margin-right: 20px;">
+                    @Html.RadioButtonFor(model => model.Estado_usuario, "Activo") Activo
+                </span>
+                <span style="margin-right: 20px;">
+                    @Html.RadioButtonFor(model => model.Estado_usuario, "Inactivo") Inactivo
+                </span>
+                @Html.ValidationMessageFor(model => model.Estado_usuario, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    </div>
+
+
+    <div class="form-group btn-container">
+            <input type="submit" value="Crear miembro" class="btn btn-default" />
+            @Html.ActionLink("Regresar", "Index", null, new { @class = "btn btn-secondary" })
+        </div>
+</div>
     }
 
 
