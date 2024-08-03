@@ -36,5 +36,42 @@ namespace ApplicationCore.Services
             string cryptPassword = Cryptography.EncrypthAES(nuevaContrasena);
             return repository.RestablecerContrasena(administrador, codigoIngresado, cryptPassword);
         }
+
+        public IEnumerable<Administrador> GetOperarios()
+        {
+            IRepositoryAdministrador repository = new RepositoryAdministrador();
+
+            return repository.GetOperarios();
+        }
+
+        public Administrador GetOperarioByID(int id_Operario)
+        {
+            IRepositoryAdministrador repository = new RepositoryAdministrador();
+            Administrador administrador = repository.GetOperarioByID(id_Operario);
+            administrador.Contraseña = Cryptography.DecrypthAES(administrador.Contraseña);
+            return administrador;
+        }
+
+        public Administrador Save(Administrador operario)
+        {
+            IRepositoryAdministrador repository = new RepositoryAdministrador();
+            string cryptPassword = Cryptography.EncrypthAES(operario.Contraseña);
+            operario.Contraseña = cryptPassword;
+            return repository.Save(operario);
+        }
+
+        public bool Delete(int id_Operario)
+        {
+            IRepositoryAdministrador repository = new RepositoryAdministrador();
+
+            return repository.Delete(id_Operario);
+        }
+
+        public IEnumerable<Rol> GetRoles()
+        {
+            IRepositoryAdministrador repository = new RepositoryAdministrador();
+
+            return repository.GetRoles();
+        }
     }
 }

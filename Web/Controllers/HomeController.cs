@@ -1,4 +1,6 @@
-﻿using System;
+﻿using ApplicationCore.Services;
+using Infraestructura.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -8,9 +10,19 @@ namespace Web.Controllers
 {
     public class HomeController : Controller
     {
+
+
         public ActionResult Index()
         {
-            return View();
+            ServiceEvento serviceEvento = new ServiceEvento();
+
+            // Retrieve all upcoming events
+            var eventos = serviceEvento.GetEventos().Where(e => e.Fecha_Evento >= DateTime.Now)
+                                                   .OrderBy(e => e.Fecha_Evento)
+                                                   .Take(3)
+                                                   .ToList();
+
+            return View(eventos);
         }
 
         public ActionResult About()

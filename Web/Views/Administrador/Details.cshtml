@@ -1,0 +1,184 @@
+﻿@model Infraestructura.Model.Administrador
+
+@{
+    ViewBag.Title = "Detalles";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<style>
+
+
+
+    .centered-title {
+        text-align: center;
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+
+    .button-group {
+        display: flex;
+        justify-content: flex-start;
+        gap: 10px;
+        margin-top: 20px;
+    }
+
+    .form-control {
+        border-radius: 15px;
+    }
+
+    .form-horizontal .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-horizontal .control-label {
+        text-align: left;
+    }
+
+    .btn-default {
+        background-color: #0069D9;
+        color: white;
+        border-color: #0069D9 !important;
+    }
+
+        .btn-default:hover {
+            background-color: white;
+            color: #0069D9;
+        }
+
+    .card {
+        margin-bottom: 20px;
+    }
+
+    .card-header {
+        background-color: #f8f9fa;
+        font-weight: bold;
+    }
+
+    .input-group-text {
+        cursor: pointer;
+    }
+</style>
+
+
+<h2 class="">Detalles del Usuario</h2>
+<hr />
+
+<div class="row mt-5">
+    <div class="col-md-6">
+        <div class="card" style="border-radius:15px">
+            <div class="card-header text-center" style="border-top-left-radius: 15px; border-top-right-radius: 15px">
+                Perfil de Usuario
+            </div>
+            <div class="card-body">
+
+
+                <div class="row">
+
+                    <div class="col-md-6">
+                        <dl class="dl-horizontal">
+                            <dt>
+                                @Html.DisplayNameFor(model => model.Usuario)
+                            </dt>
+                            <dd>
+                                @Html.DisplayFor(model => model.Usuario)
+                            </dd>
+                        </dl>
+
+
+                    </div>
+                    <div class="col-md-6">
+                        <dl class="dl-horizontal">
+                            <dt>
+                                Rol
+                            </dt>
+                            <dd>
+                                @Html.DisplayFor(model => model.Rol.Descripcion)
+                            </dd>
+                        </dl>
+
+
+                    </div>
+                </div>
+
+                <dl class="dl-horizontal">
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Contraseña)
+                    </dt>
+                    <dd>
+                        <div class="input-group mt-2">
+                            <input type="password" class="form-control" value="@Model.Contraseña" id="delete-password" readonly style="border-bottom-left-radius:15px; border-top-left-radius:15px">
+                            <span class="input-group-text" id="toggleDeletePassword" style="border-bottom-right-radius:15px; border-top-right-radius:15px">
+                                <i class="fa fa-eye" id="deleteToggleIcon"></i>
+                            </span>
+                        </div>
+                    </dd>
+                </dl>
+
+
+
+            </div>
+
+
+
+
+
+        </div>
+    </div>
+
+
+    <div class="col-md-6">
+        <div class="card" style="border-radius:15px">
+            <div class="card-header text-center" style="border-top-left-radius: 15px; border-top-right-radius: 15px">
+                Información Personal
+            </div>
+            <div class="card-body">
+                <dl class="dl-horizontal">
+                    <dt>
+                        Nombre Completo
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Nombre)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Correo)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Correo)
+                    </dd>
+
+
+                </dl>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+
+
+<div class="button-group">
+    @Html.ActionLink("Editar", "Edit", new { id = Model.ID_Administrador }, new { @class = "btn btn-default" })
+    @Html.ActionLink("Regresar", "Index", null, new { @class = "btn btn-secondary" })
+</div>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Toggle password visibility on the Details page
+            $('#toggleDetailsPassword').click(function () {
+                var passwordField = $('#details-password');
+                var passwordFieldType = passwordField.attr('type');
+                if (passwordFieldType === 'password') {
+                    passwordField.attr('type', 'text');
+                    $('#detailsToggleIcon').removeClass('fa-eye').addClass('fa-eye-slash');
+                } else {
+                    passwordField.attr('type', 'password');
+                    $('#detailsToggleIcon').removeClass('fa-eye-slash').addClass('fa-eye');
+                }
+            });
+        });
+    </script>
+}

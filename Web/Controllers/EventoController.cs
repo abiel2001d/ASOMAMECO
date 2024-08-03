@@ -22,8 +22,7 @@ namespace Web.Controllers
         {
 
             ServiceEvento serviceEvento = new ServiceEvento();
-      
-            return View(serviceEvento.GetEventos());
+            return View(serviceEvento.GetEventos().OrderBy(e => e.Fecha_Evento).ToList());
         }
 
         // GET: Evento/Details/5
@@ -224,7 +223,10 @@ namespace Web.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             Evento evento = db.Evento.Find(id);
-            db.Evento.Remove(evento);
+
+            evento.Estado = false;
+            // Guardar los cambios en la base de datos
+            db.Entry(evento).State = EntityState.Modified;
             db.SaveChanges();
             return RedirectToAction("Index");
         }

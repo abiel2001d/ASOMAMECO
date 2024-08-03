@@ -30,9 +30,15 @@
     </div>
 
     <!-- Button to return to Evento Index -->
-    <div class="mb-3">
+    <div class="mb-3 d-flex justify-content-between align-items-center">
         <a href="@Url.Action("Index", "Evento")" class="btn btn-secondary">Volver a Eventos</a>
+        <div>
+            <button id="export-excel" class="btn btn-outline-dark" style="font-size:12px">Excel</button>
+            <button id="export-csv" class="btn btn-outline-dark" style="font-size:12px">CSV</button>
+            <button id="export-pdf" class="btn btn-outline-dark" style="font-size:12px">PDF</button>
+        </div>
     </div>
+
 
     <div class="card mb-3">
         <div class="card-header d-flex justify-content-between align-items-center">
@@ -62,7 +68,7 @@
                 </div>
             </div>
 
-            <table class="table table-hover table-sm">
+            <table class="table table-hover table-sm" id="invitaciones-table">
                 <thead class="thead-light">
                     <tr>
                         <th>Cédula</th>
@@ -100,102 +106,11 @@
     </div>
 </div>
 
-<script>
-    document.getElementById("send-invitation-button").addEventListener("click", function() {
-        var button = this;
-        var spinnerContainer = document.getElementById("spinner-container");
-        button.style.display = "none";
-        spinnerContainer.style.display = "inline-block";
-
-        var eventId = @Model.ID_Evento;
-        $.ajax({
-            url: '@Url.Action("EnviarInvitaciones", "Evento")/' + eventId,
-            type: 'POST',
-            success: function(result) {
-                spinnerContainer.style.display = "none";
-                if (result.success) {
-                    swal({ title: '', text: '¡Invitaciones enviadas con éxito!', type: 'success', customClass: 'swal-custom' });
-                    updateTable(result.invitaciones);
-                } else {
-                    swal({ title: '', text: result.message, type: 'error', customClass: 'swal-custom' });
-                    button.style.display = "inline-block";
-                }
-            },
-            error: function() {
-                spinnerContainer.style.display = "none";
-                swal({ title: '', text: 'Error al enviar invitaciones', type: 'error', customClass: 'swal-custom' });
-                button.style.display = "inline-block";
-            }
-        });
-    });
-
-    document.getElementById('search-nombre').addEventListener('input', filterTable);
-    document.getElementById('search-cedula').addEventListener('input', filterTable);
-    document.getElementById('search-estado').addEventListener('change', filterTable);
-
-    function filterTable() {
-        var nombreInput = document.getElementById('search-nombre').value.toLowerCase();
-        var cedulaInput = document.getElementById('search-cedula').value.toLowerCase();
-        var estadoInput = document.getElementById('search-estado').value;
-
-        var rows = document.querySelectorAll('#invitaciones-table-body tr');
-
-        rows.forEach(function(row) {
-            var nombre = row.children[1].textContent.toLowerCase();
-            var cedula = row.children[0].textContent.toLowerCase();
-            var estado = row.children[3].textContent.trim();
-
-            var nombreMatch = nombre.includes(nombreInput);
-            var cedulaMatch = cedula.includes(cedulaInput);
-            var estadoMatch = (estadoInput === "" || estado === estadoInput);
-
-            if (nombreMatch && cedulaMatch && estadoMatch) {
-                row.style.display = '';
-            } else {
-                row.style.display = 'none';
-            }
-        });
-    }
-
-    function updateTable(invitaciones) {
-        var tbody = document.getElementById("invitaciones-table-body");
-        tbody.innerHTML = "";
-
-        if (invitaciones.length === 0) {
-            tbody.innerHTML = "<tr><td colspan='4'>No hay invitaciones enviadas aún.</td></tr>";
-            document.getElementById("send-invitation-button").style.display = "inline-block";
-        } else {
-            var confirmadas = 0;
-            var rechazadas = 0;
-            var sinRespuesta = 0;
-
-            invitaciones.forEach(function(invitacion) {
-                var row = "<tr>";
-                row += "<td>" + invitacion.Cedula + "</td>";
-                row += "<td>" + invitacion.Nombre + "</td>";
-                row += "<td>" + invitacion.Correo + "</td>";
-                row += "<td><span class='status-box " + (invitacion.Confirmado == "Sin Respuesta" ? "status-gray" : invitacion.Confirmado == "Rechazada" ? "status-red" : "status-green") + "'>" + invitacion.Confirmado + "</span></td>";
-                row += "</tr>";
-                tbody.innerHTML += row;
-
-                if (invitacion.Confirmado == "Confirmada") confirmadas++;
-                else if (invitacion.Confirmado == "Rechazada") rechazadas++;
-                else if (invitacion.Confirmado == "Sin Respuesta") sinRespuesta++;
-            });
-
-            document.getElementById("send-invitation-button").style.display = "none";
-
-            // Update event header with new counts
-            document.querySelector(".status-indicators").innerHTML = `
-                <span class="status-box status-green">Confirmadas: ${confirmadas}</span>
-                <span class="status-box status-red">Rechazadas: ${rechazadas}</span>
-                <span class="status-box status-gray">Sin Respuesta: ${sinRespuesta}</span>
-            `;
-        }
-    }
-</script>
-
 <style>
+    input, select {
+        border-radius: 15px !important;
+    }
+
     .table-sm {
         font-size: 0.875rem;
     }
@@ -239,12 +154,311 @@
         padding-bottom: 0.8rem;
         font-size: 1rem;
         vertical-align: middle;
-        color: grey
+        color: grey;
     }
 
     .status-indicators {
         display: flex;
         align-items: center;
-        font-size: 14px
+        font-size: 14px;
     }
 </style>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+
+<script>
+
+    document.addEventListener('DOMContentLoaded', function () {
+    // Send Invitations Button Event
+    var sendInvitationButton = document.getElementById('send-invitation-button');
+    sendInvitationButton.addEventListener('click', function () {
+        var button = this;
+        var spinnerContainer = document.getElementById("spinner-container");
+        button.style.display = "none";
+        spinnerContainer.style.display = "inline-block";
+
+        var eventId = @Model.ID_Evento;
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '@Url.Action("EnviarInvitaciones", "Evento")/' + eventId, true);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4) {
+                spinnerContainer.style.display = "none";
+                if (xhr.status === 200) {
+                    var result = JSON.parse(xhr.responseText);
+                    if (result.success) {
+                        swal({ title: '', text: '¡Invitaciones enviadas con éxito!', type: 'success', customClass: 'swal-custom' });
+                        // Update the table with the new data
+                        updateTable(result.invitaciones);
+                    } else {
+                        swal({ title: '', text: result.message, type: 'error', customClass: 'swal-custom' });
+                        button.style.display = "inline-block";
+                    }
+                } else {
+                    swal({ title: '', text: 'Error al enviar invitaciones', type: 'error', customClass: 'swal-custom' });
+                    button.style.display = "inline-block";
+                }
+            }
+        };
+
+        xhr.send();
+    });
+
+    function updateTable(invitaciones) {
+        var tbody = document.getElementById("invitaciones-table-body");
+        tbody.innerHTML = "";
+
+        if (invitaciones.length === 0) {
+            tbody.innerHTML = "<tr><td colspan='4'>No hay invitaciones enviadas aún.</td></tr>";
+            document.getElementById("send-invitation-button").style.display = "inline-block";
+        } else {
+            var confirmadas = 0;
+            var rechazadas = 0;
+            var sinRespuesta = 0;
+
+            invitaciones.forEach(function (invitacion) {
+                var row = "<tr>";
+                row += "<td>" + invitacion.Cedula + "</td>";
+                row += "<td>" + invitacion.Nombre + "</td>";
+                row += "<td>" + invitacion.Correo + "</td>";
+                row += "<td><span class='status-box " + (invitacion.Confirmado == "Sin Respuesta" ? "status-gray" : invitacion.Confirmado == "Rechazada" ? "status-red" : "status-green") + "'>" + invitacion.Confirmado + "</span></td>";
+                row += "</tr>";
+                tbody.innerHTML += row;
+
+                if (invitacion.Confirmado == "Confirmada") confirmadas++;
+                else if (invitacion.Confirmado == "Rechazada") rechazadas++;
+                else if (invitacion.Confirmado == "Sin Respuesta") sinRespuesta++;
+            });
+
+            document.getElementById("send-invitation-button").style.display = "none";
+
+            // Update event header with new counts
+            document.querySelector(".status-indicators").innerHTML = `
+                <span class="status-box status-green">Confirmadas: ${confirmadas}</span>
+                <span class="status-box status-red">Rechazadas: ${rechazadas}</span>
+                <span class="status-box status-gray">Sin Respuesta: ${sinRespuesta}</span>
+            `;
+        }
+    }
+
+    // Filter Table Functionality
+    document.getElementById('search-nombre').addEventListener('input', filterTable);
+    document.getElementById('search-cedula').addEventListener('input', filterTable);
+    document.getElementById('search-estado').addEventListener('change', filterTable);
+
+    function filterTable() {
+        var nombreInput = document.getElementById('search-nombre').value.toLowerCase();
+        var cedulaInput = document.getElementById('search-cedula').value.toLowerCase();
+        var estadoInput = document.getElementById('search-estado').value;
+
+        var rows = document.querySelectorAll('#invitaciones-table-body tr');
+        rows.forEach(function (row) {
+            var nombre = row.children[1].textContent.toLowerCase();
+            var cedula = row.children[0].textContent.toLowerCase();
+            var estado = row.children[3].textContent.trim();
+
+            var isVisible = (nombre.indexOf(nombreInput) > -1) &&
+                (cedula.indexOf(cedulaInput) > -1) &&
+                (estadoInput === "" || estado === estadoInput);
+
+            row.style.display = isVisible ? '' : 'none';
+        });
+    }
+
+    // Helper function to check if an element is visible
+    function isElementVisible(el) {
+        return !!(el.offsetWidth || el.offsetHeight || el.getClientRects().length);
+    }
+
+    // Helper function to format AM/PM
+    function formatAMPM(date) {
+        let hours = date.getHours();
+        let minutes = date.getMinutes();
+        let ampm = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12;
+        hours = hours ? hours : 12; // the hour '0' should be '12'
+        minutes = minutes < 10 ? '0' + minutes : minutes;
+        return hours + ':' + minutes + ' ' + ampm;
+    }
+
+    // Simple function to format date
+    function formatDate(date) {
+        const day = date.getDate().toString().padStart(2, '0');
+        const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Months are zero-based
+        const year = date.getFullYear();
+        return `${day}/${month}/${year}`;
+    }
+
+    // Custom function to parse date from string with Spanish month
+    function parseDateFromString(dateStr) {
+        const months = {
+            "enero": 0,
+            "febrero": 1,
+            "marzo": 2,
+            "abril": 3,
+            "mayo": 4,
+            "junio": 5,
+            "julio": 6,
+            "agosto": 7,
+            "septiembre": 8,
+            "octubre": 9,
+            "noviembre": 10,
+            "diciembre": 11
+        };
+
+        const [day, monthStr, yearTime] = dateStr.split('/');
+        const [year, time] = yearTime.split(' ');
+        const [hours, minutes] = time.split(':');
+
+        const month = months[monthStr.toLowerCase()];
+        const date = new Date(year, month, day, hours, minutes);
+        return date;
+    }
+
+    // Export to Excel
+    document.getElementById('export-excel').addEventListener('click', function () {
+        var dateStr = new Date().toISOString().slice(0, 19).replace(/[-T]/g, "").replace(/:/g, "");
+        var fileName = "Invitaciones-ASOMAMECO-" + dateStr + ".xlsx";
+
+        var wb = XLSX.utils.book_new();
+
+        // Add event details with proper date and time formatting
+        const eventDateStr = '@Model.Fecha_Evento.ToString("dd/MMMM/yyyy HH:mm")';
+        const eventDate = parseDateFromString(eventDateStr);
+        const formattedDate = formatDate(eventDate);
+        const formattedTime = formatAMPM(eventDate);
+
+        var wsData = [
+            [`Evento: ${'@Model.Nombre_Evento'}`],
+            [`Fecha & Hora: ${formattedDate} ${formattedTime}`],
+            [`Lugar: ${'@Model.Lugar'}`],
+            [`Descripción: ${'@Model.Descripcion'}`],
+            [],
+            ['Cédula', 'Nombre', 'Correo', 'Respuesta']
+        ];
+
+        // Add table data
+        document.querySelectorAll('#invitaciones-table tbody tr').forEach(function (row) {
+            if (isElementVisible(row)) {
+                var rowData = [];
+                row.querySelectorAll('td').forEach(function (cell) {
+                    rowData.push(cell.textContent.trim());
+                });
+                wsData.push(rowData);
+            }
+        });
+
+        var ws = XLSX.utils.aoa_to_sheet(wsData);
+
+        // Adjust column widths
+        ws['!cols'] = [
+            { wpx: 120 },  // Cédula
+            { wpx: 150 },  // Nombre
+            { wpx: 200 },  // Correo
+            { wpx: 80 }    // Respuesta
+        ];
+
+        XLSX.utils.book_append_sheet(wb, ws, 'Invitaciones');
+        XLSX.writeFile(wb, fileName);
+    });
+
+    // Export to PDF
+    document.getElementById('export-pdf').addEventListener('click', async function () {
+        const { jsPDF } = window.jspdf;
+        var pdf = new jsPDF();
+        var dateStr = new Date().toISOString().slice(0, 19).replace(/[-T]/g, "").replace(/:/g, "");
+        var fileName = "Invitaciones-ASOMAMECO-" + dateStr + ".pdf";
+
+        const eventName = '@Model.Nombre_Evento';
+        const eventDateStr = '@Model.Fecha_Evento.ToString("dd/MMMM/yyyy HH:mm")';
+        const eventDate = parseDateFromString(eventDateStr);
+        const formattedDate = formatDate(eventDate);
+        const formattedTime = formatAMPM(eventDate);
+        const eventLocation = '@Model.Lugar';
+        const eventDescription = '@Model.Descripcion';
+        const reportDate = new Date().toLocaleString();
+
+        // Add event details to PDF
+        pdf.setFontSize(14);
+        pdf.text("Reporte de Invitaciones", 14, 15);
+        pdf.setFontSize(10);
+        pdf.text(`Evento: ${eventName}`, 14, 25);
+        pdf.text(`Fecha & Hora: ${formattedDate} ${formattedTime}`, 14, 30);
+        pdf.text(`Lugar: ${eventLocation}`, 14, 35);
+        pdf.text(`Descripción: ${eventDescription}`, 14, 40);
+        pdf.text(`Fecha de reporte: ${reportDate}`, 14, 45);
+
+        // Extracting table data
+        var headers = [];
+        document.querySelectorAll('#invitaciones-table thead th').forEach(function (th) {
+            headers.push(th.textContent);
+        });
+
+        var data = [];
+        document.querySelectorAll('#invitaciones-table tbody tr').forEach(function (tr) {
+            if (isElementVisible(tr)) {
+                var row = [];
+                tr.querySelectorAll('td').forEach(function (td) {
+                    row.push(td.textContent.trim());
+                });
+                data.push(row);
+            }
+        });
+
+        // Adding table to PDF with adjusted column widths
+        pdf.autoTable({
+            head: [headers],
+            body: data,
+            startY: 50,
+            margin: { horizontal: 10 },
+            styles: { fontSize: 8 },
+            columnStyles: {
+                3: { cellWidth: 30 }  // Adjusting the width for the "Respuesta" column
+            }
+        });
+
+        pdf.save(fileName);
+    });
+
+
+        document.getElementById('export-csv').addEventListener('click', function () {
+        var dateStr = new Date().toISOString().slice(0, 19).replace(/[-T]/g, "").replace(/:/g, "");
+        var fileName = "Invitaciones-ASOMAMECO-" + dateStr + ".csv";
+
+        // Collect event details
+        const eventDateStr = '@Model.Fecha_Evento.ToString("dd/MMMM/yyyy HH:mm")';
+        const eventDate = parseDateFromString(eventDateStr);
+        const formattedDate = formatDate(eventDate);
+        const formattedTime = formatAMPM(eventDate);
+
+        var csvContent = `Evento:,${'@Model.Nombre_Evento'}\nFecha & Hora:,${formattedDate} ${formattedTime}\nLugar:,${'@Model.Lugar'}\nDescripción:,${'@Model.Descripcion'}\n\nCédula,Nombre,Correo,Respuesta\n`;
+
+        // Add table data
+        document.querySelectorAll('#invitaciones-table tbody tr').forEach(function (row) {
+            if (isElementVisible(row)) {
+                var rowData = [];
+                row.querySelectorAll('td').forEach(function (cell) {
+                    rowData.push(cell.textContent.trim());
+                });
+                csvContent += rowData.join(",") + "\n";
+            }
+        });
+
+        // Create a link to download the CSV
+        var encodedUri = encodeURI("data:text/csv;charset=utf-8," + csvContent);
+        var link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", fileName);
+        document.body.appendChild(link); // Required for FF
+
+        link.click(); // This will download the data file named "Invitaciones-ASOMAMECO-yyyyMMddHHmmss.csv"
+        document.body.removeChild(link); // Clean up
+    });
+});
+
+
+</script>

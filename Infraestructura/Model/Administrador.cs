@@ -11,7 +11,9 @@ namespace Infraestructura.Model
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+
+    [MetadataType(typeof(AdministradorMetadata))]
     public partial class Administrador
     {
         public int ID_Administrador { get; set; }
@@ -20,6 +22,7 @@ namespace Infraestructura.Model
         public string Correo { get; set; }
         public Nullable<int> CodigoVerificacion { get; set; }
         public Nullable<int> ID_Rol { get; set; }
+        public string Nombre { get; set; }
     
         public virtual Rol Rol { get; set; }
     }

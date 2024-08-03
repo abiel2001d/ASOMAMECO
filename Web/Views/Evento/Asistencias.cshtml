@@ -20,7 +20,6 @@
         </div>
     </p>
 
-
     <div class="card mb-3">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h5>Evento: @Model.Nombre_Evento</h5>
@@ -32,16 +31,20 @@
         </div>
     </div>
 
-
-    <div class="d-flex mb-3">
-        <a href="@Url.Action("Index", "Evento")" class="btn btn-secondary" style="margin-right:10px">Volver a Eventos</a>
-        @if (totalAsistencias != totalInvitaciones)
-        {
-            <button class="btn btn-primary" id="concluir-asistencia-button">Concluir Asistencia</button>
-        }
+    <div class="d-flex mb-3 justify-content-between">
+        <div>
+            <a href="@Url.Action("Index", "Evento")" class="btn btn-secondary" style="margin-right:10px">Volver a Eventos</a>
+            @if (totalAsistencias != totalInvitaciones)
+            {
+                <button class="btn btn-primary" id="concluir-asistencia-button">Concluir Asistencia</button>
+            }
+        </div>
+        <div>
+            <button id="export-excel" class="btn btn-outline-dark" style="font-size:12px">Excel</button>
+            <button id="export-csv" class="btn btn-outline-dark" style="font-size:12px">CSV</button>
+            <button id="export-pdf" class="btn btn-outline-dark" style="font-size:12px">PDF</button>
+        </div>
     </div>
-
-
 
     <div class="card mb-3">
         <div class="card-header d-flex justify-content-between align-items-center">
@@ -69,7 +72,7 @@
                 </div>
             </div>
 
-            <table class="table table-hover table-sm">
+            <table class="table table-hover table-sm" id="asistencias-table">
                 <thead class="thead-light">
                     <tr>
                         <th>Cédula</th>
@@ -120,8 +123,115 @@
     </div>
 </div>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    $(document).ready(function () {
+        // Helper function to format AM/PM
+        function formatAMPM(date) {
+            let hours = date.getHours();
+            let minutes = date.getMinutes();
+            let ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12;
+            hours = hours ? hours : 12; // the hour '0' should be '12'
+            minutes = minutes < 10 ? '0' + minutes : minutes;
+            return hours + ':' + minutes + ' ' + ampm;
+        }
+
+        // Simple function to format date
+        function formatDate(date) {
+            const day = date.getDate().toString().padStart(2, '0');
+            const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Months are zero-based
+            const year = date.getFullYear();
+            return `${day}/${month}/${year}`;
+        }
+
+        // Custom function to parse date from string with Spanish month
+        function parseDateFromString(dateStr) {
+            const months = {
+                "enero": 0,
+                "febrero": 1,
+                "marzo": 2,
+                "abril": 3,
+                "mayo": 4,
+                "junio": 5,
+                "julio": 6,
+                "agosto": 7,
+                "septiembre": 8,
+                "octubre": 9,
+                "noviembre": 10,
+                "diciembre": 11
+            };
+
+            const [day, monthStr, yearTime] = dateStr.split('/');
+            const [year, time] = yearTime.split(' ');
+            const [hours, minutes] = time.split(':');
+
+            const month = months[monthStr.toLowerCase()];
+            const date = new Date(year, month, day, hours, minutes);
+            return date;
+        }
+
+        // Filter Table Functionality
+        function filterTable() {
+            var nombreInput = document.getElementById('search-nombre').value.toLowerCase();
+            var cedulaInput = document.getElementById('search-cedula').value.toLowerCase();
+            var estadoInput = document.getElementById('search-estado').value;
+
+            var rows = document.querySelectorAll('#asistencias-table-body tr');
+
+            rows.forEach(function (row) {
+                var nombre = row.children[1].textContent.toLowerCase();
+                var cedula = row.children[0].textContent.toLowerCase();
+                var estado = row.children[4].textContent.trim();
+
+                var nombreMatch = nombre.includes(nombreInput);
+                var cedulaMatch = cedula.includes(cedulaInput);
+                var estadoMatch = (estadoInput === "" || (estadoInput === "Presente" && estado === "Presente") || (estadoInput === "Ausente" && estado !== "Presente"));
+
+                if (nombreMatch && cedulaMatch && estadoMatch) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+
+        function updateTable(asistencia) {
+            if (!asistencia || !asistencia.Usuario) {
+                console.error('Invalid asistencia object', asistencia);
+                return;
+            }
+
+            var tbody = document.getElementById("asistencias-table-body");
+            var rows = tbody.querySelectorAll("tr");
+            var updatedRow;
+            rows.forEach(function (row) {
+                var cedula = row.querySelector("td:first-child").textContent;
+                if (cedula === asistencia.Usuario.Cedula) {
+                    row.querySelector("td:nth-child(4)").textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
+                    row.querySelector("td:nth-child(5)").innerHTML = '<span class="status-box status-green">Presente</span>';
+                    updatedRow = row;
+                }
+            });
+
+            // Update present and absent counts
+            var presentes = tbody.querySelectorAll('.status-box.status-green').length;
+            var ausentes = tbody.querySelectorAll('.mark-attendance-button').length;
+
+            document.querySelector(".status-indicators").innerHTML = `
+                <span class="status-box status-green">Presentes: ${presentes}</span>
+                <span class="status-box status-gray">Ausentes: ${ausentes}</span>
+            `;
+
+            if (presentes === @totalInvitaciones) {
+                document.getElementById('concluir-asistencia-button').style.display = 'none';
+            }
+        }
+
         var buttons = document.querySelectorAll('.mark-attendance-button');
         buttons.forEach(function (button) {
             button.addEventListener('click', function () {
@@ -157,11 +267,11 @@
             });
         });
 
-        document.getElementById('search-nombre').addEventListener('input', filterTable);
-        document.getElementById('search-cedula').addEventListener('input', filterTable);
-        document.getElementById('search-estado').addEventListener('change', filterTable);
+        $('#search-nombre').on('input', filterTable);
+        $('#search-cedula').on('input', filterTable);
+        $('#search-estado').on('change', filterTable);
 
-        document.getElementById('concluir-asistencia-button').addEventListener('click', function() {
+        $('#concluir-asistencia-button').click(function () {
             var eventoId = @Model.ID_Evento;
 
             // AJAX request using XMLHttpRequest
@@ -177,23 +287,18 @@
                             swal({ title: '', text: '¡Asistencia concluida con éxito!', type: 'success', customClass: 'swal-custom' });
 
                             // Hide "Concluir Asistencia" button
-                            document.getElementById('concluir-asistencia-button').style.display = 'none';
+                            $('#concluir-asistencia-button').hide();
 
                             // Update table
-                            var rows = document.querySelectorAll('#asistencias-table-body tr');
-                            rows.forEach(function(row) {
-                                var statusBox = row.querySelector('.status-box');
-                                var markButton = row.querySelector('.mark-attendance-button');
-                                if (markButton && (!statusBox || statusBox.textContent !== 'Presente')) {
-                                    markButton.style.display = 'none';
-                                    var newStatusBox = document.createElement('span');
-                                    newStatusBox.className = 'status-box status-gray';
-                                    newStatusBox.textContent = 'Ausente';
-                                    row.querySelector('td:nth-child(5)').appendChild(newStatusBox);
+                            $('#asistencias-table-body tr').each(function () {
+                                var statusBox = $(this).find('.status-box');
+                                var markButton = $(this).find('.mark-attendance-button');
+                                if (markButton && (!statusBox || statusBox.text() !== 'Presente')) {
+                                    markButton.hide();
+                                    var newStatusBox = $('<span class="status-box status-gray">Ausente</span>');
+                                    $(this).find('td:nth-child(5)').append(newStatusBox);
                                 }
                             });
-
-
                         } else {
                             swal({ title: '', text: result.message, type: 'error', customClass: 'swal-custom' });
                         }
@@ -205,68 +310,163 @@
 
             xhr.send('idEvento=' + encodeURIComponent(eventoId));
         });
+
+        // Export to Excel
+        $('#export-excel').click(function () {
+            var dateStr = new Date().toISOString().slice(0, 19).replace(/[-T]/g, "").replace(/:/g, "");
+            var fileName = "Asistencia-ASOMAMECO-" + dateStr + ".xlsx";
+
+            var wb = XLSX.utils.book_new();
+
+            // Add event details with proper date and time formatting
+            const eventDateStr = '@Model.Fecha_Evento.ToString("dd/MMMM/yyyy HH:mm")';
+            const eventDate = parseDateFromString(eventDateStr);
+            const formattedDate = formatDate(eventDate);
+            const formattedTime = formatAMPM(eventDate);
+
+            var wsData = [
+                [`Evento: ${'@Model.Nombre_Evento'}`],
+                [`Fecha & Hora: ${formattedDate} ${formattedTime}`],
+                [`Lugar: ${'@Model.Lugar'}`],
+                [`Descripción: ${'@Model.Descripcion'}`],
+                [],
+                ['Cédula', 'Nombre', 'Respuesta Invitación', 'Hora de Marca', 'Estado']
+            ];
+
+            // Add table data
+            $('#asistencias-table tbody tr:visible').each(function () {
+                var row = [];
+                $(this).find('td').each(function () {
+                    row.push($(this).text().trim());
+                });
+                wsData.push(row);
+            });
+
+            var ws = XLSX.utils.aoa_to_sheet(wsData);
+
+            // Adjust column widths
+            ws['!cols'] = [
+                { wpx: 120 },  // Cédula
+                { wpx: 150 },  // Nombre
+                { wpx: 150 },  // Respuesta Invitación
+                { wpx: 100 },  // Hora de Marca
+                { wpx: 80 }    // Estado
+            ];
+
+            XLSX.utils.book_append_sheet(wb, ws, 'Asistencias');
+            XLSX.writeFile(wb, fileName);
+        });
+
+        // Export to CSV
+        $('#export-csv').click(function () {
+            var dateStr = new Date().toISOString().slice(0, 19).replace(/[-T]/g, "").replace(/:/g, "");
+            var fileName = "Asistencia-ASOMAMECO-" + dateStr + ".csv";
+
+            var wb = XLSX.utils.book_new();
+
+            // Add event details with proper date and time formatting
+            const eventDateStr = '@Model.Fecha_Evento.ToString("dd/MMMM/yyyy HH:mm")';
+            const eventDate = parseDateFromString(eventDateStr);
+            const formattedDate = formatDate(eventDate);
+            const formattedTime = formatAMPM(eventDate);
+
+            var wsData = [
+                [`Evento: ${'@Model.Nombre_Evento'}`],
+                [`Fecha & Hora: ${formattedDate} ${formattedTime}`],
+                [`Lugar: ${'@Model.Lugar'}`],
+                [`Descripción: ${'@Model.Descripcion'}`],
+                [],
+                ['Cédula', 'Nombre', 'Respuesta Invitación', 'Hora de Marca', 'Estado']
+            ];
+
+            // Add table data
+            $('#asistencias-table tbody tr:visible').each(function () {
+                var row = [];
+                $(this).find('td').each(function () {
+                    row.push($(this).text().trim());
+                });
+                wsData.push(row);
+            });
+
+            var ws = XLSX.utils.aoa_to_sheet(wsData);
+
+            // Adjust column widths
+            ws['!cols'] = [
+                { wpx: 120 },  // Cédula
+                { wpx: 150 },  // Nombre
+                { wpx: 150 },  // Respuesta Invitación
+                { wpx: 100 },  // Hora de Marca
+                { wpx: 80 }    // Estado
+            ];
+
+            XLSX.utils.book_append_sheet(wb, ws, 'Asistencias');
+            XLSX.writeFile(wb, fileName);
+        });
+
+        // Export to PDF
+        $('#export-pdf').click(async function () {
+            const { jsPDF } = window.jspdf;
+            var pdf = new jsPDF();
+            var dateStr = new Date().toISOString().slice(0, 19).replace(/[-T]/g, "").replace(/:/g, "");
+            var fileName = "Asistencia-ASOMAMECO-" + dateStr + ".pdf";
+
+            const eventName = '@Model.Nombre_Evento';
+            const eventDateStr = '@Model.Fecha_Evento.ToString("dd/MMMM/yyyy HH:mm")';
+            const eventDate = parseDateFromString(eventDateStr);
+            const formattedDate = formatDate(eventDate);
+            const formattedTime = formatAMPM(eventDate);
+            const eventLocation = '@Model.Lugar';
+            const eventDescription = '@Model.Descripcion';
+            const reportDate = new Date().toLocaleString();
+
+            // Add event details to PDF
+            pdf.setFontSize(14);
+            pdf.text("Reporte de Asistencia", 14, 15);
+            pdf.setFontSize(10);
+            pdf.text(`Evento: ${eventName}`, 14, 25);
+            pdf.text(`Fecha & Hora: ${formattedDate} ${formattedTime}`, 14, 30);
+            pdf.text(`Lugar: ${eventLocation}`, 14, 35);
+            pdf.text(`Descripción: ${eventDescription}`, 14, 40);
+            pdf.text(`Fecha de reporte: ${reportDate}`, 14, 45);
+
+            // Extracting table data
+            var headers = [];
+            $('#asistencias-table thead th').each(function () {
+                headers.push($(this).text());
+            });
+
+            var data = [];
+            $('#asistencias-table tbody tr:visible').each(function () {
+                var row = [];
+                $(this).find('td').each(function () {
+                    row.push($(this).text().trim());
+                });
+                data.push(row);
+            });
+
+            // Adding table to PDF with adjusted column widths
+            pdf.autoTable({
+                head: [headers],
+                body: data,
+                startY: 50,
+                margin: { horizontal: 10 },
+                styles: { fontSize: 8 },
+                columnStyles: {
+                    3: { cellWidth: 40 },  // Adjusting the width for the "Hora de Marca" column
+                    4: { cellWidth: 50 }   // Adjusting the width for the "Estado" column
+                }
+            });
+
+            pdf.save(fileName);
+        });
     });
-
-    function filterTable() {
-        var nombreInput = document.getElementById('search-nombre').value.toLowerCase();
-        var cedulaInput = document.getElementById('search-cedula').value.toLowerCase();
-        var estadoInput = document.getElementById('search-estado').value;
-
-        var rows = document.querySelectorAll('#asistencias-table-body tr');
-
-        rows.forEach(function (row) {
-            var nombre = row.children[1].textContent.toLowerCase();
-            var cedula = row.children[0].textContent.toLowerCase();
-            var estado = row.children[4].textContent.trim();
-
-            var nombreMatch = nombre.includes(nombreInput);
-            var cedulaMatch = cedula.includes(cedulaInput);
-            var estadoMatch = (estadoInput === "" || (estadoInput === "Presente" && estado === "Presente") || (estadoInput === "Ausente" && estado !== "Presente"));
-
-            if (nombreMatch && cedulaMatch && estadoMatch) {
-                row.style.display = '';
-            } else {
-                row.style.display = 'none';
-            }
-        });
-    }
-
-    function updateTable(asistencia) {
-        if (!asistencia || !asistencia.Usuario) {
-            console.error('Invalid asistencia object', asistencia);
-            return;
-        }
-
-        var tbody = document.getElementById("asistencias-table-body");
-        var rows = tbody.querySelectorAll("tr");
-        var updatedRow;
-        rows.forEach(function (row) {
-            var cedula = row.querySelector("td:first-child").textContent;
-            if (cedula === asistencia.Usuario.Cedula) {
-                row.querySelector("td:nth-child(4)").textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
-                row.querySelector("td:nth-child(5)").innerHTML = '<span class="status-box status-green">Presente</span>';
-                updatedRow = row;
-            }
-        });
-
-        // Update present and absent counts
-        var presentes = tbody.querySelectorAll('.status-box.status-green').length;
-        var ausentes = tbody.querySelectorAll('.mark-attendance-button').length;
-
-        document.querySelector(".status-indicators").innerHTML = `
-            <span class="status-box status-green">Presentes: ${presentes}</span>
-            <span class="status-box status-gray">Ausentes: ${ausentes}</span>
-        `;
-
-
-        
-        if (presentes === @totalInvitaciones) {
-            document.getElementById('concluir-asistencia-button').style.display = 'none';
-        }
-    }
 </script>
 
 <style>
+    input, select {
+        border-radius: 15px !important;
+    }
+
     .table-sm {
         font-size: 0.875rem;
     }
@@ -318,7 +518,7 @@
         padding-bottom: 0.8rem;
         font-size: 1rem;
         vertical-align: middle;
-        color: grey
+        color: grey;
     }
 
     .status-indicators {

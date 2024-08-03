@@ -13,13 +13,36 @@
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <style>
+        .btn-default {
+            background-color: #37577D !important;
+            color: white !important;
+            border-color: #37577D !important;
+        }
+
+            .btn-default:hover {
+                background-color: white !important;
+                color: #37577D !important;
+                border-color: #37577D !important;
+            }
+
+        input {
+            border-radius:15px;
+        }
+
         body {
             display: flex;
             flex-direction: column;
             min-height: 100vh;
         }
-        
 
+        h2 {
+            color: #37577D;
+            text-align: center;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            font-size: 24px;
+            font-weight: bold;
+        }
         .content {
             flex: 1;
         }
@@ -67,50 +90,54 @@
                 <ul class="nav nav-pills flex-column mb-auto">
                     @if (Session["User"] != null)
                     {
+
+                        <li class="nav-item  w-100">
+                            <a href="@Url.Action("Index", "Home")" class="nav-link link-dark">
+                                <i class="fa-solid fa-chart-pie" style="margin-right: 18px"></i>
+                                Dashboard
+                            </a>
+                        </li>
+
                         Infraestructura.Model.Administrador usuario = (Infraestructura.Model.Administrador)Session["User"];
                         if (usuario.Rol.ID_Rol == 1)
                         {
-                            <li class="nav-item">
-                                <a href="@Url.Action("Index", "Home")" class="nav-link link-dark">
-                                    <i class="fa-solid fa-chart-pie" style="margin-right: 18px"></i>
-                                    Dashboard
+
+
+                            <li class="nav-item  w-100">
+                                <a href="#submenu2" data-toggle="collapse" aria-expanded="false" class="nav-link link-dark dropdown-toggle">
+                                    <i class="fa-solid fa-user-group" style="margin-right:16px"></i>
+                                    Usuarios
+                                </a>
+                                <ul class="collapse list-unstyled" id="submenu2">
+                                    <li>
+                                        <a href="@Url.Action("Index", "Administrador")" class="nav-link link-dark">Internos</a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("Index", "Usuario")" class="nav-link link-dark">Miembros</a>
+                                    </li>
+                                </ul>
+                            </li>
+
+                        }
+                        else
+                        {
+                            <li class="nav-item w-100">
+                                <a href="@Url.Action("Index", "Usuario")" class="nav-link link-dark">
+                                    <i class="fa-solid fa-user-group" style="margin-right: 15px"></i>
+                                    Miembros
                                 </a>
                             </li>
                         }
                     }
-                    <li class="nav-item w-100">
-                        <a href="@Url.Action("Index", "Usuario")" class="nav-link link-dark">
-                            <i class="fa-solid fa-user-group" style="margin-right: 15px"></i>
-                            Miembros
-                        </a>
-                    </li>
-                    <li class="nav-item">
+
+                    <li class="nav-item  w-100">
                         <a href="@Url.Action("Index", "Evento")" class="nav-link link-dark">
                             <i class="fa-solid fa-calendar-days" style="margin-right:20px"></i>
                             Eventos
                         </a>
                     </li>
-                    @if (Session["User"] != null)
-                    {
-                        Infraestructura.Model.Administrador usuario = (Infraestructura.Model.Administrador)Session["User"];
-                        if (usuario.Rol.ID_Rol == 1)
-                        {
-                            <li class="nav-item">
-                                <a href="#submenu1" data-toggle="collapse" aria-expanded="false" class="nav-link link-dark dropdown-toggle">
-                                    <i class="fa-solid fa-chart-bar" style="margin-right:18px"></i>
-                                    Reportes
-                                </a>
-                                <ul class="collapse list-unstyled" id="submenu1">
-                                    <li>
-                                        <a href="@Url.Action("SubItem1", "Reporte")" class="nav-link link-dark">Sub-item 1</a>
-                                    </li>
-                                    <li>
-                                        <a href="@Url.Action("SubItem2", "Reporte")" class="nav-link link-dark">Sub-item 2</a>
-                                    </li>
-                                </ul>
-                            </li>
-                        }
-                    }
+                    <!-- Page Content  -->
+
                 </ul>
                 <hr>
             </div>
@@ -147,6 +174,7 @@
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/sweetalert")
     @RenderSection("scripts", required: false)

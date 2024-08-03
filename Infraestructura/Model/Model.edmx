@@ -9,12 +9,13 @@
           <Key>
             <PropertyRef Name="ID_Administrador" />
           </Key>
-          <Property Name="ID_Administrador" Type="int" Nullable="false" />
+          <Property Name="ID_Administrador" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Usuario" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="Contraseña" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="Correo" Type="varchar" MaxLength="100" />
           <Property Name="CodigoVerificacion" Type="int" />
           <Property Name="ID_Rol" Type="int" />
+          <Property Name="Nombre" Type="varchar(max)" />
         </EntityType>
         <EntityType Name="Asistencia">
           <Key>
@@ -162,12 +163,13 @@
           <Key>
             <PropertyRef Name="ID_Administrador" />
           </Key>
-          <Property Name="ID_Administrador" Type="Int32" Nullable="false" />
+          <Property Name="ID_Administrador" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Usuario" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Contraseña" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Correo" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="CodigoVerificacion" Type="Int32" />
           <Property Name="ID_Rol" Type="Int32" />
+          <Property Name="Nombre" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="Rol" Relationship="Self.FK_Administrador_Rol" FromRole="Administrador" ToRole="Rol" />
         </EntityType>
         <EntityType Name="Asistencia">
@@ -331,6 +333,7 @@
                 <ScalarProperty Name="Correo" ColumnName="Correo" />
                 <ScalarProperty Name="CodigoVerificacion" ColumnName="CodigoVerificacion" />
                 <ScalarProperty Name="ID_Rol" ColumnName="ID_Rol" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

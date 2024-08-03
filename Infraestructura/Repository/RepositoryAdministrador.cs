@@ -116,8 +116,8 @@ namespace Infraestructura.Repository
             {
                 using (MyContext ctx = new MyContext())
                 {
-                   
-                   
+
+
                     if (administrador.CodigoVerificacion == codigoIngresado)
                     {
                         administrador.Contraseña = nuevaContrasena;
@@ -130,7 +130,7 @@ namespace Infraestructura.Repository
                     {
                         return false;
                     }
-                   
+
                 }
             }
             catch (DbUpdateException dbEx)
@@ -145,7 +145,177 @@ namespace Infraestructura.Repository
                 Log.Error(ex, System.Reflection.MethodBase.GetCurrentMethod(), ref mensaje);
                 throw;
             }
-        
+
         }
+
+
+        public IEnumerable<Administrador> GetOperarios()
+        {
+            IEnumerable<Administrador> lista = null;
+            try
+            {
+
+                using (MyContext ctx = new MyContext())
+                {
+                    ctx.Configuration.LazyLoadingEnabled = false;
+
+                    lista = ctx.Administrador.Include("Rol").ToList();
+
+
+                }
+                return lista;
+            }
+
+            catch (DbUpdateException dbEx)
+            {
+                string mensaje = "";
+                Log.Error(dbEx, System.Reflection.MethodBase.GetCurrentMethod(), ref mensaje);
+                throw new Exception(mensaje);
+            }
+            catch (Exception ex)
+            {
+                string mensaje = "";
+                Log.Error(ex, System.Reflection.MethodBase.GetCurrentMethod(), ref mensaje);
+                throw;
+            }
+        }
+
+
+        public IEnumerable<Rol> GetRoles()
+        {
+            IEnumerable<Rol> lista = null;
+            try
+            {
+
+                using (MyContext ctx = new MyContext())
+                {
+                    ctx.Configuration.LazyLoadingEnabled = false;
+
+                    lista = ctx.Rol.ToList();
+
+
+                }
+                return lista;
+            }
+
+            catch (DbUpdateException dbEx)
+            {
+                string mensaje = "";
+                Log.Error(dbEx, System.Reflection.MethodBase.GetCurrentMethod(), ref mensaje);
+                throw new Exception(mensaje);
+            }
+            catch (Exception ex)
+            {
+                string mensaje = "";
+                Log.Error(ex, System.Reflection.MethodBase.GetCurrentMethod(), ref mensaje);
+                throw;
+            }
+        }
+
+
+        public Administrador GetOperarioByID(int id_Operario)
+        {
+            Administrador operario = null;
+            try
+            {
+                using (MyContext ctx = new MyContext())
+                {
+                    ctx.Configuration.LazyLoadingEnabled = false;
+                    operario = ctx.Administrador.
+                    Where(p => p.ID_Administrador == id_Operario).
+                    Include("Rol").
+                    FirstOrDefault<Administrador>();
+                }
+                return operario;
+            }
+            catch (DbUpdateException dbEx)
+            {
+                string mensaje = "";
+                Log.Error(dbEx, System.Reflection.MethodBase.GetCurrentMethod(), ref mensaje);
+                throw new Exception(mensaje);
+            }
+            catch (Exception ex)
+            {
+                string mensaje = "";
+                Log.Error(ex, System.Reflection.MethodBase.GetCurrentMethod(), ref mensaje);
+                throw;
+
+            }
+        }
+        public Administrador Save(Administrador operario)
+        {
+            int retorno = 0;
+            Administrador oOperario = null;
+            try
+            {
+                using (MyContext ctx = new MyContext())
+                {
+                    ctx.Configuration.LazyLoadingEnabled = false;
+                    oOperario = GetOperarioByID(operario.ID_Administrador);
+                    if (oOperario == null)
+                    {
+                        ctx.Administrador.Add(operario);
+                    }
+                    else
+                    {
+                        ctx.Entry(operario).State = EntityState.Modified;
+                    }
+                    retorno = ctx.SaveChanges();
+                }
+                if (retorno >= 0)
+                    oOperario = GetOperarioByID(operario.ID_Administrador);
+                return oOperario;
+            }
+            catch (DbUpdateException dbEx)
+            {
+                string mensaje = "";
+                Log.Error(dbEx, System.Reflection.MethodBase.GetCurrentMethod(), ref mensaje);
+                throw new Exception(mensaje);
+            }
+            catch (Exception ex)
+            {
+                string mensaje = "";
+                Log.Error(ex, System.Reflection.MethodBase.GetCurrentMethod(), ref mensaje);
+                throw;
+            }
+        }
+
+
+        public bool Delete(int id_Operario)
+        {
+            try
+            {
+                using (MyContext ctx = new MyContext())
+                {
+                    ctx.Configuration.LazyLoadingEnabled = false;
+                    var operario = GetOperarioByID(id_Operario);
+                    if (operario != null)
+                    {
+                        // Attach the entity to the context if it is not already attached
+                        if (ctx.Entry(operario).State == EntityState.Detached)
+                        {
+                            ctx.Administrador.Attach(operario);
+                        }
+                        ctx.Administrador.Remove(operario);
+                        ctx.SaveChanges();
+                        return true;
+                    }
+                    return false;
+                }
+            }
+            catch (DbUpdateException dbEx)
+            {
+                string mensaje = "";
+                Log.Error(dbEx, System.Reflection.MethodBase.GetCurrentMethod(), ref mensaje);
+                throw new Exception(mensaje);
+            }
+            catch (Exception ex)
+            {
+                string mensaje = "";
+                Log.Error(ex, System.Reflection.MethodBase.GetCurrentMethod(), ref mensaje);
+                throw;
+            }
+        }
+
     }
 }
