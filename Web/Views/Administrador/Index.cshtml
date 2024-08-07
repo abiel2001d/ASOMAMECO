@@ -1,0 +1,85 @@
+﻿@model IEnumerable<Infraestructura.Model.Administrador>
+
+@{
+    ViewBag.Title = "Administradores";
+    Layout = "~/Views/Shared/_Layout.cshtml"; // Ensure you have a layout to extend
+}
+
+<style>
+
+    input{
+        border-radius:15px !important;
+    }
+   
+
+    .table-sm {
+        font-size: 0.875rem;
+    }
+
+    .table thead th {
+        border-bottom: 2px solid #dee2e6;
+    }
+
+    .table tbody tr:hover {
+        background-color: #f8f9fa;
+    }
+
+    .action-buttons a {
+        margin-right: 5px;
+    }
+
+    .centered-title {
+        text-align: center;
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+
+    .create-button {
+        margin-bottom: 20px;
+    }
+</style>
+
+<h2 class="">Usuarios Internos</h2>
+<hr />
+<div class="container">
+
+
+    <p class="create-button">
+        @Html.ActionLink("Crear Usuario", "Create", null, new { @class = "btn btn-primary" })
+    </p>
+
+    <table class="table table-hover table-sm">
+        <thead class="thead-light">
+            <tr>
+                <th>Nombre Completo</th>
+                <th>@Html.DisplayNameFor(model => model.Correo)</th>
+                <th>@Html.DisplayNameFor(model => model.Usuario)</th>
+                <th>Rol</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => item.Nombre)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Correo)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Usuario)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Rol.Descripcion)</td>
+                    <td class="action-buttons">
+                        <a href="@Url.Action("Edit", new { id = item.ID_Administrador })" class="btn btn-secondary btn-sm" title="Editar">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <a href="@Url.Action("Details", new { id = item.ID_Administrador })" class="btn btn-info btn-sm" title="Detalles">
+                            <i class="fas fa-info-circle"></i>
+                        </a>
+                        <a href="@Url.Action("Delete", new { id = item.ID_Administrador })" class="btn btn-danger btn-sm" title="Borrar">
+                            <i class="fas fa-trash-alt"></i>
+                        </a>
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

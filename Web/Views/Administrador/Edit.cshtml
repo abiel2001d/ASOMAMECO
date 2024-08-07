@@ -1,0 +1,166 @@
+﻿@model Infraestructura.Model.Administrador
+
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+<style>
+   
+
+    .centered-title {
+        text-align: center;
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+
+    .button-group {
+        display: flex;
+        justify-content: flex-start;
+        gap: 10px;
+        margin-top: 20px;
+    }
+
+    .form-control {
+        border-radius: 15px;
+    }
+
+    .form-horizontal .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-horizontal .control-label {
+        text-align: left;
+    }
+
+    .btn-default {
+        background-color: #0069D9;
+        color: white;
+        border-color: #0069D9 !important;
+    }
+
+        .btn-default:hover {
+            background-color: white;
+            color: #0069D9;
+        }
+
+    .card {
+        margin-bottom: 20px;
+    }
+
+    .card-header {
+        background-color: #f8f9fa;
+        font-weight: bold;
+    }
+
+    .input-group-text {
+        cursor: pointer;
+    }
+</style>
+<h2 class="">Editar Usuario</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4></h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.ID_Administrador)
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card" style="border-radius:15px">
+                    <div class="card-header text-center" style="border-top-left-radius: 15px; border-top-right-radius: 15px">Perfil de Usuario</div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    @Html.LabelFor(model => model.Usuario, new { @class = "control-label col-md-6" })
+                                    @Html.EditorFor(model => model.Usuario, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                    @Html.ValidationMessageFor(model => model.Usuario, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="col-md-6">
+                                    @Html.LabelFor(model => model.ID_Rol, "Rol", new { @class = "control-label col-md-6" })
+                                    @Html.DropDownListFor(model => model.ID_Rol, (SelectList)ViewBag.ID_Rol, new { @class = "form-control", id = "rolDropdown" })
+                                    @Html.ValidationMessageFor(model => model.ID_Rol, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Contraseña, new { @class = "control-label col-md-6" })
+                            <div class="input-group">
+                                @Html.EditorFor(model => model.Contraseña, new { htmlAttributes = new { @class = "form-control", id = "edit-password", style = "border-bottom-left-radius:15px; border-top-left-radius:15px", type = "password" } })
+
+                                <span class="input-group-text" id="toggleEditPassword" style="border-bottom-right-radius:15px; border-top-right-radius:15px">
+                                    <i class="fa fa-eye" id="editToggleIcon"></i>
+                                </span>
+                            </div>
+                            @Html.ValidationMessageFor(model => model.Contraseña, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card" style="border-radius:15px">
+                    <div class="card-header text-center" style="border-top-left-radius: 15px; border-top-right-radius: 15px">Información Personal</div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <div class="control-label col-md-6 mb-2">Nombre Completo</div>
+                            <div>
+                                @Html.EditorFor(model => model.Nombre, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.Nombre, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Correo, new { @class = "control-label col-md-6" })
+                            <div>
+                                @Html.EditorFor(model => model.Correo, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.Correo, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10 button-group">
+                <input type="submit" value="Guardar" class="btn btn-default" />
+                @Html.ActionLink("Regresar", "Index", null, new { @class = "btn btn-secondary" })
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Toggle password visibility on the Edit page
+            $('#toggleEditPassword').click(function () {
+                var passwordField = $('#edit-password');
+                var passwordFieldType = passwordField.attr('type');
+                if (passwordFieldType === 'password') {
+                    passwordField.attr('type', 'text');
+                    $('#editToggleIcon').removeClass('fa-eye').addClass('fa-eye-slash');
+                } else {
+                    passwordField.attr('type', 'password');
+                    $('#editToggleIcon').removeClass('fa-eye-slash').addClass('fa-eye');
+                }
+            });
+
+            // Get the selected role from the model
+            var selectedRole = '@Model.ID_Rol';
+            // Set the dropdown to the selected role
+            $('#rolDropdown').val(selectedRole);
+        });
+    </script>
+}

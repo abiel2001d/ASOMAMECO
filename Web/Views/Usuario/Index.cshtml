@@ -3,6 +3,10 @@
 @{ ViewBag.Title = "Index"; }
 
 <style>
+    input, select {
+        border-radius: 15px !important;
+    }
+
     .table-sm {
         font-size: 0.875rem;
     }
@@ -36,43 +40,57 @@
     }
 </style>
 
-<div class="container">
-    <h2 class="centered-title">Lista de miembros</h2>
+<h2 class="centered-title">Miembros</h2>
+<hr />
 
+<div class="container">
     @using (Html.BeginForm("ImportarMiembros", "Usuario", FormMethod.Post, new { enctype = "multipart/form-data" }))
     {
-        // <input type="file" name="file" required />
+        @Html.ActionLink("Crear Miembro", "Create", null, new { @style = "margin-bottom: 20px;", @class = "btn btn-primary" })
+    }
 
+    <form id="filterForm" class="mb-lg-3">
+        <div class="form-row">
+            <div class="form-group col-md-3">
+                <input type="text" id="filterNombre" class="form-control" placeholder="Filtrar por Nombre">
+            </div>
+            <div class="form-group col-md-3">
+                <input type="text" id="filterCedula" class="form-control" placeholder="Filtrar por Cédula">
+            </div>
+            <div class="form-group col-md-2">
+                <select id="filterEstado" class="form-control">
+                    <option value="">Todos</option>
+                    <option value="activo">Activo</option>
+                    <option value="inactivo">Inactivo</option>
+                </select>
+            </div>
 
-@Html.ActionLink("Agregar Nuevo Miembro", "Create", null, new { @style = "margin-bottom: 20px;", @class = "btn btn-primary" })}
+            <div class="form-group col-md-2">
+                <input type="text" id="filterCorreo" class="form-control" placeholder="Filtrar por Correo">
+            </div>
 
-
-
-
+            <div class="form-group col-md-2">
+                <input type="text" id="filterTelefono" class="form-control" placeholder="Filtrar por Teléfono">
+            </div>
+        </div>
+    </form>
 
     <table class="table table-hover table-sm">
         <thead class="thead-light">
             <tr>
                 <th>
-
-                    <input type="text" id="filterNombre" class="form-control mb-3" placeholder="Filtrar por Nombre">
                     @Html.DisplayNameFor(model => model.Nombre)
                 </th>
                 <th>
-                    <input type="text" id="filterCedula"  class="form-control mb-3" placeholder="Filtrar por Cédula">
                     @Html.DisplayNameFor(model => model.Cedula)
                 </th>
                 <th>
-                    <input type="text" id="filterEstado" class="form-control mb-3" placeholder="Filtrar por Estado">
                     @Html.DisplayNameFor(model => model.Estado_usuario)
                 </th>
                 <th>
-                    <input type="text" id="filterCorreo" class="form-control mb-3" placeholder="Filtrar por Correo">
                     @Html.DisplayNameFor(model => model.Correo)
                 </th>
                 <th>
-                    <input type="text" id="filterTelefono"  class="form-control mb-3" placeholder="Filtrar por Teléfono">
-
                     @Html.DisplayNameFor(model => model.Telefono)
                 </th>
                 <th></th>
@@ -81,35 +99,35 @@
         <tbody id="resultado">
             @foreach (var item in Model)
             {
-<tr>
-    <td class="w-25">
-        @Html.DisplayFor(modelItem => item.Nombre)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.Cedula)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.Estado_usuario)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.Correo)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.Telefono)
-    </td>
-    <td class="action-buttons" style="width:130px">
-        <a href="@Url.Action("Edit", new { id = item.Id_Usuario })" class="btn btn-secondary btn-sm" title="Editar">
-            <i class="fas fa-edit"></i>
-        </a>
-        <a href="@Url.Action("Details", new { id = item.Id_Usuario })" class="btn btn-info btn-sm" title="Detalles">
-            <i class="fas fa-info-circle"></i>
-        </a>
-        <a href="@Url.Action("Delete", new { id = item.Id_Usuario })" class="btn btn-danger btn-sm" title="Borrar">
-            <i class="fas fa-trash-alt"></i>
-        </a>
-    </td>
-</tr>
-       }
+                <tr>
+                    <td class="w-25">
+                        @Html.DisplayFor(modelItem => item.Nombre)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Cedula)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Estado_usuario)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Correo)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Telefono)
+                    </td>
+                    <td class="action-buttons" style="width:130px">
+                        <a href="@Url.Action("Edit", new { id = item.Id_Usuario })" class="btn btn-secondary btn-sm" title="Editar">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <a href="@Url.Action("Details", new { id = item.Id_Usuario })" class="btn btn-info btn-sm" title="Detalles">
+                            <i class="fas fa-info-circle"></i>
+                        </a>
+                        <a href="@Url.Action("Delete", new { id = item.Id_Usuario })" class="btn btn-danger btn-sm" title="Borrar">
+                            <i class="fas fa-trash-alt"></i>
+                        </a>
+                    </td>
+                </tr>
+            }
         </tbody>
     </table>
 </div>
@@ -117,7 +135,8 @@
 @section Scripts{
     @Scripts.Render("~/bundles/jqueryajax")
 
-    <script>$(document).ready(function () {
+    <script>
+        $(document).ready(function () {
 
             function filterTable() {
                 var nombre = $('#filterNombre').val().toLowerCase();
@@ -136,8 +155,8 @@
                     if (cedula && !row.find('td').eq(1).text().toLowerCase().includes(cedula)) {
                         match = false;
                     }
-                    var estadoText = " " + estado;
-                    if (estado && !row.find('td').eq(2).text().toLowerCase().includes(estadoText)) {
+                    // Use exact match for estado filtering
+                    if (estado && row.find('td').eq(2).text().trim().toLowerCase() !== estado) {
                         match = false;
                     }
                     if (correo && !row.find('td').eq(3).text().toLowerCase().includes(correo)) {
@@ -151,8 +170,8 @@
                 });
             }
 
-
-    $('.form-control').on('keyup', filterTable);
-        });</script>
-
+            $('.form-control').on('keyup', filterTable);
+            $('#filterEstado').on('change', filterTable);  // Bind change event for the dropdown
+        });
+    </script>
 }

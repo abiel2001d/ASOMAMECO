@@ -10,25 +10,34 @@
         margin-bottom: 20px;
     }
 
-    .regresar-link {
-        margin-left: 710px;
-        margin-top: -70px;
+    .button-group {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 20px;
     }
 
-    .editar-link {
-        margin-left: 620px;
-        background-color: #17a2b8;
-        color: white;
-        display: inline-block;
+    .form-control {
+        border-radius: 15px;
+    }
+
+    .form-horizontal .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-horizontal .control-label {
+        text-align: left;
+    }
+
+
+    .input-group-text {
+        cursor: pointer;
+    }
+
+    .centered-title {
         text-align: center;
-        transition: background-color 0.3s ease;
-    }
-
-    input[type=submit] {
-        background-color: #0069D9;
-        color: white;
-        margin-right: 5px;
-        margin-bottom: -88px;
+        margin-top: 20px;
+        margin-bottom: 20px;
     }
 
     .time-input-group {
@@ -39,17 +48,11 @@
         .time-input-group .form-control-1 {
             margin-right: 95px;
         }
-
-    .centered-information {
-        text-align: center;
-        margin-top: 20px;
-        margin-bottom: 20px;
-    }
 </style>
 
 <div>
     <hr />
-    <dl class="centered-information">
+    <dl class="centered-information text-center">
         <dt>
             @Html.DisplayNameFor(model => model.Nombre_Evento)
         </dt>
@@ -86,8 +89,10 @@
 </div>
 <br />
 <p>
-    <div>
-        @Html.ActionLink("Editar", "Edit", new { id = Model.ID_Evento }, new { @class = "btn btn-info editar-link" })
+
+    <div class="button-group">
+        @Html.ActionLink("Editar", "Edit", new { id = Model.ID_Evento }, new { @class = "btn btn-default" })
+        @Html.ActionLink("Regresar", "Index", null, new { @class = "btn btn-secondary regresar-link" })
     </div>
-    @Html.ActionLink("Regresar", "Index", null, new { @class = "btn btn-secondary regresar-link" })
+   
 </p>

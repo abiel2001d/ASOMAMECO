@@ -1,7 +1,7 @@
 ﻿@model Infraestructura.Model.Evento
 
 @{
-    ViewBag.Title = "¿Seguro quiere borrar este usuario?";
+    ViewBag.Title = "¿Seguro quiere borrar este evento?";
 }
 
 <style>
@@ -12,34 +12,34 @@
         margin-bottom: 20px;
     }
 
-    .form-title {
+    .button-group {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 20px;
+    }
+
+    .form-control {
+        border-radius: 15px;
+    }
+
+    .form-horizontal .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-horizontal .control-label {
+        text-align: left;
+    }
+
+
+    .input-group-text {
+        cursor: pointer;
+    }
+
+    .centered-title {
         text-align: center;
         margin-top: 20px;
         margin-bottom: 20px;
-        font-size: 24px;
-        font-weight: bold;
-    }
-
-    .regresar-link {
-        margin-left: 580px;
-        margin-top: -70px;
-        display: inline-block;
-        text-align: center;
-    }
-
-    .editar-link {
-        margin-left: 480px;
-        background-color: #17a2b8;
-        color: white;
-        display: inline-block;
-        text-align: center;
-        transition: background-color 0.3s ease;
-    }
-
-    input[type=submit] {
-        background-color: #0069D9;
-        color: white;
-        margin-left: 460px;
     }
 
     .time-input-group {
@@ -50,59 +50,53 @@
         .time-input-group .form-control-1 {
             margin-right: 95px;
         }
-
-    .centered-information {
-        text-align: center;
-        margin-top: 20px;
-        margin-bottom: 20px;
-    }
 </style>
 <h2 class="form-title">@ViewBag.Title</h2>
 <div class="details-view">
     <hr />
-    <dl class="centered-information">
-        <dt>
-            @Html.DisplayNameFor(model => model.Nombre_Evento)
-        </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Nombre_Evento)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Fecha_Evento)
-        </dt>
-
-        <dd>
-            @String.Format("{0:dd/MMMM/yyyy hh:mmtt}", Model.Fecha_Evento)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Descripcion)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Descripcion)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Lugar)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Lugar)
-        </dd>
-
-    </dl>
 
     @using (Html.BeginForm())
     {
         @Html.AntiForgeryToken()
 
-        <div class="form-actions no-color">
+        <dl class="centered-information text-center">
+            <dt>
+                @Html.DisplayNameFor(model => model.Nombre_Evento)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Nombre_Evento)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Fecha_Evento)
+            </dt>
+
+            <dd>
+                @String.Format("{0:dd/MMMM/yyyy hh:mmtt}", Model.Fecha_Evento)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Descripcion)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Descripcion)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Lugar)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Lugar)
+            </dd>
+
+        </dl>
+        <div class=" button-group mt-5">
             <input type="submit" value="Eliminar" class="btn btn-default" />
-            <div>
-                @Html.ActionLink("Regresar", "Index", null, new { @class = "btn btn-secondary regresar-link" })
-            </div>
+            @Html.ActionLink("Regresar", "Index", null, new { @class = "btn btn-secondary" })
         </div>
     }
+</div>
