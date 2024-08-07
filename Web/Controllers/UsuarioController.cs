@@ -10,6 +10,7 @@ using System.Reflection;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.UI;
+using Web.Security;
 using Web.Utils;
 
 namespace Web.Controllers
@@ -17,7 +18,7 @@ namespace Web.Controllers
     public class UsuarioController : Controller
     {
         private Proyecto_Calidad_SoftwareEntities db = new Proyecto_Calidad_SoftwareEntities();
-
+        [CustomAuthorize((int)Roles.Administrador, (int)Roles.Operario)]
         // GET: Usuario
         public ActionResult Index()
         {
@@ -53,7 +54,7 @@ namespace Web.Controllers
             }
         }
 
-
+        [CustomAuthorize((int)Roles.Administrador, (int)Roles.Operario)]
         // GET: Usuario/Details/5
         public ActionResult Details(int id)
         {
@@ -68,13 +69,13 @@ namespace Web.Controllers
             }
             return View(usuario);
         }
-
+        [CustomAuthorize((int)Roles.Administrador, (int)Roles.Operario)]
         // GET: Usuario/Create
         public ActionResult Create()
         {
             return View();
         }
-
+        [CustomAuthorize((int)Roles.Administrador, (int)Roles.Operario)]
         // POST: Usuario/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -89,7 +90,7 @@ namespace Web.Controllers
 
             return View(usuario);
         }
-
+        [CustomAuthorize((int)Roles.Administrador, (int)Roles.Operario)]
         [HttpPost]
         public ActionResult ImportarMiembros(HttpPostedFileBase file)
         {
@@ -150,7 +151,7 @@ namespace Web.Controllers
             // Si el archivo no es válido, redirigir a la vista de error
             return RedirectToAction("Error");
         }
-
+        [CustomAuthorize((int)Roles.Administrador, (int)Roles.Operario)]
 
         // GET: Usuario/Edit/5
         public ActionResult Edit(int? id)
@@ -166,7 +167,7 @@ namespace Web.Controllers
             }
             return View(usuario);
         }
-
+        [CustomAuthorize((int)Roles.Administrador, (int)Roles.Operario)]
         // POST: Usuario/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -180,7 +181,7 @@ namespace Web.Controllers
             }
             return View(usuario);
         }
-
+        [CustomAuthorize((int)Roles.Administrador, (int)Roles.Operario)]
         // GET: Usuario/Delete/5
         public ActionResult Delete(int? id)
         {
@@ -195,7 +196,7 @@ namespace Web.Controllers
             }
             return View(usuario);
         }
-
+        [CustomAuthorize((int)Roles.Administrador, (int)Roles.Operario)]
         // POST: Usuario/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]

@@ -173,5 +173,16 @@ namespace Web.Controllers
                 return Json(new { success = false, message = "Error al procesar los datos: " + ex.Message });
             }
         }
+
+        public ActionResult UnAuthorized()
+        {
+            ViewBag.Message = "No autorizado";
+            if (Session["User"] != null)
+            {
+                Administrador usuario = Session["User"] as Administrador;
+                Log.Warn($"No autorizado {usuario.Usuario}");
+            }
+            return View();
+        }
     }
 }

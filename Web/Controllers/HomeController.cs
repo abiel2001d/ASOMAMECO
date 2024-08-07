@@ -5,13 +5,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Web.Security;
 
 namespace Web.Controllers
 {
     public class HomeController : Controller
     {
 
-
+        [CustomAuthorize((int)Roles.Administrador, (int)Roles.Operario)]
         public ActionResult Index()
         {
             ServiceEvento serviceEvento = new ServiceEvento();

@@ -7,6 +7,7 @@ using System.Net;
 using System;
 using Web.Utils;
 using ApplicationCore.Services;
+using Web.Security;
 
 namespace Web.Controllers
 {
@@ -20,7 +21,7 @@ namespace Web.Controllers
             IEnumerable<Rol> rolesQuery = _repository.GetRoles();
             ViewBag.ID_Rol = new SelectList(rolesQuery, "ID_Rol", "Descripcion", selectedRole);
         }
-
+        [CustomAuthorize((int)Roles.Administrador)]
         // GET: Administrador
         public ActionResult Index()
         {
@@ -41,7 +42,7 @@ namespace Web.Controllers
                 return RedirectToAction("Default", "Error");
             }
         }
-
+        [CustomAuthorize((int)Roles.Administrador)]
         // GET: Administrador/Details/5
         public ActionResult Details(int id)
         {
@@ -56,14 +57,14 @@ namespace Web.Controllers
             }
             return View(administrador);
         }
-
+        [CustomAuthorize((int)Roles.Administrador)]
         // GET: Administrador/Create
         public ActionResult Create()
         {
             PopulateRolesDropDownList();
             return View();
         }
-
+        [CustomAuthorize((int)Roles.Administrador)]
         // POST: Administrador/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -100,7 +101,7 @@ namespace Web.Controllers
             PopulateRolesDropDownList(administrador.ID_Rol);
             return View(administrador);
         }
-
+        [CustomAuthorize((int)Roles.Administrador)]
         // GET: Administrador/Edit/5
         public ActionResult Edit(int id)
         {
@@ -116,7 +117,7 @@ namespace Web.Controllers
             PopulateRolesDropDownList(administrador.ID_Rol);
             return View(administrador);
         }
-
+        [CustomAuthorize((int)Roles.Administrador)]
         // POST: Administrador/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -141,7 +142,7 @@ namespace Web.Controllers
             PopulateRolesDropDownList(administrador.ID_Rol);
             return View(administrador);
         }
-
+        [CustomAuthorize((int)Roles.Administrador)]
         // GET: Administrador/Delete/5
         public ActionResult Delete(int id)
         {
@@ -156,7 +157,7 @@ namespace Web.Controllers
             }
             return View(administrador);
         }
-
+        [CustomAuthorize((int)Roles.Administrador)]
         // POST: Administrador/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
