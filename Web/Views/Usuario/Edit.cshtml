@@ -8,6 +8,12 @@
         padding: 20px;
     }
 
+    input[type=submit] {
+        background-color: #0069D9;
+        color: white;
+        margin-right: 5px;
+    }
+
     .form-title {
         text-align: center;
         margin-top: 20px;
@@ -30,15 +36,6 @@
         margin-top: 20px;
     }
 
-    .btn-create, .btn-link {
-        background-color: #eaa159;
-        border-color: #eaa159;
-        color: #ffffff;
-        display: inline-block;
-        text-align: center;
-        transition: background-color 0.3s ease;
-        margin: 0 10px; /* Espacio entre los botones */
-    }
 
         .btn-create:hover, .btn-link:hover {
             background-color: #f0bb86;
@@ -57,6 +54,7 @@
 
 @using (Html.BeginForm())
 {
+
 
     @Html.AntiForgeryToken()
 
@@ -119,6 +117,7 @@
             </div>
         </div>
     </div>}
+
 
 
 @section Scripts {
