@@ -42,13 +42,7 @@ namespace Web.Controllers
             IServiceAdministrador _serviceAdministrador = new ServiceAdministrador();
             try
             {
-                // Clear the model state for these properties as they are not part of the form submission.
-                ModelState.Remove("ID_Administrador");
-                ModelState.Remove("Usuario");
-                ModelState.Remove("Contraseña");
-
-                if (ModelState.IsValid)
-                {
+               
                     Administrador oAdministrador = _serviceAdministrador.GetAdministrador(administrador.Usuario, administrador.Contraseña);
                     if (oAdministrador != null)
                     {
@@ -83,7 +77,7 @@ namespace Web.Controllers
                         Log.Warn($"Intento de inicio: {administrador.Usuario}");
                         TempData["mensaje"] = Util.SweetAlertHelper.Mensaje("Iniciar Sesión", "Usuario o contraseña incorrecta.", Util.SweetAlertMessageType.error);
                     }
-                }
+                
             }
             catch (Exception ex)
             {
@@ -178,6 +172,17 @@ namespace Web.Controllers
                 Log.Error(ex, MethodBase.GetCurrentMethod());
                 return Json(new { success = false, message = "Error al procesar los datos: " + ex.Message });
             }
+        }
+
+        public ActionResult UnAuthorized()
+        {
+            ViewBag.Message = "No autorizado";
+            if (Session["User"] != null)
+            {
+                Administrador usuario = Session["User"] as Administrador;
+                Log.Warn($"No autorizado {usuario.Usuario}");
+            }
+            return View();
         }
     }
 }

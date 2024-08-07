@@ -10,22 +10,22 @@ using System.Web.Mvc;
 using ApplicationCore;
 using ApplicationCore.Services;
 using Infraestructura.Model;
+using Web.Security;
 
 namespace Web.Controllers
 {
     public class EventoController : Controller
     {
         private Proyecto_Calidad_SoftwareEntities db = new Proyecto_Calidad_SoftwareEntities();
-
+        [CustomAuthorize((int)Roles.Administrador, (int)Roles.Operario)]
         // GET: Evento
         public ActionResult Index()
         {
 
             ServiceEvento serviceEvento = new ServiceEvento();
-      
-            return View(serviceEvento.GetEventos());
+            return View(serviceEvento.GetEventos().OrderBy(e => e.Fecha_Evento).ToList());
         }
-
+        [CustomAuthorize((int)Roles.Administrador, (int)Roles.Operario)]
         // GET: Evento/Details/5
         public ActionResult Details(int id)
         {
@@ -40,13 +40,13 @@ namespace Web.Controllers
             }
             return View(evento);
         }
-
+        [CustomAuthorize((int)Roles.Administrador)]
         // GET: Evento/Create
         public ActionResult Create()
         {
             return View();
         }
-
+        [CustomAuthorize((int)Roles.Administrador)]
         // POST: Evento/Create
         // Para protegerse de ataques de publicación excesiva, habilite las propiedades específicas a las que quiere enlazarse. Para obtener 
         // más detalles, vea https://go.microsoft.com/fwlink/?LinkId=317598.
@@ -84,7 +84,7 @@ namespace Web.Controllers
 
             return View(evento);
         }
-
+        [CustomAuthorize((int)Roles.Administrador)]
         // GET: Evento/Edit/5
         public ActionResult Edit(int id)
         {
@@ -98,7 +98,7 @@ namespace Web.Controllers
             }
             return View(evento);
         }
-
+        [CustomAuthorize((int)Roles.Administrador)]
         // POST: Evento/Edit/5
         // Para protegerse de ataques de publicación excesiva, habilite las propiedades específicas a las que quiere enlazarse. Para obtener 
         // más detalles, vea https://go.microsoft.com/fwlink/?LinkId=317598.
@@ -137,7 +137,7 @@ namespace Web.Controllers
 
 
 
-
+        [CustomAuthorize((int)Roles.Administrador, (int)Roles.Operario)]
         public ActionResult Asistencias(int id, string nombre = "", string cedula = "", string estado = "")
         {
             ServiceAsistencia serviceAsistencia = new ServiceAsistencia();
@@ -176,7 +176,7 @@ namespace Web.Controllers
         }
 
 
-
+        [CustomAuthorize((int)Roles.Administrador, (int)Roles.Operario)]
         [HttpPost]
         public JsonResult MarcarAsistencia(int idUsuario, int idEvento)
         {
@@ -202,7 +202,7 @@ namespace Web.Controllers
         }
 
 
-
+        [CustomAuthorize((int)Roles.Administrador)]
         // GET: Evento/Delete/5
         public ActionResult Delete(int? id)
         {
@@ -217,14 +217,17 @@ namespace Web.Controllers
             }
             return View(evento);
         }
-
+        [CustomAuthorize((int)Roles.Administrador)]
         // POST: Evento/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
             Evento evento = db.Evento.Find(id);
-            db.Evento.Remove(evento);
+
+            evento.Estado = false;
+            // Guardar los cambios en la base de datos
+            db.Entry(evento).State = EntityState.Modified;
             db.SaveChanges();
             return RedirectToAction("Index");
         }
@@ -238,7 +241,7 @@ namespace Web.Controllers
             base.Dispose(disposing);
         }
 
-
+        [CustomAuthorize((int)Roles.Administrador, (int)Roles.Operario)]
         // GET: Evento/Invitaciones/5
         public ActionResult Invitaciones(int id)
         {
@@ -273,7 +276,7 @@ namespace Web.Controllers
                 return View("Error");
             }
         }
-
+        [CustomAuthorize((int)Roles.Administrador, (int)Roles.Operario)]
         [HttpPost]
         public JsonResult ConcluirAsistencia(int idEvento)
         {

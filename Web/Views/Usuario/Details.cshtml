@@ -3,12 +3,12 @@
 @{ ViewBag.Title = "Detalles del miembro"; }
 
 <style>
-    .form-title {
-        text-align: center;
+
+    .button-group {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
         margin-top: 20px;
-        margin-bottom: 20px;
-        font-size: 24px;
-        font-weight: bold;
     }
 
     .btn-default {
@@ -45,7 +45,7 @@
     }
 </style>
 
-<h2 class="form-title">@ViewBag.Title</h2>
+<h2 class="">@ViewBag.Title</h2>
 
 <div class="details-view">
     <div>
@@ -89,10 +89,13 @@
         </dl>
     </div>
 
-    <div class="btn-container">
-        @Html.ActionLink("Editar", "Edit", new { id = Model.Id_Usuario }, new { @class = "btn btn-default" }) 
-        @Html.ActionLink("Regresar", "Index", null, new { @class = "btn btn-secondary" })
+
+    <div class="button-group mt-5">
+        @Html.ActionLink("Editar", "Edit", new { id = Model.Id_Usuario }, new { @class = "btn btn-default" })
+        @Html.ActionLink("Regresar", "Index", null, new { @class = "btn btn-secondary regresar-link" })
+
     </div>
+   
 </div>
 
 @section Scripts {

@@ -1,21 +1,138 @@
-﻿
-    <style>
-        .construction-card {
-            border-radius:50px;
-            max-width: 800px;
-            margin: auto;
-            margin-top: 50px;
+﻿@model IEnumerable<Infraestructura.Model.Evento>
+
+@{
+    ViewBag.Title = "Próximos Eventos";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .first-event-card {
+        border-radius: 20px;
+        overflow: hidden;
+        margin-bottom: 30px;
+    }
+
+        .first-event-card .card-body {
+            padding: 30px;
         }
-    </style>
 
+    .card {
+        border-radius: 50px;
+        transition: transform 0.2s;
+    }
 
+        .card:hover {
+            transform: translateY(-5px);
+        }
 
-    <div class="container">
-        <div class="card construction-card">
-            <div class="card-body text-center">
-                <h1 class="card-title">En Construcción...</h1>
-                <p class="card-text">Esta página está actualmente en construcción. ¡Vuelve pronto para más actualizaciones!</p>
+    .action-buttons a {
+        margin-right: 5px;
+    }
+
+    .centered-title {
+        text-align: center;
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+
+    .create-button {
+        margin-bottom: 20px;
+    }
+
+    .table-sm {
+        font-size: 0.875rem;
+    }
+
+    .table thead th {
+        border-bottom: 2px solid #dee2e6;
+    }
+
+    .table tbody tr:hover {
+        background-color: #f8f9fa;
+    }
+</style>
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Próximos Eventos</h2>
+    <hr />
+    <div class="row">
+        @if (Model.Any())
+        {
+            var firstEvent = Model.First();
+            <div class="col-lg-12 mb-4">
+                <!-- Primer evento destacado -->
+                <div class="card first-event-card shadow-lg border-0">
+                    <div class="row no-gutters">
+                        <div class="col-md-5 d-flex align-items-center justify-content-center">
+                            <div>
+                                <i class="fas fa-calendar-alt fa-5x text-primary"></i>
+                            </div>
+                        </div>
+                        <div class="col-md-7">
+                            <div class="card-body">
+                                <h4 class="card-title">@firstEvent.Nombre_Evento</h4>
+                                <p class="card-text"><strong>Fecha & Hora:</strong> @firstEvent.Fecha_Evento.ToString("dddd, MMMM d, yyyy hh:mm tt")</p>
+                                <p class="card-text"><strong>Lugar:</strong> @firstEvent.Lugar</p>
+                                <p class="card-text">@firstEvent.Descripcion</p>
+                                <div class="action-buttons">
+                                    <a href="@Url.Action("Invitaciones", "Evento", new { id = firstEvent.ID_Evento })" class="btn btn-outline-primary btn-sm">
+                                        <i class="fas fa-paper-plane"></i> Invitaciones
+                                    </a>
+                                    @if (firstEvent.Invitacion != null && firstEvent.Invitacion.Any())
+                                    {
+                                        <a href="@Url.Action("Asistencias", "Evento", new { id = firstEvent.ID_Evento })" class="btn btn-outline-primary btn-sm">
+                                            <i class="fas fa-list-check"></i> Asistencia
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <a href="#" class="btn btn-outline-dark btn-sm disabled">
+                                            <i class="fas fa-list-check"></i> Asistencia
+                                        </a>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
 
+            <!-- Siguientes dos eventos -->
+            foreach (var evento in Model.Skip(1).Take(2))
+            {
+                <div class="col-md-6 mb-4">
+                    <div class="card shadow-sm border-0">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">@evento.Nombre_Evento</h5>
+                            <p class="card-text"><strong>Fecha & Hora:</strong> @evento.Fecha_Evento.ToString("MMMM d, yyyy hh:mm tt")</p>
+                            <p class="card-text"><strong>Lugar:</strong> @evento.Lugar</p>
+                            <div class="action-buttons">
+                                <a href="@Url.Action("Invitaciones", "Evento", new { id = evento.ID_Evento })" class="btn btn-outline-primary btn-sm">
+                                    <i class="fas fa-paper-plane"></i> Invitaciones
+                                </a>
+                                @if (evento.Invitacion != null && evento.Invitacion.Any())
+                                {
+                                    <a href="@Url.Action("Asistencias", "Evento", new { id = evento.ID_Evento })" class="btn btn-outline-primary btn-sm">
+                                        <i class="fas fa-list-check"></i> Asistencia
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a href="#" class="btn btn-outline-dark btn-sm disabled">
+                                        <i class="fas fa-list-check"></i> Asistencia
+                                    </a>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col-12 text-center">
+                <p>No se encontraron eventos próximos.</p>
+            </div>
+        }
+    </div>
+</div>
