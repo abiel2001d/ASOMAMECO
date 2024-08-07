@@ -404,61 +404,103 @@
         });
 
         // Export to PDF
-        $('#export-pdf').click(async function () {
-            const { jsPDF } = window.jspdf;
-            var pdf = new jsPDF();
-            var dateStr = new Date().toISOString().slice(0, 19).replace(/[-T]/g, "").replace(/:/g, "");
-            var fileName = "Asistencia-ASOMAMECO-" + dateStr + ".pdf";
+       $('#export-pdf').click(async function () {
+    const { jsPDF } = window.jspdf;
+    var pdf = new jsPDF();
+    var dateStr = new Date().toISOString().slice(0, 19).replace(/[-T]/g, "").replace(/:/g, "");
+    var fileName = "Asistencia-ASOMAMECO-" + dateStr + ".pdf";
 
-            const eventName = '@Model.Nombre_Evento';
-            const eventDateStr = '@Model.Fecha_Evento.ToString("dd/MMMM/yyyy HH:mm")';
-            const eventDate = parseDateFromString(eventDateStr);
-            const formattedDate = formatDate(eventDate);
-            const formattedTime = formatAMPM(eventDate);
-            const eventLocation = '@Model.Lugar';
-            const eventDescription = '@Model.Descripcion';
-            const reportDate = new Date().toLocaleString();
+    const eventName = '@Model.Nombre_Evento';
+    const eventDateStr = '@Model.Fecha_Evento.ToString("dd/MMMM/yyyy HH:mm")';
+    const eventDate = parseDateFromString(eventDateStr);
+    const formattedDate = formatDate(eventDate);
+    const formattedTime = formatAMPM(eventDate);
+    const eventLocation = '@Model.Lugar';
+    const eventDescription = '@Model.Descripcion';
 
-            // Add event details to PDF
-            pdf.setFontSize(14);
-            pdf.text("Reporte de Asistencia", 14, 15);
-            pdf.setFontSize(10);
-            pdf.text(`Evento: ${eventName}`, 14, 25);
-            pdf.text(`Fecha & Hora: ${formattedDate} ${formattedTime}`, 14, 30);
-            pdf.text(`Lugar: ${eventLocation}`, 14, 35);
-            pdf.text(`Descripción: ${eventDescription}`, 14, 40);
-            pdf.text(`Fecha de reporte: ${reportDate}`, 14, 45);
+    // Format the report date using the same format as the event date
+    const reportDate = new Date();
+    const formattedReportDate = formatDate(reportDate);
+    const formattedReportTime = formatAMPM(reportDate);
 
-            // Extracting table data
-            var headers = [];
-            $('#asistencias-table thead th').each(function () {
-                headers.push($(this).text());
-            });
+    // Add event details to PDF
+    pdf.setFontSize(14);
+    pdf.text("Reporte de Asistencia", 14, 15);
 
-            var data = [];
-            $('#asistencias-table tbody tr:visible').each(function () {
-                var row = [];
-                $(this).find('td').each(function () {
-                    row.push($(this).text().trim());
-                });
-                data.push(row);
-            });
+    // Align the report date to the right
+    pdf.setFontSize(10);
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const reportDateText = `Fecha de reporte: ${formattedReportDate} ${formattedReportTime}`;
+    const reportDateX = pageWidth - pdf.getTextWidth(reportDateText) - 14;
+    pdf.text(reportDateText, reportDateX, 15);
 
-            // Adding table to PDF with adjusted column widths
-            pdf.autoTable({
-                head: [headers],
-                body: data,
-                startY: 50,
-                margin: { horizontal: 10 },
-                styles: { fontSize: 8 },
-                columnStyles: {
-                    3: { cellWidth: 40 },  // Adjusting the width for the "Hora de Marca" column
-                    4: { cellWidth: 50 }   // Adjusting the width for the "Estado" column
-                }
-            });
+    // Add event details
+    pdf.text(`Evento: ${eventName}`, 14, 25);
+    pdf.text(`Fecha & Hora: ${formattedDate} ${formattedTime}`, 14, 30);
+    pdf.text(`Lugar: ${eventLocation}`, 14, 35);
+    pdf.text(`Descripción: ${eventDescription}`, 14, 40);
 
-            pdf.save(fileName);
+    // Extracting table data
+    var headers = [];
+    $('#asistencias-table thead th').each(function () {
+        headers.push($(this).text());
+    });
+
+    var data = [];
+    $('#asistencias-table tbody tr:visible').each(function () {
+        var row = [];
+        $(this).find('td').each(function () {
+            row.push($(this).text().trim());
         });
+        data.push(row);
+    });
+
+    // Adding table to PDF with adjusted column widths
+    pdf.autoTable({
+        head: [headers],
+        body: data,
+        startY: 50,
+        margin: { horizontal: 10 },
+        styles: { fontSize: 8 },
+        columnStyles: {
+            3: { cellWidth: 40 },  // Adjusting the width for the "Hora de Marca" column
+            4: { cellWidth: 50 }   // Adjusting the width for the "Estado" column
+        }
+    });
+
+    pdf.save(fileName);
+});
+
+// Helper functions
+function parseDateFromString(dateStr) {
+    // Assuming dateStr is in the format "dd/MMMM/yyyy HH:mm"
+    const parts = dateStr.split(' ');
+    const dateParts = parts[0].split('/');
+    const timeParts = parts[1].split(':');
+    return new Date(dateParts[2], getMonthFromName(dateParts[1]), dateParts[0], timeParts[0], timeParts[1]);
+}
+
+function getMonthFromName(monthName) {
+    const months = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
+    return months.indexOf(monthName.toLowerCase());
+}
+
+function formatDate(date) {
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = date.toLocaleString('default', { month: 'long' });
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+}
+
+function formatAMPM(date) {
+    let hours = date.getHours();
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12;
+    hours = hours ? hours : 12; // the hour '0' should be '12'
+    return `${hours}:${minutes} ${ampm}`;
+}
+
     });
 </script>
 
