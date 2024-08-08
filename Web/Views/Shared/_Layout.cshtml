@@ -26,7 +26,7 @@
             }
 
         input {
-            border-radius:15px;
+            border-radius: 15px;
         }
 
         body {
@@ -43,6 +43,7 @@
             font-size: 24px;
             font-weight: bold;
         }
+
         .content {
             flex: 1;
         }
@@ -60,6 +61,16 @@
             display: flex;
             align-items: center;
         }
+
+            /* Nueva clase para el enlace activo */
+            .nav-link.active {
+                background-color: #07305d !important;
+                color: white !important;
+            }
+
+                .nav-link.active i {
+                    color: white !important;
+                }
     </style>
 </head>
 <body>
@@ -87,7 +98,7 @@
                     <img src="~/Utils/Img/logo.jpg" width="215" height="80" style="border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);" />
                 </div>
                 <hr>
-                <ul class="nav nav-pills flex-column mb-auto">
+                <ul class="nav nav-pills flex-column mb-auto" id="navMenu">
                     @if (Session["User"] != null)
                     {
 
@@ -101,8 +112,6 @@
                         Infraestructura.Model.Administrador usuario = (Infraestructura.Model.Administrador)Session["User"];
                         if (usuario.Rol.ID_Rol == 1)
                         {
-
-
                             <li class="nav-item  w-100">
                                 <a href="#submenu2" data-toggle="collapse" aria-expanded="false" class="nav-link link-dark dropdown-toggle">
                                     <i class="fa-solid fa-user-group" style="margin-right:16px"></i>
@@ -184,5 +193,24 @@
             @Html.Raw(TempData["mensaje"])
         </script>
     }
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var navLinks = document.querySelectorAll("#navMenu .nav-link");
+            var currentUrl = window.location.href;
+
+            navLinks.forEach(function (link) {
+                if (link.href === currentUrl) {
+                    link.classList.add("active");
+
+                    // Si el enlace está dentro de un dropdown, activar el dropdown también
+                    var parentDropdown = link.closest('.collapse');
+                    if (parentDropdown) {
+                        parentDropdown.classList.add('show');  // Para mantener el dropdown expandido
+                    }
+                }
+            });
+        });
+    </script>
 </body>
 </html>
